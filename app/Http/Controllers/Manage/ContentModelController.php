@@ -30,7 +30,10 @@ class ContentModelController extends Controller
      */
     public function create()
     {
-        //
+        return view('manage.content-models.create', [
+            'title' => 'Create new content model',
+            'model' => new ContentModel
+        ]);
     }
 
     /**
