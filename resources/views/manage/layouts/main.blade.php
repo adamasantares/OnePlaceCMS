@@ -92,8 +92,7 @@
     <!-- ./wrapper -->    
 
     <!-- Scripts -->
-    <script src="{{ asset('js/admin.js') }}"></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
     @yield('javascript')
 </body>
 </html>

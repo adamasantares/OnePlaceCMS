@@ -8,11 +8,15 @@
 require('./bootstrap');
 
 require('admin-lte');
-require('admin-lte/plugins/select2/select2.js');
-require('admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js');
-require('admin-lte/plugins/iCheck/icheck.min.js');
+// require('admin-lte/plugins/select2/select2.js');
+// require('admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js');
+// require('admin-lte/plugins/iCheck/icheck.min.js');
+// window.Vue = require('vue');
 
-window.Vue = require('vue');
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue);
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -27,6 +31,10 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('content-model-form-component', require('./components/ContentModelFormComponent.vue').default);
+Vue.component('create-content-model-field-component', require('./components/CreateContentModelFiledComponent.vue').default);
+Vue.component('create-content-model-field-modal-component', require('./components/CreateContentModelFiledModalComponent.vue').default);
+Vue.component('create-text-field-btn-component', require('./components/CreateTextFieldBtnComponent.vue').default);
+Vue.component('create-text-field-modal-component', require('./components/CreateTextFieldModalComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

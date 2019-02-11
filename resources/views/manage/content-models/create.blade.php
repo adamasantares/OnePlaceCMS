@@ -3,7 +3,7 @@
 @section('content')
 <div class="card parent-container create_article">
     <div class="card-header d-flex p-0">
-        <h3 class="card-title p-3">Edit article</h3>
+        <h3 class="card-title p-3">Create content model</h3>
     </div>
     <div class="card-body">
         <form id="content" action="{{ route('manage.content-model.create') }}" method="post">
