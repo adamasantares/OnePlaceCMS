@@ -26,6 +26,10 @@
     "dependencies": {
         "admin-lte": "^3.0.0-alpha.2",
         "bootstrap-vue": "^2.0.0-rc.11",
-        "vuedraggable": "^2.17.0"
+        "validate.js": "^0.12.0",
+        "vue-router": "^3.0.2",
+        "vue-slide-up-down": "^1.6.0",
+        "vuedraggable": "^2.17.0",
+        "vuex": "^3.1.0"
     }
 }

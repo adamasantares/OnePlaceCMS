@@ -1,11 +1,13 @@
 <template>
     <draggable v-model="myArray" class="dragArea list-group" :options="{group:'people'}">
-        <li class="list-group-item"
-            v-for="(element,index) in myArray">{{element.name}}
-            <span>{{ element }}</span>
-            <button @click="remove(index)">X
-            </button>
-        </li>
+            <div class="list-group-item list-group-item-action"
+                v-for="(element,index) in myArray">{{element.name}}
+                <span>{{ element }}</span>
+                <button @click="remove(index)"
+                        class="btn btn-default pull-right"
+                >X
+                </button>
+            </div>
     </draggable>
 </template>
 

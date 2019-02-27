@@ -179,6 +179,8 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Jenssegers\Mongodb\Auth\PasswordResetServiceProvider::class,
 
+//        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
     ],
 
     /*

@@ -75,7 +75,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapManageRoutes()
     {
         Route::prefix('manage')
-            ->middleware(['web', 'auth'])
+//            ->middleware(['web', 'auth'])
+            ->middleware(['web'])
             ->as('manage.')
             ->namespace($this->namespaceManage)
             ->group(base_path('routes/manage.php'));
