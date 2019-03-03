@@ -9,6 +9,7 @@ export default {
         loading: false,
         auth_error: null,
         customers: [],
+        contentModels: [],
         sidebarShow: false
     },
     getters: {
@@ -26,6 +27,9 @@ export default {
         },
         customers(state) {
             return state.customers;
+        },
+        contentModels(state) {
+            return state.contentModels;
         },
         sidebarShow(state) {
             return state.sidebarShow;
@@ -56,6 +60,9 @@ export default {
         updateCustomers(state, payload) {
             state.customers = payload;
         },
+        updateContentModels(state, payload) {
+            state.contentModels = payload;
+        },
         sidebarShowToggle(state) {
             state.sidebarShow = !state.sidebarShow;
         }
@@ -69,6 +76,16 @@ export default {
             .then((response) => {
                 context.commit('updateCustomers', response.data.customers);
             })
+        },
+        getContentModels(context, params) {
+
+            let url = params.page ? '/api/content-model?page=' + params.page : '/api/content-model';
+
+            axios.get(url)
+                .then((response) => {
+                    console.log(response.data);
+                    context.commit('updateContentModels', response.data);
+                })
         }
     }
 };

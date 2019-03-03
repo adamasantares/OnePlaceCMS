@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\ContentModel;
 use Illuminate\Http\Request;
 
@@ -15,12 +14,14 @@ class ContentModelController extends Controller
      */
     public function index()
     {
-        $models = ContentModel::where('title', 'like', '%'.request()->get('query-content-model').'%')->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('manage.content-models.index', [
-            'models' => $models->appends(request()->except('page')),
-            'title' => 'Content Models'
-        ]);
+        if(request()->get('query-content-model')) {
+            $models = ContentModel::where('title', 'like', '%'.request()->get('query-content-model').'%')->orderBy('created_at', 'desc')->paginate(15);
+        } else {
+            $models = ContentModel::orderBy('created_at', 'desc')->paginate(15);
+        }
+
+        return response()->json($models->appends(request()->except('page')), 200);
     }
 
     /**

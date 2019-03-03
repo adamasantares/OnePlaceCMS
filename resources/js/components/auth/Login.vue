@@ -85,7 +85,6 @@
         },
         computed: {
             authError() {
-                console.log(this.$store.getters.authError);
                 return this.$store.getters.authError;
             }
         }
