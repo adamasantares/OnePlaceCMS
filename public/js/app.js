@@ -2145,22 +2145,9 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Pagination: _template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  data: function data() {
-    return {
-      sortColumn: "title",
-      sortDirection: "asc"
-    };
-  },
   computed: {
     contentModels: function contentModels() {
       return this.$store.getters.contentModels;
-    },
-    searchParamsStart: function searchParamsStart() {
-      return {
-        'column': 'date_create',
-        'sort': 'desc',
-        'page': 1
-      };
     },
     searchParamsForTitleColumn: function searchParamsForTitleColumn() {
       return {
@@ -2175,10 +2162,17 @@ __webpack_require__.r(__webpack_exports__);
         'sort': this.$route.query.column == 'date_create' ? this.$route.query.sort == 'asc' ? 'desc' : 'asc' : 'asc',
         'page': this.$route.query.page
       };
+    },
+    searchParams: function searchParams() {
+      return {
+        'column': this.$route.query.column,
+        'sort': this.$route.query.sort,
+        'page': this.$route.query.page
+      };
     }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
-    this.$store.dispatch('getContentModels', this.searchParams);
+    this.$store.dispatch('getContentModels', to.query.page);
     next();
   },
   mounted: function mounted() {
@@ -2186,7 +2180,7 @@ __webpack_require__.r(__webpack_exports__);
       return;
     }
 
-    this.$store.dispatch('getContentModels', this.searchParams);
+    this.$store.dispatch('getContentModels', this.$route.query.page);
   }
 });
 
@@ -40281,7 +40275,10 @@ var render = function() {
                       attrs: {
                         to: {
                           path: "/content/model",
-                          query: _vm.searchParamsForTitleColumn
+                          query: {
+                            column: "title",
+                            page: this.$route.query.page
+                          }
                         }
                       }
                     },
@@ -40293,7 +40290,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "th",
-                { staticClass: "sorting", staticStyle: { width: "200px" } },
+                { staticStyle: { width: "200px" } },
                 [
                   _c(
                     "router-link",
@@ -40302,7 +40299,10 @@ var render = function() {
                       attrs: {
                         to: {
                           path: "/content/model",
-                          query: _vm.searchParamsForDateCreate
+                          query: {
+                            column: "date_created",
+                            page: this.$route.query.page
+                          }
                         }
                       }
                     },
@@ -40314,15 +40314,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "th",
-                {
-                  staticClass: "sorting",
-                  staticStyle: { width: "200px" },
-                  on: {
-                    click: function($event) {
-                      _vm.sortBy("date_update")
-                    }
-                  }
-                },
+                { staticClass: "sorting", staticStyle: { width: "200px" } },
                 [_vm._v("Date update")]
               ),
               _vm._v(" "),
@@ -57837,10 +57829,9 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
         context.commit('updateCustomers', response.data.customers);
       });
     },
-    getContentModels: function getContentModels(context, params) {
-      var url = params.page ? '/api/content-model?page=' + params.page : '/api/content-model';
+    getContentModels: function getContentModels(context, page) {
+      var url = page ? '/api/content-model?page=' + page : '/api/content-model';
       axios.get(url).then(function (response) {
-        console.log(response.data);
         context.commit('updateContentModels', response.data);
       });
     }

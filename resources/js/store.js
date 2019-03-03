@@ -77,13 +77,12 @@ export default {
                 context.commit('updateCustomers', response.data.customers);
             })
         },
-        getContentModels(context, params) {
+        getContentModels(context, page) {
 
-            let url = params.page ? '/api/content-model?page=' + params.page : '/api/content-model';
+            let url = page ? '/api/content-model?page=' + page : '/api/content-model';
 
             axios.get(url)
                 .then((response) => {
-                    console.log(response.data);
                     context.commit('updateContentModels', response.data);
                 })
         }

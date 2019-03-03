@@ -4,12 +4,12 @@
             <thead>
                 <tr role="row">
                     <th>
-                        <router-link :to="{ path: '/content/model', query: searchParamsForTitleColumn}"  class="sorting page-link">Title</router-link>
+                        <router-link :to="{ path: '/content/model', query: {column: 'title', page: this.$route.query.page} }"  class="sorting page-link">Title</router-link>
                     </th>
-                    <th class="sorting" style="width: 200px">
-                        <router-link :to="{ path: '/content/model', query: searchParamsForDateCreate}"  class="sorting page-link">Date create</router-link>
+                    <th style="width: 200px">
+                        <router-link :to="{ path: '/content/model', query: {column: 'date_created', page: this.$route.query.page} }"  class="sorting page-link">Date create</router-link>
                     </th>
-                    <th class="sorting" @click="sortBy('date_update')" style="width: 200px">Date update</th>
+                    <th class="sorting" style="width: 200px">Date update</th>
                     <th style="width: 84px">Action</th>
                 </tr>
             </thead>
@@ -77,22 +77,9 @@
         components: {
             Pagination
         },
-        data() {
-            return {
-                sortColumn: "title",
-                sortDirection: "asc"
-            }
-        },
         computed: {
             contentModels() {
                 return this.$store.getters.contentModels;
-            },
-            searchParamsStart() {
-                return {
-                    'column': 'date_create',
-                    'sort': 'desc',
-                    'page': 1
-                }
             },
             searchParamsForTitleColumn() {
                 return {
@@ -107,10 +94,17 @@
                     'sort': (this.$route.query.column == 'date_create') ? (this.$route.query.sort == 'asc') ? 'desc' : 'asc' : 'asc',
                     'page': this.$route.query.page
                 }
-            }
+            },
+            searchParams() {
+                return {
+                    'column': this.$route.query.column,
+                    'sort': this.$route.query.sort,
+                    'page': this.$route.query.page
+                }
+            },
         },
         beforeRouteUpdate (to, from, next) {
-            this.$store.dispatch('getContentModels', this.searchParams);
+            this.$store.dispatch('getContentModels', to.query.page);
             next();
         },
         mounted() {
@@ -118,7 +112,7 @@
                 return;
             }
 
-            this.$store.dispatch('getContentModels', this.searchParams);
+            this.$store.dispatch('getContentModels', this.$route.query.page);
         }
     }
 </script>
