@@ -8,7 +8,10 @@ export default {
         isLoggedIn: !!user,
         loading: false,
         auth_error: null,
-        customers: [],
+        titlePage: '',
+        searchParams: {},
+        successMessage: '',
+        errorMessage: [],
         contentModels: [],
         sidebarShow: false
     },
@@ -25,8 +28,17 @@ export default {
         authError(state) {
             return state.auth_error;
         },
-        customers(state) {
-            return state.customers;
+        titlePage(state) {
+            return state.titlePage;
+        },
+        searchParams(state) {
+            return state.searchParams;
+        },
+        successMessage(state) {
+            return state.successMessage;
+        },
+        errorMessage(state) {
+            return state.errorMessage;
         },
         contentModels(state) {
             return state.contentModels;
@@ -57,8 +69,17 @@ export default {
             state.isLoggedIn = false;
             state.currentUser = null;
         },
-        updateCustomers(state, payload) {
-            state.customers = payload;
+        updateTitlePage(state, payload) {
+            state.titlePage = payload;
+        },
+        updateSuccessMessage(state, payload) {
+            state.successMessage = payload;
+        },
+        updateErrorMessage(state, payload) {
+            state.errorMessage = payload;
+        },
+        updateSearchParams(state, payload) {
+            state.searchParams = payload;
         },
         updateContentModels(state, payload) {
             state.contentModels = payload;
@@ -71,20 +92,19 @@ export default {
         login(context) {
             context.commit("login");
         },
-        getCustomers(context) {
-            axios.get('/api/customers')
-            .then((response) => {
-                context.commit('updateCustomers', response.data.customers);
-            })
+        updateSearchParams(context, params) {
+            context.commit('updateSearchParams', params);
         },
-        getContentModels(context, page) {
-
-            let url = page ? '/api/content-model?page=' + page : '/api/content-model';
+        getContentModels(context, params) {
+            let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+            let url = '/api/content-model?' + queryString;
 
             axios.get(url)
                 .then((response) => {
                     context.commit('updateContentModels', response.data);
-                })
+                }).catch(() => {
+                    context.commit('updateContentModels', {});
+                });
         }
     }
 };

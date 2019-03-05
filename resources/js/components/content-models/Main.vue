@@ -1,39 +1,55 @@
 <template>
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">List</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6">
-                                <div class="card-tools">
-                                    <div class="input-group input-group-sm">
-                                        <form-search></form-search>
+            <template v-if="$route.meta.type == 'list'">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List Models</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="card-tools">
+                                        <div class="input-group input-group-sm">
+                                            <form-search></form-search>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <router-link to="/content/model/create" class="btn btn-success pull-right btn-create">Create content model</router-link>
+                                </div>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <a href="" class="btn btn-success pull-right btn-create">Create content model</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <router-view></router-view>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12">
-
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <router-view></router-view>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
-            </div>
+            </template>
+            <template v-else-if="$route.meta.type == 'view'">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Model</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <router-view></router-view>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </template>
+
             <!-- /.card -->
         </div>
         <!-- /.col -->
@@ -42,7 +58,7 @@
 </template>
 
 <script>
-    import FormSearch from "./FormSearch";
+    import FormSearch from "../template-components/FormSearch";
 
     export default {
         name: "content-models-main",

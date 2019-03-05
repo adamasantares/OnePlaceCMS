@@ -1,12 +1,13 @@
 <template>
-    <div class="dataTables_paginate paging_simple_numbers">
+    <div v-if="pages.length" class="dataTables_paginate paging_simple_numbers">
         <ul class="pagination">
             <li class="paginate_button page-item previous" :class="{ disabled: (currentPage == 1) }">
-                <router-link :to="{ path: '/content/model', query: { page: 1 }}"  class="page-link">First</router-link>
+                <a href="#" @click.prevent="changePage(1)" class="page-link">First</a>
+
             </li>
 
             <li class="paginate_button page-item" :class="{ disabled: (currentPage == 1) }">
-                <router-link :to="{ path: '/content/model', query: { page: currentPage - 1 }}"  class="page-link">Prev</router-link>
+                <a href="#" @click.prevent="changePage(currentPage - 1)" class="page-link">Prev</a>
             </li>
 
 
@@ -21,16 +22,16 @@
 
 
             <li v-for="page in pages" class="paginate_button page-item" :class="{ active: (currentPage == page) }">
-                <router-link :to="{ path: '/content/model', query: { page: page }}"  class="page-link">{{ page }}</router-link>
+                <a href="#" @click.prevent="changePage(page)" class="page-link">{{ page }}</a>
             </li>
 
 
             <li class="paginate_button page-item" :class="{ disabled: (currentPage == lastPage) }">
-                <router-link :to="{ path: '/content/model', query: { page: currentPage + 1 }}"  class="page-link">Next</router-link>
+                <a href="#" @click.prevent="changePage(currentPage + 1)" class="page-link">Next</a>
             </li>
 
             <li class="paginate_button page-item next" :class="{ disabled: (currentPage == lastPage) }">
-                <router-link :to="{ path: '/content/model', query: { page: lastPage }}"  class="page-link">Last</router-link>
+                <a href="#" @click.prevent="changePage(lastPage)" class="page-link">Last</a>
             </li>
 
         </ul>
@@ -45,17 +46,33 @@
             lastPage: Number
         },
         computed: {
-            // fromPage() {
-            //     return this.currentPage > 1 ? this.currentPage - 1 : 1;
-            // },
             pages() {
+
+                if(this.lastPage <= 1) {
+                    return [];
+                }
+
                 let pagesArray = [];
-                // for (let page = this.fromPage; page <= this.lastPage; page++) {
+
                 for (let page = 1; page <= this.lastPage; page++) {
                     pagesArray.push(page);
                 }
 
                 return pagesArray;
+            },
+            searchParams() {
+                return this.$store.getters.searchParams;
+            }
+        },
+        methods: {
+            changePage(page) {
+                let params = {};
+                params.column = this.searchParams.column;
+                params.sort = this.searchParams.sort;
+                params.search = this.searchParams.search;
+                params.page = page;
+
+                this.$store.dispatch('updateSearchParams', params);
             }
         }
     }

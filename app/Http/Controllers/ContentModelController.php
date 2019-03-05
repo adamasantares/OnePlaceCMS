@@ -14,12 +14,7 @@ class ContentModelController extends Controller
      */
     public function index()
     {
-
-        if(request()->get('query-content-model')) {
-            $models = ContentModel::where('title', 'like', '%'.request()->get('query-content-model').'%')->orderBy('created_at', 'desc')->paginate(15);
-        } else {
-            $models = ContentModel::orderBy('created_at', 'desc')->paginate(15);
-        }
+        $models = ContentModel::where('title', 'like', request()->get('search').'%')->orderBy(request()->get('column'), request()->get('sort'))->paginate(15);
 
         return response()->json($models->appends(request()->except('page')), 200);
     }
@@ -90,6 +85,6 @@ class ContentModelController extends Controller
      */
     public function destroy(ContentModel $contentModel)
     {
-        //
+        $contentModel->delete();
     }
 }

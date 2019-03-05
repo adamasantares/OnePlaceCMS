@@ -7,18 +7,10 @@
             <Header/>
             <Sidebar/>
             <div class="content-wrapper" style="min-height: 933px;">
-                <section class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-12">
-                                <h1>
-                                    Title
-                                </h1>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <title-header></title-header>
                 <div class="content">
+                    <success-messages></success-messages>
+                    <error-messages></error-messages>
                     <router-view></router-view>
                 </div>
                 <!-- /.content -->
@@ -29,14 +21,17 @@
 </template>
 
 <script>
-    import Header from './Header.vue';
+    import Header from './template-components/Header.vue';
+    import TitleHeader from './template-components/TitleHeader.vue';
     import Sidebar from './sidebar/Sidebar.vue';
-    import Footer from './Footer.vue';
+    import SuccessMessages from './template-components/SuccessMessages.vue';
+    import ErrorMessages from './template-components/ErrorMessages.vue';
+    import Footer from './template-components/Footer.vue';
 
     export default {
         name: 'main-app',
         components: {
-            Header, Sidebar, Footer
+            Header, TitleHeader, Sidebar, SuccessMessages, ErrorMessages, Footer
         }
     }
 </script>

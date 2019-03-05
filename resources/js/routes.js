@@ -1,12 +1,9 @@
 import Home from './components/Home.vue';
 import Login from './components/auth/Login.vue';
-import CustomersMain from './components/customers/Main.vue';
-import CustomersList from './components/customers/List.vue';
-import NewCustomer from './components/customers/New.vue';
-import Customer from './components/customers/View.vue';
 
 import ContentModelsMain from './components/content-models/Main.vue';
 import ContentModelsList from './components/content-models/List.vue';
+import CreateContentModel from './components/content-models/Create.vue';
 
 
 export const routes = [
@@ -14,7 +11,8 @@ export const routes = [
         path: '/',
         component: Home,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            title: "Home"
         }
     },
     {
@@ -28,21 +26,28 @@ export const routes = [
         path: '/content/model',
         component: ContentModelsMain,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
         },
         children: [
             {
                 path: '/',
-                component: ContentModelsList
-            },
+                component: ContentModelsList,
+                meta: {
+                    type: 'list'
+                }
+            }
+            ,
             {
                 path: 'create',
-                component: NewCustomer
+                component: CreateContentModel,
+                meta: {
+                    type: 'view'
+                }
             },
-            {
-                path: '/edit/:id',
-                component: Customer
-            }
+            // {
+            //     path: '/edit/:id',
+            //     component: Customer
+            // }
         ]
     }
 ];
