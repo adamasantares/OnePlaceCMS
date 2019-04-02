@@ -9,7 +9,6 @@ export default {
         loading: false,
         auth_error: null,
         titlePage: '',
-        searchParams: {},
         successMessage: '',
         errorMessage: [],
         contentModels: [],
@@ -30,9 +29,6 @@ export default {
         },
         titlePage(state) {
             return state.titlePage;
-        },
-        searchParams(state) {
-            return state.searchParams;
         },
         successMessage(state) {
             return state.successMessage;
@@ -78,9 +74,6 @@ export default {
         updateErrorMessage(state, payload) {
             state.errorMessage = payload;
         },
-        updateSearchParams(state, payload) {
-            state.searchParams = payload;
-        },
         updateContentModels(state, payload) {
             state.contentModels = payload;
         },
@@ -91,9 +84,6 @@ export default {
     actions: {
         login(context) {
             context.commit("login");
-        },
-        updateSearchParams(context, params) {
-            context.commit('updateSearchParams', params);
         },
         getContentModels(context, params) {
             let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');

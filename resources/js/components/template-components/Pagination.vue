@@ -59,20 +59,14 @@
                 }
 
                 return pagesArray;
-            },
-            searchParams() {
-                return this.$store.getters.searchParams;
             }
         },
         methods: {
             changePage(page) {
-                let params = {};
-                params.column = this.searchParams.column;
-                params.sort = this.searchParams.sort;
-                params.search = this.searchParams.search;
-                params.page = page;
+                let query = Object.assign({}, this.$route.query, this.$route.query);
+                query.page = page;
 
-                this.$store.dispatch('updateSearchParams', params);
+                this.$router.push({path: this.$route.path, query: query});
             }
         }
     }

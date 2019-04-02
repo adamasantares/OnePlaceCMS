@@ -27,13 +27,6 @@ const router = new VueRouter({
 
 initialize(store, router);
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-// Vue.component('content-model-form-component', require('./components/ContentModelFormComponent.vue').default);
-// Vue.component('create-content-model-field-component', require('./components/CreateContentModelFiledComponent.vue').default);
-// Vue.component('create-content-model-field-modal-component', require('./components/CreateContentModelFiledModalComponent.vue').default);
-// Vue.component('create-text-field-btn-component', require('./components/CreateTextFieldBtnComponent.vue').default);
-// Vue.component('create-text-field-modal-component', require('./components/CreateTextFieldModalComponent.vue').default);
-
 const app = new Vue({
     el: '#app',
     router,

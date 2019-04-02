@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ContentModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\ContentMoldelRequest;
 
 class ContentModelController extends Controller
 {
@@ -38,9 +39,14 @@ class ContentModelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContentMoldelRequest $request)
     {
-        //
+        try {
+            ContentModel::create($request->all());
+            response()->json([], 200);
+        } catch (\Exception $e) {
+            response()->json([], 500);
+        }
     }
 
     /**

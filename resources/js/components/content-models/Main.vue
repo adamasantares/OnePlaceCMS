@@ -32,22 +32,7 @@
                 </div>
             </template>
             <template v-else-if="$route.meta.type == 'view'">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Model</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="dataTables_wrapper dt-bootstrap4">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <router-view></router-view>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
+                <router-view></router-view>
             </template>
 
             <!-- /.card -->

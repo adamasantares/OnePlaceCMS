@@ -21,20 +21,12 @@
                 query: this.$route.query.search ? this.$route.query.search : ''
             }
         },
-        computed: {
-            searchParams() {
-                return this.$store.getters.searchParams;
-            }
-        },
         methods: {
             search() {
-                let params = {};
-                params.column = this.searchParams.column;
-                params.sort = this.searchParams.sort;
-                params.search = this.query;
-                params.page = this.searchParams.page;
+                let query = Object.assign({}, this.$route.query, this.$route.query);
+                query.search = this.query;
 
-                this.$store.dispatch('updateSearchParams', params);
+                this.$router.push({path: this.$route.path, query: query});
             }
         }
     }

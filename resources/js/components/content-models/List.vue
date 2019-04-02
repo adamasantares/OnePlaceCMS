@@ -3,16 +3,16 @@
         <table class="table table-bordered table-striped dataTable" role="grid" >
             <thead>
                 <tr role="row">
-                    <th @click="sortTable(sortObjForTitle)" :class="classObjectForTitleColumn">
+                    <th @click="sortTable('title')" :class="classObjectForTitleColumn">
                         Title
                     </th>
-                    <th @click="sortTable(sortObjForPublished)" :class="classObjectForPublishedColumn" style="width: 200px">
+                    <th @click="sortTable('published')" :class="classObjectForPublishedColumn" style="width: 200px">
                         Published
                     </th>
-                    <th @click="sortTable(sortObjForDateCreated)" :class="classObjectForDateCreatedColumn" style="width: 200px">
+                    <th @click="sortTable('created_at')" :class="classObjectForDateCreatedColumn" style="width: 200px">
                         Date create
                     </th>
-                    <th @click="sortTable(sortObjForDateUpdated)" :class="classObjectForDateUpdatedColumn" style="width: 200px">
+                    <th @click="sortTable('updated_at')" :class="classObjectForDateUpdatedColumn" style="width: 200px">
                         Date update
                     </th>
                     <th style="width: 84px">Action</th>
@@ -51,7 +51,7 @@
                 </tr>
             </tfoot>
         </table>
-        <pagination :currentPage="contentModels.current_page" :lastPage="contentModels.last_page"></pagination>
+        <pagination :currentPage="searchParams.page" :lastPage="contentModels.last_page"></pagination>
     </div>
 </template>
 
@@ -63,67 +63,42 @@
         components: {
             Pagination
         },
+        data() {
+            return {
+                searchParams: {
+                    column: this.$route.query.column ? this.$route.query.column : 'created_at',
+                    sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
+                    search: this.$route.query.search ? this.$route.query.search : '',
+                    page: this.$route.query.page ? +this.$route.query.page : 1
+                }
+            }
+        },
         computed: {
             contentModels() {
                 return this.$store.getters.contentModels;
             },
-            startSearchParams() {
-                return {
-                    column: this.$route.query.column ? this.$route.query.column : 'created_at',
-                    sort: this.$route.query.column ? this.$route.query.sort : 'desc',
-                    search: this.$route.query.search ? this.$route.query.search : '',
-                    page: this.$route.query.page ? this.$route.query.page : 1
-                }
-            },
-            searchParams() {
-                return this.$store.getters.searchParams;
-            },
-            sortObjForTitle() {
-                return {
-                    'column': 'title',
-                    'sort': (this.searchParams.column == 'title') ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc'
-                }
-            },
-            sortObjForPublished() {
-                return {
-                    'column': 'published',
-                    'sort': (this.searchParams.column == 'published') ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc'
-                }
-            },
-            sortObjForDateCreated() {
-                return {
-                    'column': 'created_at',
-                    'sort': (this.searchParams.column == 'created_at') ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc'
-                }
-            },
-            sortObjForDateUpdated() {
-                return {
-                    'column': 'updated_at',
-                    'sort': (this.searchParams.column == 'updated_at') ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc'
-                }
-            },
-            classObjectForTitleColumn: function () {
+            classObjectForTitleColumn() {
                 return {
                     sorting_asc: this.searchParams.column == 'title' && this.searchParams.sort == 'asc',
                     sorting_desc: this.searchParams.column == 'title' && this.searchParams.sort == 'desc',
                     sorting: this.searchParams.column != 'title'
                 }
             },
-            classObjectForPublishedColumn: function () {
+            classObjectForPublishedColumn() {
                 return {
                     sorting_asc: this.searchParams.column == 'published' && this.searchParams.sort == 'asc',
                     sorting_desc: this.searchParams.column == 'published' && this.searchParams.sort == 'desc',
                     sorting: this.searchParams.column != 'published'
                 }
             },
-            classObjectForDateCreatedColumn: function () {
+            classObjectForDateCreatedColumn() {
                 return {
                     sorting_asc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'asc',
                     sorting_desc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'desc',
                     sorting: this.searchParams.column != 'created_at'
                 }
             },
-            classObjectForDateUpdatedColumn: function () {
+            classObjectForDateUpdatedColumn() {
                 return {
                     sorting_asc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'asc',
                     sorting_desc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'desc',
@@ -132,14 +107,10 @@
             }
         },
         methods: {
-            sortTable(sortObj) {
-                let params = {};
-                params.column = sortObj.column;
-                params.sort = sortObj.sort;
-                params.search = this.searchParams.search;
-                params.page = this.searchParams.page;
-
-                this.$store.dispatch('updateSearchParams', params);
+            sortTable(column) {
+                this.searchParams.column = column;
+                this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
+                this.$router.push({path: '/content/model', query: this.searchParams });
             },
             deleteModel(model) {
                 let confirm = window.confirm("Delete " + model.title + "?");
@@ -158,19 +129,14 @@
 
             }
         },
-        watch: {
-            searchParams: function (obj) {
-                this.$router.push({path: '/content/model', query: obj });
-            }
-        },
         beforeRouteUpdate (to, from, next) {
-            this.$store.dispatch('getContentModels', to.query);
+            Object.assign(this.searchParams, to.query);
+            this.$store.dispatch('getContentModels', this.searchParams);
             next();
         },
         mounted() {
             this.$store.commit('updateTitlePage', 'Models');
-            this.$store.dispatch('updateSearchParams', this.startSearchParams);
-            this.$store.dispatch('getContentModels', this.$route.query);
+            this.$store.dispatch('getContentModels', this.searchParams);
         }
     }
 </script>
