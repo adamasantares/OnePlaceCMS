@@ -4,6 +4,7 @@ import Login from './components/auth/Login.vue';
 import ContentModelsMain from './components/content-models/Main.vue';
 import ContentModelsList from './components/content-models/List.vue';
 import CreateContentModel from './components/content-models/Create.vue';
+import EditContentModel from './components/content-models/Edit.vue';
 
 
 export const routes = [
@@ -44,10 +45,13 @@ export const routes = [
                     type: 'view'
                 }
             },
-            // {
-            //     path: '/edit/:id',
-            //     component: Customer
-            // }
+            {
+                path: 'edit/:id',
+                component: EditContentModel,
+                meta: {
+                    type: 'view'
+                }
+            }
         ]
     }
 ];

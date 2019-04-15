@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ContentModel;
+use App\ContentField;
 use Illuminate\Http\Request;
-use App\Http\Requests\ContentMoldelRequest;
+use App\Http\Requests\ContentModelRequest;
 
 class ContentModelController extends Controller
 {
@@ -21,29 +22,30 @@ class ContentModelController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('manage.content-models.create', [
-            'title' => 'Create new content model',
-            'model' => new ContentModel
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ContentMoldelRequest $request)
+    public function store(ContentModelRequest $request)
     {
         try {
-            ContentModel::create($request->all());
-            response()->json([], 200);
+            $model = ContentModel::create($request->only('title', 'api_id', 'desc', 'published'));
+            $fields = $request->input('contentFields');
+
+            foreach ($fields as $index => $value) {
+               ContentField::create(
+                    [
+                        'api_id' => $value['api_id'],
+                        'name' => $value['name'],
+                        'validations' => $value['validations'],
+                        'order' => $index,
+                        'model_id' => $model->id
+                    ]
+                );
+            }
+
+            return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
             response()->json([], 500);
         }
@@ -57,18 +59,11 @@ class ContentModelController extends Controller
      */
     public function show(ContentModel $contentModel)
     {
-        //
-    }
+        if (empty($contentModel)) {
+            return response()->json([], 404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ContentModel  $contentModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ContentModel $contentModel)
-    {
-        //
+        return response()->json(['model' => $contentModel, 'fields' => $contentModel->fields()->get()], 200);
     }
 
     /**
@@ -78,9 +73,9 @@ class ContentModelController extends Controller
      * @param  \App\ContentModel  $contentModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ContentModel $contentModel)
+    public function update(ContentModelRequest $request, ContentModel $contentModel)
     {
-        //
+        $contentModel->update($request->only('_id', 'title', 'api_id', 'desc', 'published'));
     }
 
     /**

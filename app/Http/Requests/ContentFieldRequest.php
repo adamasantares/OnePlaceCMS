@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContentMoldelRequest extends FormRequest
+class ContentFieldRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,10 @@ class ContentMoldelRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'max:255|required',
-            'api_id' => 'max:255|unique:content_models,api_id,'.$this->segment(3).'|required',
-            'desc' => 'max:1024',
+            'name' => 'max:255|required',
+            'api_id' => 'max:255|unique:content_fields,api_id,'.$this->segment(3).'|required',
+            'list' => 'boolean',
+            'validations.*' => 'boolean'
         ];
     }
 }

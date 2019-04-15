@@ -12,7 +12,9 @@ export default {
         successMessage: '',
         errorMessage: [],
         contentModels: [],
-        sidebarShow: false
+        sidebarShow: false,
+        isCreateFieldFormDisplayed: false,
+        contentModelsFields: []
     },
     getters: {
         isLoading(state) {
@@ -41,6 +43,12 @@ export default {
         },
         sidebarShow(state) {
             return state.sidebarShow;
+        },
+        isCreateFieldFormDisplayed(state) {
+            return state.isCreateFieldFormDisplayed;
+        },
+        contentModelsFields(state) {
+            return state.contentModelsFields;
         }
     },
     mutations: {
@@ -79,6 +87,18 @@ export default {
         },
         sidebarShowToggle(state) {
             state.sidebarShow = !state.sidebarShow;
+        },
+        updateCreateFieldFormDisplay(state, payload) {
+            state.isCreateFieldFormDisplayed = payload;
+        },
+        addContentField(state, payload) {
+            state.contentModelsFields.push(payload);
+        },
+        removeContentField(state, id) {
+            // state.contentModelsFields.push(payload);
+        },
+        resetContentFields(state) {
+            state.contentModelsFields = [];
         }
     },
     actions: {

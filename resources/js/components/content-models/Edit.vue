@@ -21,7 +21,7 @@
                                         <div class="form-group">
                                             <label for="id-field">Api Identifier</label>
                                             <input v-model="fields.api_id" id="id-field" class="form-control"
-                                                   :class="errors && errors.api_id ? 'is-invalid' : ''">
+                                                   :class="errors && errors.api_id ? 'is-invalid' : ''" readonly>
                                             <div v-if="errors && errors.api_id" class="invalid-feedback">{{ errors.api_id[0] }}</div>
                                         </div>
                                         <div class="form-group">
@@ -69,30 +69,32 @@
             saveModel() {
                 this.fields.contentFields = this.contentFields;
 
-                axios.post('/api/content-model', this.fields).then(response => {
+                axios.put(`/api/content-model/${this.fields._id}`, this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
-                    this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
-                    this.$store.commit('resetContentFields');
+                    this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
-                    this.fields = {};
-
-                    this.$router.push(`/content/model/edit/${response.data._id}`)
-
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
                         this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', ["Model wasn't created"]);
+                        this.$store.commit('updateErrorMessage', ["Model wasn't updated"]);
                     } else {
                         this.errors = [];
                         this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', ["Error occurred while saving new model"]);
+                        this.$store.commit('updateErrorMessage', ["Error occurred while saving model"]);
                     }
                 });
             }
         },
         created() {
-            this.$store.commit('updateTitlePage', 'Create new model');
+            axios.get(`/api/content-model/${this.$route.params.id}`)
+                .then((response) => {
+                    this.fields = response.data.model;
+                    this.$store.commit('updateTitlePage', 'Edit ' + this.fields.title);
+                    response.data.fields.forEach((field) => {
+                        this.$store.commit('addContentField', field);
+                    });
+                });
         }
     }
 </script>

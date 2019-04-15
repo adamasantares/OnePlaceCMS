@@ -31,7 +31,7 @@
                         <td>{{ model.created_at }}</td>
                         <td>{{ model.updated_at }}</td>
                         <td>
-                            <router-link :to="{ path: `/content/model/${model._id}` }" class="btn btn btn-primary" >
+                            <router-link :to="{ path: `/content/model/edit/${model._id}` }" class="btn btn btn-primary" >
                                 <i class="fa fa-edit"></i>
                             </router-link>
                             <a @click.prevent="deleteModel(model)" href="#" title="Delete" class="btn btn btn-danger">
@@ -120,23 +120,26 @@
                         .then(() => {
                             this.$store.commit('updateErrorMessage', []);
                             this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-                            this.$store.dispatch('getContentModels', this.$route.query);
+                            this.getContentModels(this.$route.query);
                         }).catch(() => {
                             this.$store.commit('updateSuccessMessage', "");
                             this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
                         });
                 }
 
+            },
+            getContentModels(query) {
+                Object.assign(this.searchParams, query);
+                this.$store.dispatch('getContentModels', this.searchParams);
             }
         },
         beforeRouteUpdate (to, from, next) {
-            Object.assign(this.searchParams, to.query);
-            this.$store.dispatch('getContentModels', this.searchParams);
+            this.getContentModels(to.query);
             next();
         },
         mounted() {
             this.$store.commit('updateTitlePage', 'Models');
-            this.$store.dispatch('getContentModels', this.searchParams);
+            this.getContentModels({});
         }
     }
 </script>

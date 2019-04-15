@@ -12,4 +12,5 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::resource('content-model', 'ContentModelController');
+    Route::post('content-field/validate', 'ContentFieldController@validateFields');
 });
