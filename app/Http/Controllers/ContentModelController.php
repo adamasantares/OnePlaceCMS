@@ -75,7 +75,7 @@ class ContentModelController extends Controller
      */
     public function update(ContentModelRequest $request, ContentModel $contentModel)
     {
-        $contentModel->update($request->only('_id', 'title', 'api_id', 'desc', 'published'));
+        $contentModel->update($request->only('title', 'desc', 'published'));
     }
 
     /**
@@ -86,6 +86,7 @@ class ContentModelController extends Controller
      */
     public function destroy(ContentModel $contentModel)
     {
+        $contentModel->fields()->delete();
         $contentModel->delete();
     }
 }
