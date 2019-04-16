@@ -13,8 +13,9 @@ export default {
         errorMessage: [],
         contentModels: [],
         sidebarShow: false,
-        isCreateFieldFormDisplayed: false,
-        contentModelsFields: []
+        isFieldFormDisplayed: false,
+        contentModelsFields: [],
+        currentContentFieldType: {}
     },
     getters: {
         isLoading(state) {
@@ -44,11 +45,14 @@ export default {
         sidebarShow(state) {
             return state.sidebarShow;
         },
-        isCreateFieldFormDisplayed(state) {
-            return state.isCreateFieldFormDisplayed;
+        isFieldFormDisplayed(state) {
+            return state.isFieldFormDisplayed;
         },
         contentModelsFields(state) {
             return state.contentModelsFields;
+        },
+        currentContentFieldType(state) {
+            return state.currentContentFieldType;
         }
     },
     mutations: {
@@ -88,17 +92,22 @@ export default {
         sidebarShowToggle(state) {
             state.sidebarShow = !state.sidebarShow;
         },
-        updateCreateFieldFormDisplay(state, payload) {
-            state.isCreateFieldFormDisplayed = payload;
+        updateFieldFormDisplay(state, payload) {
+            state.isFieldFormDisplayed = payload;
         },
         addContentField(state, payload) {
             state.contentModelsFields.push(payload);
         },
-        removeContentField(state, id) {
-            // state.contentModelsFields.push(payload);
+        removeContentField(state, api_id) {
+            state.contentModelsFields = state.contentModelsFields.filter(function(field) {
+                return field.api_id != api_id;
+            });
         },
         resetContentFields(state) {
             state.contentModelsFields = [];
+        },
+        setCurrentContentFieldType(state, payload) {
+            state.currentContentFieldType = payload;
         }
     },
     actions: {

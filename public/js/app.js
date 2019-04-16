@@ -1979,7 +1979,8 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addField: function addField(type) {
       this.isOpened = false;
-      this.$store.commit('updateCreateFieldFormDisplay', true);
+      this.$store.commit('setCurrentContentFieldType', type);
+      this.$store.commit('updateFieldFormDisplay', true);
     }
   }
 });
@@ -2010,9 +2011,16 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     fieldProp: Object
   },
+  computed: {
+    fields: function fields() {
+      return this.$store.getters.contentModelsFields;
+    }
+  },
   methods: {
     editField: function editField() {},
-    deleteField: function deleteField() {}
+    deleteField: function deleteField() {
+      this.$store.commit('removeContentField', this.fieldProp.api_id);
+    }
   }
 });
 
@@ -2248,6 +2256,186 @@ __webpack_require__.r(__webpack_exports__);
         _this2.$store.commit('addContentField', field);
       });
     });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _fields_validations_TextValidations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fields-validations/TextValidations */ "./resources/js/components/content-models/fields-validations/TextValidations.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "CreateFieldModal",
+  components: {
+    TextValidations: _fields_validations_TextValidations__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      activeTab: 'settings',
+      errors: [],
+      fields: {
+        name: '',
+        api_id: '',
+        validations: {}
+      }
+    };
+  },
+  computed: {
+    isOpened: function isOpened() {
+      return this.$store.getters.isFieldFormDisplayed;
+    },
+    contentFields: function contentFields() {
+      return this.$store.getters.contentModelsFields;
+    },
+    fieldType: function fieldType() {
+      return this.$store.getters.currentContentFieldType;
+    }
+  },
+  methods: {
+    closeModal: function closeModal() {
+      this.$store.commit('updateFieldFormDisplay', false);
+    },
+    setActiveTab: function setActiveTab(tab) {
+      this.activeTab = tab;
+    },
+    resetFields: function resetFields() {
+      this.activeTab = 'settings';
+      this.fields.name = '';
+      this.fields.api_id = '';
+      this.fields.list = false;
+      this.fields.validations = {};
+      this.errors = [];
+    },
+    updateValidations: function updateValidations(validations) {
+      this.validations = validations;
+    },
+    validateOnStorage: function validateOnStorage() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        var self = _this;
+
+        var result = _this.contentFields.find(function (field) {
+          return field.api_id === self.fields.api_id;
+        });
+
+        if (result) {
+          _this.errors = [];
+          _this.errors["api_id"] = ["The api id has already been taken."];
+          reject();
+        } else {
+          resolve();
+        }
+      });
+    },
+    validateOnServer: function validateOnServer() {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        axios.post('/api/content-field/validate', _this2.fields).then(function (response) {
+          resolve();
+        }).catch(function (error) {
+          if (error.response.status === 422) {
+            _this2.errors = error.response.data.errors || {};
+
+            _this2.$store.commit('updateSuccessMessage', "");
+
+            _this2.$store.commit('updateErrorMessage', ["Field " + _this2.fields.name + " incorrect"]);
+          } else {
+            _this2.$store.commit('updateSuccessMessage', "");
+
+            _this2.$store.commit('updateErrorMessage', ["Server error"]);
+          }
+
+          reject();
+        });
+      });
+    },
+    submit: function submit() {
+      var _this3 = this;
+
+      this.validateOnStorage().then(function (resolve) {
+        _this3.validateOnServer().then(function (resolve) {
+          var field = Object.assign({}, _this3.fields);
+
+          _this3.$store.commit('addContentField', field);
+
+          _this3.closeModal();
+
+          _this3.resetFields();
+        }, function (reject) {});
+      }, function (reject) {});
+    }
   }
 });
 
@@ -2516,10 +2704,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2557,170 +2745,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "CreateFieldModal",
+  name: "TextValidations",
   data: function data() {
     return {
-      activeTab: 'settings',
-      errors: [],
-      fields: {
-        type: 'text',
-        name: '',
-        api_id: '',
-        list: false,
-        validations: {}
-      },
-      error_api: ''
+      validations: {}
     };
   },
-  computed: {
-    isOpened: function isOpened() {
-      return this.$store.getters.isCreateFieldFormDisplayed;
-    },
-    contentFields: function contentFields() {
-      return this.$store.getters.contentModelsFields;
-    }
-  },
-  methods: {
-    closeModal: function closeModal() {
-      this.$store.commit('updateCreateFieldFormDisplay', false);
-    },
-    setActiveTab: function setActiveTab(tab) {
-      this.activeTab = tab;
-    },
-    resetFields: function resetFields() {
-      this.fields.name = '';
-      this.fields.api_id = '';
-      this.fields.list = false;
-      this.fields.validations = {};
-      this.errors = [];
-    },
-    validateOnStorage: function validateOnStorage() {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        var self = _this;
-
-        var result = _this.contentFields.find(function (field) {
-          return field.api_id === self.fields.api_id;
-        });
-
-        if (result) {
-          _this.errors = [];
-          _this.errors["api_id"] = ["The api id has already been taken."];
-          reject();
-        } else {
-          resolve();
-        }
-      });
-    },
-    validateOnServer: function validateOnServer() {
-      var _this2 = this;
-
-      return new Promise(function (resolve, reject) {
-        axios.post('/api/content-field/validate', _this2.fields).then(function (response) {
-          resolve();
-        }).catch(function (error) {
-          if (error.response.status === 422) {
-            _this2.errors = error.response.data.errors || {};
-
-            _this2.$store.commit('updateSuccessMessage', "");
-
-            _this2.$store.commit('updateErrorMessage', ["Field " + _this2.fields.name + " incorrect"]);
-          } else {
-            _this2.$store.commit('updateSuccessMessage', "");
-
-            _this2.$store.commit('updateErrorMessage', ["Server error"]);
-          }
-
-          reject();
-        });
-      });
-    },
-    submit: function submit() {
-      var _this3 = this;
-
-      this.validateOnStorage().then(function (resolve) {
-        _this3.validateOnServer().then(function (resolve) {
-          var field = Object.assign({}, _this3.fields);
-
-          _this3.$store.commit('addContentField', field);
-
-          _this3.resetFields();
-
-          _this3.closeModal();
-        }, function (reject) {});
-      }, function (reject) {});
+  watch: {
+    validations: function validations() {
+      this.$emit('update-validations', this.validations);
     }
   }
 });
@@ -6642,6 +6676,25 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "#textFieldModal .tab-pane {\n  padding: 20px 0;\n}\n#textFieldModal .nav.nav-tabs {\n  outline: none;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldsList.vue?vue&type=style&index=0&lang=scss&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldsList.vue?vue&type=style&index=0&lang=scss& ***!
@@ -6655,25 +6708,6 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".he-tree {\n  border: 1px solid #ccc;\n  padding: 20px;\n}\n.tree-node-inner {\n  padding: 5px;\n  border: 1px solid #ccc;\n  cursor: pointer;\n}\n.draggable-placeholder-inner {\n  border: 1px dashed #0088F8;\n  box-sizing: border-box;\n  background: rgba(0, 136, 249, 0.09);\n  color: #0088f9;\n  text-align: center;\n  padding: 0;\n  display: flex;\n  align-items: center;\n}\n.tree3 .tree-node-inner {\n  border: none;\n  padding: 0px;\n}\n.tree3 .tree-node-inner-back:hover {\n  background: #ddd;\n}\n.tree4 .tree-node-inner {\n  border: none;\n  border-bottom: 1px solid #ccc;\n  padding: 5px 10px;\n  backgroud: #ccc;\n}\n.tree4 .draggable-placeholder-inner {\n  background-color: orangered;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "#textFieldModal .tab-pane {\n  padding: 20px 0;\n}\n#textFieldModal .nav.nav-tabs {\n  outline: none;\n}", ""]);
 
 // exports
 
@@ -26950,6 +26984,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../../node_modules/vue-loader/lib??vue-loader-options!./FieldModal.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldsList.vue?vue&type=style&index=0&lang=scss&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldsList.vue?vue&type=style&index=0&lang=scss& ***!
@@ -26973,36 +27037,6 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&":
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss& ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateFieldModal.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -30277,11 +30311,11 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  return _vm.addField("text")
+                  return _vm.addField("dropdown")
                 }
               }
             },
-            [_vm._v("Select field")]
+            [_vm._v("Dropdown")]
           )
         ]
       )
@@ -30576,7 +30610,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("create-field-modal")
+      _c("field-modal")
     ],
     1
   )
@@ -30822,7 +30856,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("create-field-modal")
+      _c("field-modal")
     ],
     1
   )
@@ -30837,6 +30871,294 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "textFieldModal" } }, [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        class: { show: _vm.isOpened },
+        style: { display: this.isOpened ? "block" : "none" }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-lg modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-header" }, [
+                    _c("h5", { staticClass: "modal-title" }, [
+                      _vm._v("Create field")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      {
+                        staticClass: "nav nav-pills pull-right",
+                        attrs: { id: "pills-tab", role: "tablist" }
+                      },
+                      [
+                        _c("li", { staticClass: "nav-item" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "nav-link",
+                              class:
+                                _vm.activeTab == "settings" ? "active" : "",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.setActiveTab("settings")
+                                }
+                              }
+                            },
+                            [_vm._v("Settings")]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("li", { staticClass: "nav-item" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "nav-link",
+                              class:
+                                _vm.activeTab == "validations" ? "active" : "",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.setActiveTab("validations")
+                                }
+                              }
+                            },
+                            [_vm._v("Validations")]
+                          )
+                        ])
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tab-content",
+                        attrs: { id: "pills-tabContent" }
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "tab-pane fade",
+                            class:
+                              _vm.activeTab == "settings" ? "show active" : ""
+                          },
+                          [
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-6" }, [
+                                _c("div", { staticClass: "form-group" }, [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "name-input" } },
+                                    [_vm._v("Name")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.fields.name,
+                                        expression: "fields.name"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    class:
+                                      _vm.errors && _vm.errors.name
+                                        ? "is-invalid"
+                                        : "",
+                                    attrs: {
+                                      id: "name-input",
+                                      type: "text",
+                                      placeholder: "Enter name"
+                                    },
+                                    domProps: { value: _vm.fields.name },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.fields,
+                                          "name",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.errors && _vm.errors.name
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "invalid-feedback" },
+                                        [_vm._v(_vm._s(_vm.errors.name[0]))]
+                                      )
+                                    : _vm._e()
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-6" }, [
+                                _c("div", { staticClass: "form-group" }, [
+                                  _c("label", { attrs: { for: "id-input" } }, [
+                                    _vm._v("Field ID")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.fields.api_id,
+                                        expression: "fields.api_id"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    class:
+                                      _vm.errors && _vm.errors.api_id
+                                        ? "is-invalid"
+                                        : "",
+                                    attrs: {
+                                      id: "id-input",
+                                      type: "text",
+                                      placeholder: "Enter field ID"
+                                    },
+                                    domProps: { value: _vm.fields.api_id },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.fields,
+                                          "api_id",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.errors && _vm.errors.api_id
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "invalid-feedback" },
+                                        [_vm._v(_vm._s(_vm.errors.api_id[0]))]
+                                      )
+                                    : _vm._e()
+                                ])
+                              ])
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "tab-pane fade",
+                            class:
+                              _vm.activeTab == "validations"
+                                ? "show active"
+                                : ""
+                          },
+                          [
+                            _vm.fieldType == "text"
+                              ? _c("text-validations", {
+                                  on: {
+                                    "update-validations": _vm.updateValidations
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c("input", {
+                      staticClass: "btn btn-success",
+                      attrs: { name: "save", type: "submit", value: "Save" }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary",
+                        attrs: { type: "button", "data-dismiss": "modal" },
+                        on: {
+                          click: function($event) {
+                            _vm.resetFields()
+                            _vm.closeModal()
+                          }
+                        }
+                      },
+                      [_vm._v("Close")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _vm.isOpened
+      ? _c("div", {
+          staticClass: "modal-backdrop fade show",
+          on: {
+            click: function($event) {
+              return _vm.closeModal()
+            }
+          }
+        })
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -31176,10 +31498,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e&":
-/*!***********************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e& ***!
-  \***********************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -31191,628 +31513,204 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "textFieldModal" } }, [
-    _c(
-      "div",
-      {
-        staticClass: "modal fade",
-        class: { show: _vm.isOpened },
-        style: { display: this.isOpened ? "block" : "none" }
-      },
-      [
-        _c(
-          "div",
+  return _c("div", [
+    _c("div", { staticClass: "form-check" }, [
+      _c("input", {
+        directives: [
           {
-            staticClass: "modal-dialog modal-lg modal-dialog-centered",
-            attrs: { role: "document" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c(
-                "form",
-                {
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.submit($event)
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "modal-header" }, [
-                    _c("h5", { staticClass: "modal-title" }, [
-                      _vm._v("Create field")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "ul",
-                      {
-                        staticClass: "nav nav-pills pull-right",
-                        attrs: { id: "pills-tab", role: "tablist" }
-                      },
-                      [
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "nav-link",
-                              class:
-                                _vm.activeTab == "settings" ? "active" : "",
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.setActiveTab("settings")
-                                }
-                              }
-                            },
-                            [_vm._v("Settings")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", { staticClass: "nav-item" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "nav-link",
-                              class:
-                                _vm.activeTab == "validations" ? "active" : "",
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.setActiveTab("validations")
-                                }
-                              }
-                            },
-                            [_vm._v("Validations")]
-                          )
-                        ])
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-body" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "tab-content",
-                        attrs: { id: "pills-tabContent" }
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane fade",
-                            class:
-                              _vm.activeTab == "settings" ? "show active" : ""
-                          },
-                          [
-                            _c("div", { staticClass: "row" }, [
-                              _c("div", { staticClass: "col-6" }, [
-                                _c("div", { staticClass: "form-group" }, [
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "name-input" } },
-                                    [_vm._v("Name")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.fields.name,
-                                        expression: "fields.name"
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    class:
-                                      _vm.errors && _vm.errors.name
-                                        ? "is-invalid"
-                                        : "",
-                                    attrs: {
-                                      id: "name-input",
-                                      type: "text",
-                                      placeholder: "Enter name"
-                                    },
-                                    domProps: { value: _vm.fields.name },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          _vm.fields,
-                                          "name",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _vm.errors && _vm.errors.name
-                                    ? _c(
-                                        "div",
-                                        { staticClass: "invalid-feedback" },
-                                        [_vm._v(_vm._s(_vm.errors.name[0]))]
-                                      )
-                                    : _vm._e()
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "col-6" }, [
-                                _c("div", { staticClass: "form-group" }, [
-                                  _c("label", { attrs: { for: "id-input" } }, [
-                                    _vm._v("Field ID")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.fields.api_id,
-                                        expression: "fields.api_id"
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    class:
-                                      _vm.errors && _vm.errors.api_id
-                                        ? "is-invalid"
-                                        : "",
-                                    attrs: {
-                                      id: "id-input",
-                                      type: "text",
-                                      placeholder: "Enter field ID"
-                                    },
-                                    domProps: { value: _vm.fields.api_id },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          _vm.fields,
-                                          "api_id",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _vm.errors && _vm.errors.api_id
-                                    ? _c(
-                                        "div",
-                                        { staticClass: "invalid-feedback" },
-                                        [_vm._v(_vm._s(_vm.errors.api_id[0]))]
-                                      )
-                                    : _vm._e()
-                                ])
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "row" }, [
-                              _c("div", { staticClass: "col-6" }, [
-                                _c("div", { staticClass: "form-check" }, [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.fields.list,
-                                        expression: "fields.list"
-                                      }
-                                    ],
-                                    staticClass: "form-check-input",
-                                    class:
-                                      _vm.errors && _vm.errors.list
-                                        ? "is-invalid"
-                                        : "",
-                                    attrs: {
-                                      type: "checkbox",
-                                      id: "list-check"
-                                    },
-                                    domProps: {
-                                      checked: Array.isArray(_vm.fields.list)
-                                        ? _vm._i(_vm.fields.list, null) > -1
-                                        : _vm.fields.list
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        var $$a = _vm.fields.list,
-                                          $$el = $event.target,
-                                          $$c = $$el.checked ? true : false
-                                        if (Array.isArray($$a)) {
-                                          var $$v = null,
-                                            $$i = _vm._i($$a, $$v)
-                                          if ($$el.checked) {
-                                            $$i < 0 &&
-                                              _vm.$set(
-                                                _vm.fields,
-                                                "list",
-                                                $$a.concat([$$v])
-                                              )
-                                          } else {
-                                            $$i > -1 &&
-                                              _vm.$set(
-                                                _vm.fields,
-                                                "list",
-                                                $$a
-                                                  .slice(0, $$i)
-                                                  .concat($$a.slice($$i + 1))
-                                              )
-                                          }
-                                        } else {
-                                          _vm.$set(_vm.fields, "list", $$c)
-                                        }
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    {
-                                      staticClass: "form-check-label",
-                                      attrs: { for: "list-check" }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                                    List\n                                                "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm.errors && _vm.errors.list
-                                    ? _c(
-                                        "div",
-                                        { staticClass: "invalid-feedback" },
-                                        [_vm._v(_vm._s(_vm.errors.list[0]))]
-                                      )
-                                    : _vm._e()
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane fade",
-                            class:
-                              _vm.activeTab == "validations"
-                                ? "show active"
-                                : ""
-                          },
-                          [
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fields.validations.required,
-                                    expression: "fields.validations.required"
-                                  }
-                                ],
-                                staticClass: "form-check-input",
-                                attrs: {
-                                  type: "checkbox",
-                                  id: "required-rule"
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fields.validations.required
-                                  )
-                                    ? _vm._i(
-                                        _vm.fields.validations.required,
-                                        null
-                                      ) > -1
-                                    : _vm.fields.validations.required
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.fields.validations.required,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "required",
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "required",
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fields.validations,
-                                        "required",
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "form-check-label",
-                                  attrs: { for: "required-rule" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            Required\n                                        "
-                                  )
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fields.validations.unique,
-                                    expression: "fields.validations.unique"
-                                  }
-                                ],
-                                staticClass: "form-check-input",
-                                attrs: { type: "checkbox", id: "unique-rule" },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fields.validations.unique
-                                  )
-                                    ? _vm._i(
-                                        _vm.fields.validations.unique,
-                                        null
-                                      ) > -1
-                                    : _vm.fields.validations.unique
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.fields.validations.unique,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "unique",
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "unique",
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fields.validations,
-                                        "unique",
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "form-check-label",
-                                  attrs: { for: "unique-rule" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            Unique\n                                        "
-                                  )
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fields.validations.email,
-                                    expression: "fields.validations.email"
-                                  }
-                                ],
-                                staticClass: "form-check-input",
-                                attrs: { type: "checkbox", id: "email-rule" },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fields.validations.email
-                                  )
-                                    ? _vm._i(
-                                        _vm.fields.validations.email,
-                                        null
-                                      ) > -1
-                                    : _vm.fields.validations.email
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.fields.validations.email,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "email",
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "email",
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fields.validations,
-                                        "email",
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "form-check-label",
-                                  attrs: { for: "email-rule" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            E-mail\n                                        "
-                                  )
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-check" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fields.validations.url,
-                                    expression: "fields.validations.url"
-                                  }
-                                ],
-                                staticClass: "form-check-input",
-                                attrs: { type: "checkbox", id: "url-rule" },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fields.validations.url
-                                  )
-                                    ? _vm._i(_vm.fields.validations.url, null) >
-                                      -1
-                                    : _vm.fields.validations.url
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.fields.validations.url,
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "url",
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fields.validations,
-                                            "url",
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fields.validations,
-                                        "url",
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "form-check-label",
-                                  attrs: { for: "url-rule" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            URL\n                                        "
-                                  )
-                                ]
-                              )
-                            ])
-                          ]
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c("input", {
-                      staticClass: "btn btn-success",
-                      attrs: { name: "save", type: "submit", value: "Save" }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-secondary",
-                        attrs: { type: "button", "data-dismiss": "modal" },
-                        on: {
-                          click: function($event) {
-                            _vm.resetFields()
-                            _vm.closeModal()
-                          }
-                        }
-                      },
-                      [_vm._v("Close")]
-                    )
-                  ])
-                ]
-              )
-            ])
-          ]
-        )
-      ]
-    ),
+            name: "model",
+            rawName: "v-model",
+            value: _vm.validations.required,
+            expression: "validations.required"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "checkbox", id: "required-rule" },
+        domProps: {
+          checked: Array.isArray(_vm.validations.required)
+            ? _vm._i(_vm.validations.required, null) > -1
+            : _vm.validations.required
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.validations.required,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 &&
+                  _vm.$set(_vm.validations, "required", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.validations,
+                    "required",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.validations, "required", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "required-rule" } },
+        [_vm._v("\n            Required\n        ")]
+      )
+    ]),
     _vm._v(" "),
-    _vm.isOpened
-      ? _c("div", {
-          staticClass: "modal-backdrop fade show",
-          on: { click: _vm.closeModal }
-        })
-      : _vm._e()
+    _c("div", { staticClass: "form-check" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.validations.unique,
+            expression: "validations.unique"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "checkbox", id: "unique-rule" },
+        domProps: {
+          checked: Array.isArray(_vm.validations.unique)
+            ? _vm._i(_vm.validations.unique, null) > -1
+            : _vm.validations.unique
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.validations.unique,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 &&
+                  _vm.$set(_vm.validations, "unique", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.validations,
+                    "unique",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.validations, "unique", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "unique-rule" } },
+        [_vm._v("\n            Unique\n        ")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-check" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.validations.email,
+            expression: "validations.email"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "checkbox", id: "email-rule" },
+        domProps: {
+          checked: Array.isArray(_vm.validations.email)
+            ? _vm._i(_vm.validations.email, null) > -1
+            : _vm.validations.email
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.validations.email,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && _vm.$set(_vm.validations, "email", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.validations,
+                    "email",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.validations, "email", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "email-rule" } },
+        [_vm._v("\n            E-mail\n        ")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-check" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.validations.url,
+            expression: "validations.url"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "checkbox", id: "url-rule" },
+        domProps: {
+          checked: Array.isArray(_vm.validations.url)
+            ? _vm._i(_vm.validations.url, null) > -1
+            : _vm.validations.url
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.validations.url,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && _vm.$set(_vm.validations, "url", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.validations,
+                    "url",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
+            } else {
+              _vm.$set(_vm.validations, "url", $$c)
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        { staticClass: "form-check-label", attrs: { for: "url-rule" } },
+        [_vm._v("\n            URL\n        ")]
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -49075,6 +48973,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/content-models/FieldModal.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/content-models/FieldModal.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FieldModal.vue?vue&type=template&id=b55d6eae& */ "./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae&");
+/* harmony import */ var _FieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FieldModal.vue?vue&type=script&lang=js& */ "./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FieldModal.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _FieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/content-models/FieldModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./FieldModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss& ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../../node_modules/vue-loader/lib??vue-loader-options!./FieldModal.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./FieldModal.vue?vue&type=template&id=b55d6eae& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/FieldModal.vue?vue&type=template&id=b55d6eae&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FieldModal_vue_vue_type_template_id_b55d6eae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/content-models/FieldsList.vue":
 /*!***************************************************************!*\
   !*** ./resources/js/components/content-models/FieldsList.vue ***!
@@ -49336,20 +49321,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue ***!
-  \**********************************************************************************/
+/***/ "./resources/js/components/content-models/fields-validations/TextValidations.vue":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/content-models/fields-validations/TextValidations.vue ***!
+  \***************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateFieldModal.vue?vue&type=template&id=eda02d4e& */ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e&");
-/* harmony import */ var _CreateFieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateFieldModal.vue?vue&type=script&lang=js& */ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CreateFieldModal.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* harmony import */ var _TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TextValidations.vue?vue&type=template&id=780b99ba&scoped=true& */ "./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true&");
+/* harmony import */ var _TextValidations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TextValidations.vue?vue&type=script&lang=js& */ "./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -49357,67 +49340,51 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _CreateFieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TextValidations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "780b99ba",
   null
   
 )
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/content-models/fieldsModals/CreateFieldModal.vue"
+component.options.__file = "resources/js/components/content-models/fields-validations/TextValidations.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************!*\
-  !*** ./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************/
+/***/ "./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************!*\
+  !*** ./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateFieldModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextValidations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextValidations.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextValidations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&":
-/*!********************************************************************************************************************!*\
-  !*** ./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss& ***!
-  \********************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateFieldModal.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=style&index=0&lang=scss&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e&":
-/*!*****************************************************************************************************************!*\
-  !*** ./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e& ***!
-  \*****************************************************************************************************************/
+/***/ "./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true&":
+/*!**********************************************************************************************************************************!*\
+  !*** ./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true& ***!
+  \**********************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateFieldModal.vue?vue&type=template&id=eda02d4e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue?vue&type=template&id=eda02d4e&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextValidations.vue?vue&type=template&id=780b99ba&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/content-models/fields-validations/TextValidations.vue?vue&type=template&id=780b99ba&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateFieldModal_vue_vue_type_template_id_eda02d4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextValidations_vue_vue_type_template_id_780b99ba_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -50438,14 +50405,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_content_models_AddFieldBtn__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../components/content-models/AddFieldBtn */ "./resources/js/components/content-models/AddFieldBtn.vue");
 /* harmony import */ var _components_template_components_PublishToggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../components/template-components/PublishToggle */ "./resources/js/components/template-components/PublishToggle.vue");
 /* harmony import */ var _components_content_models_FieldsList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../components/content-models/FieldsList */ "./resources/js/components/content-models/FieldsList.vue");
-/* harmony import */ var _components_content_models_fieldsModals_CreateFieldModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../components/content-models/fieldsModals/CreateFieldModal */ "./resources/js/components/content-models/fieldsModals/CreateFieldModal.vue");
+/* harmony import */ var _components_content_models_FieldModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../components/content-models/FieldModal */ "./resources/js/components/content-models/FieldModal.vue");
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    CreateFieldModal: _components_content_models_fieldsModals_CreateFieldModal__WEBPACK_IMPORTED_MODULE_3__["default"],
+    FieldModal: _components_content_models_FieldModal__WEBPACK_IMPORTED_MODULE_3__["default"],
     FieldsList: _components_content_models_FieldsList__WEBPACK_IMPORTED_MODULE_2__["default"],
     AddFieldBtn: _components_content_models_AddFieldBtn__WEBPACK_IMPORTED_MODULE_0__["default"],
     PublishToggle: _components_template_components_PublishToggle__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -50565,8 +50532,9 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     errorMessage: [],
     contentModels: [],
     sidebarShow: false,
-    isCreateFieldFormDisplayed: false,
-    contentModelsFields: []
+    isFieldFormDisplayed: false,
+    contentModelsFields: [],
+    currentContentFieldType: {}
   },
   getters: {
     isLoading: function isLoading(state) {
@@ -50596,11 +50564,14 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     sidebarShow: function sidebarShow(state) {
       return state.sidebarShow;
     },
-    isCreateFieldFormDisplayed: function isCreateFieldFormDisplayed(state) {
-      return state.isCreateFieldFormDisplayed;
+    isFieldFormDisplayed: function isFieldFormDisplayed(state) {
+      return state.isFieldFormDisplayed;
     },
     contentModelsFields: function contentModelsFields(state) {
       return state.contentModelsFields;
+    },
+    currentContentFieldType: function currentContentFieldType(state) {
+      return state.currentContentFieldType;
     }
   },
   mutations: {
@@ -50641,16 +50612,22 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     sidebarShowToggle: function sidebarShowToggle(state) {
       state.sidebarShow = !state.sidebarShow;
     },
-    updateCreateFieldFormDisplay: function updateCreateFieldFormDisplay(state, payload) {
-      state.isCreateFieldFormDisplayed = payload;
+    updateFieldFormDisplay: function updateFieldFormDisplay(state, payload) {
+      state.isFieldFormDisplayed = payload;
     },
     addContentField: function addContentField(state, payload) {
       state.contentModelsFields.push(payload);
     },
-    removeContentField: function removeContentField(state, id) {// state.contentModelsFields.push(payload);
+    removeContentField: function removeContentField(state, api_id) {
+      state.contentModelsFields = state.contentModelsFields.filter(function (field) {
+        return field.api_id != api_id;
+      });
     },
     resetContentFields: function resetContentFields(state) {
       state.contentModelsFields = [];
+    },
+    setCurrentContentFieldType: function setCurrentContentFieldType(state, payload) {
+      state.currentContentFieldType = payload;
     }
   },
   actions: {

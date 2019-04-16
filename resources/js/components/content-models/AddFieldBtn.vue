@@ -5,7 +5,7 @@
         </button>
         <div :class="{ show: isOpened }" class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
             <a @click="addField('text')" class="dropdown-item" href="#">Text field</a>
-            <a @click="addField('text')" class="dropdown-item" href="#">Select field</a>
+            <a @click="addField('dropdown')" class="dropdown-item" href="#">Dropdown</a>
         </div>
     </div>
 </template>
@@ -21,7 +21,8 @@
         methods: {
             addField(type) {
                 this.isOpened = false;
-                this.$store.commit('updateCreateFieldFormDisplay', true);
+                this.$store.commit('setCurrentContentFieldType', type);
+                this.$store.commit('updateFieldFormDisplay', true);
             }
         }
     }

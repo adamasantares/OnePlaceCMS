@@ -14,12 +14,17 @@
         props: {
             fieldProp: Object
         },
+        computed: {
+            fields() {
+                return this.$store.getters.contentModelsFields;
+            }
+        },
         methods: {
             editField() {
 
             },
             deleteField() {
-
+                this.$store.commit('removeContentField', this.fieldProp.api_id);
             }
         }
     }

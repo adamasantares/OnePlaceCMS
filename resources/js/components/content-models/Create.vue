@@ -55,7 +55,7 @@
                 <!-- /.card-footer-->
             </div>
         </form>
-        <create-field-modal></create-field-modal>
+        <field-modal></field-modal>
     </div>
 </template>
 

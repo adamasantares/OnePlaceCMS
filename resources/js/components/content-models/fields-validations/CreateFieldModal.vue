@@ -57,33 +57,7 @@
                                     </div>
                                     <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
 
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" v-model="fields.validations.required" id="required-rule">
-                                            <label class="form-check-label" for="required-rule">
-                                                Required
-                                            </label>
-                                        </div>
 
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" v-model="fields.validations.unique" id="unique-rule">
-                                            <label class="form-check-label" for="unique-rule">
-                                                Unique
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" v-model="fields.validations.email" id="email-rule">
-                                            <label class="form-check-label" for="email-rule">
-                                                E-mail
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" v-model="fields.validations.url"  id="url-rule">
-                                            <label class="form-check-label" for="url-rule">
-                                                URL
-                                            </label>
-                                        </div>
 
                                     </div>
                                 </div>
@@ -101,6 +75,8 @@
 </template>
 
 <script>
+
+
     export default {
         name: "CreateFieldModal",
         data() {
@@ -119,7 +95,7 @@
         },
         computed: {
             isOpened() {
-                return this.$store.getters.isCreateFieldFormDisplayed;
+                return this.$store.getters.isFieldFormDisplayed;
             },
             contentFields() {
                 return this.$store.getters.contentModelsFields;
@@ -127,7 +103,7 @@
         },
         methods: {
             closeModal() {
-                this.$store.commit('updateCreateFieldFormDisplay', false);
+                this.$store.commit('updateFieldFormDisplay', false);
             },
             setActiveTab(tab) {
                 this.activeTab = tab;

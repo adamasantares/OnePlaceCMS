@@ -1,11 +1,10 @@
-
 import AddFieldBtn from "./../components/content-models/AddFieldBtn";
 import PublishToggle from "./../components/template-components/PublishToggle";
 import FieldsList from "./../components/content-models/FieldsList";
-import CreateFieldModal from "./../components/content-models/fieldsModals/CreateFieldModal";
+import FieldModal from "./../components/content-models/FieldModal";
 
 export default {
-    components: {CreateFieldModal, FieldsList, AddFieldBtn, PublishToggle},
+    components: {FieldModal, FieldsList, AddFieldBtn, PublishToggle},
 
     data() {
         return {
@@ -26,11 +25,13 @@ export default {
     },
 
     methods: {
+
         onChangePublished(value) {
             this.fields.published = value;
         },
 
     },
+
     created() {
         this.$store.commit('resetContentFields');
     }
