@@ -44,7 +44,7 @@
 
                                 </div>
                                 <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
-                                    <text-validations v-if="fieldType == 'text'" @update-validations="updateValidations"></text-validations>
+                                    <text-validations v-if="fieldType == 'text'" :validations-prop="fields.validations" @update-validations="updateValidations"></text-validations>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div @click="closeModal()" v-if="isOpened" class="modal-backdrop fade show"></div>
+        <div @click="resetFields(); closeModal()" v-if="isOpened" class="modal-backdrop fade show"></div>
     </div>
 </template>
 
@@ -106,7 +106,7 @@
                 this.errors = [];
             },
             updateValidations(validations) {
-                this.validations = validations;
+                this.fields.validations = validations;
             },
             validateOnStorage() {
                 return new Promise((resolve, reject) => {

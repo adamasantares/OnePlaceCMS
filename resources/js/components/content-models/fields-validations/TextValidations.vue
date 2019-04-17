@@ -41,8 +41,11 @@
             }
         },
         watch: {
-            validations: function () {
-                this.$emit('update-validations', this.validations);
+            validations: {
+                handler(){
+                    this.$emit('update-validations', this.validations);
+                },
+                deep: true
             }
         }
     }
