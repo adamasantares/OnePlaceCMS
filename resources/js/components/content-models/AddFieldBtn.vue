@@ -21,7 +21,7 @@
         methods: {
             addField(type) {
                 this.isOpened = false;
-                this.$store.commit('setCurrentContentFieldType', type);
+                this.$store.commit('setCurrentContentField', {type: type, status: 'new'});
                 this.$store.commit('updateFieldFormDisplay', true);
             }
         }

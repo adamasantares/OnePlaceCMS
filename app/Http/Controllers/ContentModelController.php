@@ -38,6 +38,7 @@ class ContentModelController extends Controller
                     [
                         'api_id' => $value['api_id'],
                         'name' => $value['name'],
+                        'type' => $value['type'],
                         'validations' => $value['validations'],
                         'order' => $index,
                         'model_id' => $model->id
@@ -47,7 +48,7 @@ class ContentModelController extends Controller
 
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
-            response()->json([], 500);
+            return response()->json([], 500);
         }
     }
 
@@ -75,7 +76,39 @@ class ContentModelController extends Controller
      */
     public function update(ContentModelRequest $request, ContentModel $contentModel)
     {
-        $contentModel->update($request->only('title', 'desc', 'published'));
+        try {
+            $contentModel->update($request->only('title', 'desc', 'published'));
+            $contentModelFieldsIds = $contentModel->fields()->get()->pluck('_id')->toArray();
+
+            $fields = $request->input('contentFields');
+            $fieldsIds = [];
+
+            foreach ($fields as $index => $value) {
+
+                $field =  ContentField::updateOrCreate(
+                    [
+                        'api_id' => $value['api_id']
+                    ],
+                    [
+                        'name' => $value['name'],
+                        'type' => $value['type'],
+                        'validations' => $value['validations'],
+                        'order' => $index,
+                        'model_id' => $contentModel->id
+                    ]
+                );
+
+                array_push($fieldsIds, $field->id);
+            }
+
+            $fieldsIdsForDelete = array_diff($contentModelFieldsIds, $fieldsIds);
+
+            ContentField::destroy($fieldsIdsForDelete);
+
+            return response()->json([], 200);
+        } catch (\Exception $e) {
+            return response()->json([], 500);
+        }
     }
 
     /**

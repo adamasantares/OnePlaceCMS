@@ -36,7 +36,9 @@
                                                 <input v-model="fields.api_id" id="id-input" type="text"
                                                        class="form-control"
                                                        :class="errors && errors.api_id ? 'is-invalid' : ''"
-                                                       placeholder="Enter field ID">
+                                                       placeholder="Enter field ID"
+                                                       :readonly="fields._id"
+                                                       >
                                                 <div v-if="errors && errors.api_id" class="invalid-feedback">{{ errors.api_id[0] }}</div>
                                             </div>
                                         </div>
@@ -44,7 +46,7 @@
 
                                 </div>
                                 <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
-                                    <text-validations v-if="fieldType == 'text'" :validations-prop="fields.validations" @update-validations="updateValidations"></text-validations>
+                                    <text-validations v-if="fieldType == 'text'"></text-validations>
                                 </div>
                             </div>
                         </div>
@@ -72,11 +74,6 @@
             return {
                 activeTab: 'settings',
                 errors: [],
-                fields: {
-                    name: '',
-                    api_id: '',
-                    validations: {}
-                }
             }
         },
         computed: {
@@ -86,8 +83,20 @@
             contentFields() {
                 return this.$store.getters.contentModelsFields;
             },
+            fields() {
+                return {
+                    _id: this.$store.getters.currentContentField._id,
+                    name: this.$store.getters.currentContentField.name,
+                    api_id: this.$store.getters.currentContentField.api_id,
+                    type: this.$store.getters.currentContentField.type,
+                    validations: this.$store.getters.currentContentField.validations
+                }
+            },
             fieldType() {
-                return this.$store.getters.currentContentFieldType;
+                return this.$store.getters.currentContentField.type;
+            },
+            validations() {
+                return this.$store.getters.currentValidationsRules;
             }
         },
         methods: {
@@ -99,21 +108,17 @@
             },
             resetFields() {
                 this.activeTab = 'settings';
-                this.fields.name = '';
-                this.fields.api_id = '';
-                this.fields.list = false;
-                this.fields.validations = {};
                 this.errors = [];
-            },
-            updateValidations(validations) {
-                this.fields.validations = validations;
+                this.$store.commit('resetCurrentContentField');
+                this.$store.commit('resetCurrentValidationsRules');
             },
             validateOnStorage() {
                 return new Promise((resolve, reject) => {
+
                     var self = this;
 
                     let result = this.contentFields.find(function (field) {
-                            return field.api_id === self.fields.api_id;
+                            return field._id && field._id !== self.fields._id && field.api_id === self.fields.api_id;
                         }
                     );
 
@@ -148,7 +153,16 @@
                     .then(resolve => {
                         this.validateOnServer().then(resolve => {
                             let field = Object.assign({}, this.fields);
-                            this.$store.commit('addContentField', field);
+                            field.validations = this.validations;
+
+                            if(field._id) {
+                                this.$store.commit('updateContentField', field);
+                            } else {
+                                this.$store.commit('addContentField', field);
+                            }
+
+
+
                             this.closeModal();
                             this.resetFields();
                         },

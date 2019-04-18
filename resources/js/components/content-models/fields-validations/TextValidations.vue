@@ -33,19 +33,14 @@
 <script>
     export default {
         name: "TextValidations",
-        data() {
-            return {
-                validations: {
-
-                }
-            }
-        },
-        watch: {
+        computed: {
             validations: {
-                handler(){
-                    this.$emit('update-validations', this.validations);
+                get() {
+                    return this.$store.getters.currentValidationsRules;
                 },
-                deep: true
+                set(value) {
+                    this.$store.commit('setCurrentValidationsRules', value);
+                }
             }
         }
     }

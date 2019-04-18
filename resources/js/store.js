@@ -15,7 +15,8 @@ export default {
         sidebarShow: false,
         isFieldFormDisplayed: false,
         contentModelsFields: [],
-        currentContentFieldType: {}
+        currentContentField: {},
+        currentValidationsRules: {}
     },
     getters: {
         isLoading(state) {
@@ -51,8 +52,11 @@ export default {
         contentModelsFields(state) {
             return state.contentModelsFields;
         },
-        currentContentFieldType(state) {
-            return state.currentContentFieldType;
+        currentContentField(state) {
+            return state.currentContentField;
+        },
+        currentValidationsRules(state) {
+            return state.currentValidationsRules;
         }
     },
     mutations: {
@@ -98,6 +102,19 @@ export default {
         addContentField(state, payload) {
             state.contentModelsFields.push(payload);
         },
+        updateContentField(state, payload) {
+
+            state.contentModelsFields = state.contentModelsFields.map((value) => {
+
+                if(payload._id == value._id) {
+                    return payload;
+                }
+
+                return value;
+            });
+
+
+        },
         removeContentField(state, api_id) {
             state.contentModelsFields = state.contentModelsFields.filter(function(field) {
                 return field.api_id != api_id;
@@ -106,8 +123,17 @@ export default {
         resetContentFields(state) {
             state.contentModelsFields = [];
         },
-        setCurrentContentFieldType(state, payload) {
-            state.currentContentFieldType = payload;
+        setCurrentContentField(state, payload) {
+            state.currentContentField = payload;
+        },
+        resetCurrentContentField(state) {
+            state.currentContentField = {};
+        },
+        setCurrentValidationsRules(state, payload) {
+            state.currentValidationsRules = payload;
+        },
+        resetCurrentValidationsRules(state) {
+            state.currentValidationsRules = {};
         }
     },
     actions: {

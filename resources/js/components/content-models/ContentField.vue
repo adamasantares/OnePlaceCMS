@@ -14,17 +14,19 @@
         props: {
             fieldProp: Object
         },
-        computed: {
-            fields() {
-                return this.$store.getters.contentModelsFields;
-            }
-        },
         methods: {
             editField() {
-
+                this.$store.commit('setCurrentContentField', this.fieldProp);
+                this.$store.commit('setCurrentValidationsRules', this.fieldProp.validations);
+                this.$store.commit('updateFieldFormDisplay', true);
             },
             deleteField() {
-                this.$store.commit('removeContentField', this.fieldProp.api_id);
+                let confirm = window.confirm("Delete " + this.fieldProp.name + "?");
+
+                if(confirm) {
+                    this.$store.commit('removeContentField', this.fieldProp.api_id);
+                }
+
             }
         }
     }
