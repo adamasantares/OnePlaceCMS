@@ -6,6 +6,10 @@ import ContentModelsList from './components/content-models/List.vue';
 import CreateContentModel from './components/content-models/Create.vue';
 import EditContentModel from './components/content-models/Edit.vue';
 
+import ContentEntriesMain from './components/content-entries/Main.vue';
+import ContentEntriesList from './components/content-entries/List.vue';
+
+
 
 export const routes = [
     {
@@ -24,7 +28,7 @@ export const routes = [
         }
     },
     {
-        path: '/content/model',
+        path: '/model',
         component: ContentModelsMain,
         meta: {
             requiresAuth: true,
@@ -38,6 +42,36 @@ export const routes = [
                 }
             }
             ,
+            {
+                path: 'create',
+                component: CreateContentModel,
+                meta: {
+                    type: 'view'
+                }
+            },
+            {
+                path: 'edit/:id',
+                component: EditContentModel,
+                meta: {
+                    type: 'view'
+                }
+            }
+        ]
+    },
+    {
+        path: '/entry/:model',
+        component: ContentEntriesMain,
+        meta: {
+            requiresAuth: true,
+        },
+        children: [
+            {
+                path: '/',
+                component: ContentEntriesList,
+                meta: {
+                    type: 'list'
+                }
+            },
             {
                 path: 'create',
                 component: CreateContentModel,

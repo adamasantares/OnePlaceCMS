@@ -4,7 +4,7 @@
             <template v-if="$route.meta.type == 'list'">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">List Models</h3>
+                        <h3 class="card-title">List Entries</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -18,7 +18,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    <router-link to="/model/create" class="btn btn-success pull-right btn-create">Create content model</router-link>
+                                    <router-link to="/model/create" class="btn btn-success pull-right btn-create">Create entry</router-link>
                                 </div>
                             </div>
                             <div class="row">

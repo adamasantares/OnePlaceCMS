@@ -43,7 +43,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
                                     <text-validations v-if="fieldType == 'text'"></text-validations>
@@ -117,12 +116,12 @@
 
                     var self = this;
 
-                    let result = this.contentFields.find(function (field) {
-                            return field._id && field._id !== self.fields._id && field.api_id === self.fields.api_id;
+                    let isInvalid = this.contentFields.find(function (field) {
+                            return field._id != self.fields._id && field.api_id === self.fields.api_id;
                         }
                     );
 
-                    if(result) {
+                    if(isInvalid) {
                         this.errors = [];
                         this.errors["api_id"] = ["The api id has already been taken."];
                         reject();
@@ -155,13 +154,12 @@
                             let field = Object.assign({}, this.fields);
                             field.validations = this.validations;
 
-                            if(field._id) {
+                            if(this.fields._id) {
                                 this.$store.commit('updateContentField', field);
                             } else {
+                                field._id = Date.now();
                                 this.$store.commit('addContentField', field);
                             }
-
-
 
                             this.closeModal();
                             this.resetFields();

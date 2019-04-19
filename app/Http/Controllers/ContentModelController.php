@@ -122,4 +122,16 @@ class ContentModelController extends Controller
         $contentModel->fields()->delete();
         $contentModel->delete();
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function all()
+    {
+        $models = ContentModel::where('published', true)->orderBy('title', 'asc')->get();
+
+        return response()->json($models, 200);
+    }
 }

@@ -49,7 +49,7 @@
                 <div class="card-footer">
                     <div class="btn-group pull-right" role="group" aria-label="...">
                         <input class="btn btn-success" name="save" type="submit" value="Save">
-                        <router-link to="/content/model" class="btn btn-default">Close</router-link>
+                        <router-link to="/model" class="btn btn-default">Close</router-link>
                     </div>
                 </div>
                 <!-- /.card-footer-->

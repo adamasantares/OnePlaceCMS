@@ -1,47 +1,57 @@
 <template>
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item">
-                <router-link to="/dashboard" class="nav-link">
-                    <i class="nav-icon fa fa-dashboard"></i>
-                    <p>Dashboard</p>
-                </router-link>
-            </li>
-            <sidebar-menu-section v-for="section in sections" :key="section.title" :section="section"></sidebar-menu-section>
+            <template v-for="section in sections">
+                <sidebar-menu-section v-if="section.childs.length" :key="section.title" :section="section"></sidebar-menu-section>
+                <sidebar-menu-item v-else :key="section.title" :item="section"></sidebar-menu-item>
+            </template>
         </ul>
     </nav>
 </template>
 
 <script>
     import SidebarMenuSection from './SidebarMenuSection.vue';
+    import SidebarMenuItem from './SidebarMenuItem.vue';
 
     export default {
         name: "sidebar-menu",
         components: {
+            SidebarMenuItem,
             SidebarMenuSection
         },
-        data () {
-            return {
-                sections: [
+        computed: {
+            allContentModelsList() {
+                let models = [...this.$store.getters.allContentModels];
+
+                return models.map((model) => {
+                    return Object.assign(model, {link: `/entry/${model._id}`, icon: 'fa-circle-o'});
+                });
+            },
+            sections() {
+                return [
                     {
-                        title: 'Content',
-                        link: '/content',
-                        icon: 'fa-book',
-                        childs: [
-                            {
-                                title: 'Models',
-                                link: '/content/model',
-                                icon: 'fa-archive'
-                            },
-                            {
-                                title: 'Entries',
-                                link: '/content/entry',
-                                icon: 'fa-file-text'
-                            }
-                        ]
+                        title: 'Dashboard',
+                        link: '/dashboard',
+                        icon: 'fa-dashboard',
+                        childs: []
+                    },
+                    {
+                        title: 'Models',
+                        link: '/model',
+                        icon: 'fa-archive',
+                        childs: []
+                    },
+                    {
+                        title: 'Entries',
+                        link: '/entry',
+                        icon: 'fa-file-text',
+                        childs: this.allContentModelsList
                     }
                 ]
             }
+        },
+        created() {
+            this.$store.dispatch('getAllContentModels');
         }
     }
 </script>

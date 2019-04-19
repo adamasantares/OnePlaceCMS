@@ -49,7 +49,7 @@
                 <div class="card-footer">
                     <div class="btn-group pull-right" role="group" aria-label="...">
                         <input class="btn btn-success" name="save" type="submit" value="Save">
-                        <router-link to="/content/model" class="btn btn-default">Close</router-link>
+                        <router-link to="/model" class="btn btn-default">Close</router-link>
                     </div>
                 </div>
                 <!-- /.card-footer-->
@@ -76,13 +76,14 @@
                     this.errors = [];
                     this.fields = {};
 
-                    this.$router.push(`/content/model/edit/${response.data._id}`)
+                    this.$router.push(`/model/edit/${response.data._id}`)
 
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
                         this.$store.commit('updateSuccessMessage', "");
                         this.$store.commit('updateErrorMessage', ["Model wasn't created"]);
+                        this.$store.dispatch('getAllContentModels');
                     } else {
                         this.errors = [];
                         this.$store.commit('updateSuccessMessage', "");
