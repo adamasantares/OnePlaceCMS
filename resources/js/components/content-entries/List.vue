@@ -109,38 +109,38 @@
         },
         methods: {
             sortTable(column) {
-                this.searchParams.column = column;
-                this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
-                this.$router.push({path: '/entries', query: this.searchParams });
+                // this.searchParams.column = column;
+                // this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
+                // this.$router.push({path: '/entries', query: this.searchParams });
             },
             deleteModel(model) {
-                let confirm = window.confirm("Delete " + model.title + "?");
-
-                if(confirm) {
-                    axios.delete(`/api/content-model/${model._id}`)
-                        .then(() => {
-                            this.$store.commit('updateErrorMessage', []);
-                            this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-                            this.getContentModels(this.$route.query);
-                        }).catch(() => {
-                        this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
-                    });
-                }
+                // let confirm = window.confirm("Delete " + model.title + "?");
+                //
+                // if(confirm) {
+                //     axios.delete(`/api/content-model/${model._id}`)
+                //         .then(() => {
+                //             this.$store.commit('updateErrorMessage', []);
+                //             this.$store.commit('updateSuccessMessage', model.title + " was deleted");
+                //             this.getEntries(this.$route.query);
+                //         }).catch(() => {
+                //         this.$store.commit('updateSuccessMessage', "");
+                //         this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
+                //     });
+                // }
 
             },
-            getContentModels(query) {
+            getEntries(query) {
                 Object.assign(this.searchParams, query);
-                this.$store.dispatch('getContentModels', this.searchParams);
+                this.$store.dispatch('getEntries', this.searchParams);
             }
         },
         beforeRouteUpdate (to, from, next) {
-            this.getContentModels(to.query);
+            // this.getEntries(to.query);
             next();
         },
         mounted() {
-            this.$store.commit('updateTitlePage', 'Models');
-            this.getContentModels({});
+            this.$store.commit('updateTitlePage', 'Entries');
+            // this.getEntries({});
         }
     }
 </script>

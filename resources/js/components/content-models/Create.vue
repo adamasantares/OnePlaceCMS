@@ -75,15 +75,13 @@
                     this.$store.commit('resetContentFields');
                     this.errors = [];
                     this.fields = {};
-
                     this.$router.push(`/model/edit/${response.data._id}`)
-
+                    this.$store.dispatch('getAllContentModels');
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
                         this.$store.commit('updateSuccessMessage', "");
                         this.$store.commit('updateErrorMessage', ["Model wasn't created"]);
-                        this.$store.dispatch('getAllContentModels');
                     } else {
                         this.errors = [];
                         this.$store.commit('updateSuccessMessage', "");

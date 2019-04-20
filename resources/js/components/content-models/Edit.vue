@@ -73,6 +73,7 @@
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
+                    this.$store.dispatch('getAllContentModels');
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};

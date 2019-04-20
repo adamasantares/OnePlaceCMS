@@ -8,6 +8,7 @@ import EditContentModel from './components/content-models/Edit.vue';
 
 import ContentEntriesMain from './components/content-entries/Main.vue';
 import ContentEntriesList from './components/content-entries/List.vue';
+import CreateContentEntry from './components/content-entries/Create.vue';
 
 
 
@@ -74,7 +75,7 @@ export const routes = [
             },
             {
                 path: 'create',
-                component: CreateContentModel,
+                component: CreateContentEntry,
                 meta: {
                     type: 'view'
                 }

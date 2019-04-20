@@ -88,8 +88,6 @@ export default {
         getAllContentModels(context) {
             axios.get('/api/content-model/all')
                 .then((response) => {
-                    console.log(response.data);
-
                     context.commit('updateAllContentModels', response.data);
                 }).catch(() => {
                     context.commit('updateAllContentModels', {});

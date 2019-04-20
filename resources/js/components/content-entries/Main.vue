@@ -18,7 +18,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    <router-link to="/model/create" class="btn btn-success pull-right btn-create">Create entry</router-link>
+                                    <router-link :to="`/entry/${$route.params.model}/create`" class="btn btn-success pull-right btn-create">Create entry</router-link>
                                 </div>
                             </div>
                             <div class="row">
@@ -46,7 +46,7 @@
     import FormSearch from "../template-components/FormSearch";
 
     export default {
-        name: "content-models-main",
+        name: "content-entries-main",
         components: {
             FormSearch
         }
