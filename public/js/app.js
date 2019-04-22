@@ -2003,6 +2003,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Create",
@@ -2151,7 +2161,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../template-components/Pagination */ "./resources/js/components/template-components/Pagination.vue");
+/* harmony import */ var _mixins_Listing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Listing */ "./resources/js/mixins/Listing.js");
 //
 //
 //
@@ -2212,83 +2222,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'list',
-  components: {
-    Pagination: _template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
+  mixins: [_mixins_Listing__WEBPACK_IMPORTED_MODULE_0__["default"]],
   data: function data() {
     return {
-      entries: [],
       model_id: this.$route.params.model,
-      searchParams: {
-        column: this.$route.query.column ? this.$route.query.column : 'created_at',
-        sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
-        search: this.$route.query.search ? this.$route.query.search : '',
-        page: this.$route.query.page ? +this.$route.query.page : 1
-      }
+      base_path: "/entry/".concat(this.model_id),
+      base_path_api: '/api/content-entry/'
     };
   },
   computed: {
-    contentEntries: function contentEntries() {
+    rows: function rows() {
       return this.$store.getters.contentEntries;
-    },
-    classObjectForTitleColumn: function classObjectForTitleColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'title' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'title' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'title'
-      };
-    },
-    classObjectForPublishedColumn: function classObjectForPublishedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'published' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'published' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'published'
-      };
-    },
-    classObjectForDateCreatedColumn: function classObjectForDateCreatedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'created_at'
-      };
-    },
-    classObjectForDateUpdatedColumn: function classObjectForDateUpdatedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'updated_at'
-      };
     }
   },
   methods: {
-    sortTable: function sortTable(column) {
-      this.searchParams.column = column;
-      this.searchParams.sort = this.searchParams.column == column ? this.searchParams.sort == 'asc' ? 'desc' : 'asc' : 'asc';
-      this.$router.push({
-        path: "/entry/".concat(this.model_id),
-        query: this.searchParams
-      });
-    },
-    deleteRow: function deleteRow(model) {
-      var _this = this;
-
-      var confirm = window.confirm("Delete " + model.title + "?");
-
-      if (confirm) {
-        axios.delete("/api/content-entry/".concat(model._id)).then(function () {
-          _this.$store.commit('updateErrorMessage', []);
-
-          _this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-
-          _this.getEntries(_this.$route.query);
-        }).catch(function () {
-          _this.$store.commit('updateSuccessMessage', "");
-
-          _this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
-        });
-      }
-    },
-    getEntries: function getEntries(query) {
+    getRows: function getRows(query) {
       var params = Object.assign(this.searchParams, query);
       params = Object.assign({
         model_id: this.model_id
@@ -2298,12 +2246,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     this.model_id = to.params.model;
-    this.getEntries(to.query);
+    this.getRows(to.query);
     next();
   },
   mounted: function mounted() {
     this.$store.commit('updateTitlePage', 'Entries');
-    this.getEntries({});
+    this.getRows({});
   }
 });
 
@@ -2932,7 +2880,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../template-components/Pagination */ "./resources/js/components/template-components/Pagination.vue");
+/* harmony import */ var _mixins_Listing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Listing */ "./resources/js/mixins/Listing.js");
 //
 //
 //
@@ -2993,94 +2941,31 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'list',
-  components: {
-    Pagination: _template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
+  mixins: [_mixins_Listing__WEBPACK_IMPORTED_MODULE_0__["default"]],
   data: function data() {
     return {
-      searchParams: {
-        column: this.$route.query.column ? this.$route.query.column : 'created_at',
-        sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
-        search: this.$route.query.search ? this.$route.query.search : '',
-        page: this.$route.query.page ? +this.$route.query.page : 1
-      }
+      base_path: '/model',
+      base_path_api: '/api/content-model/'
     };
   },
   computed: {
-    contentModels: function contentModels() {
+    rows: function rows() {
       return this.$store.getters.contentModels;
-    },
-    classObjectForTitleColumn: function classObjectForTitleColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'title' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'title' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'title'
-      };
-    },
-    classObjectForPublishedColumn: function classObjectForPublishedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'published' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'published' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'published'
-      };
-    },
-    classObjectForDateCreatedColumn: function classObjectForDateCreatedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'created_at'
-      };
-    },
-    classObjectForDateUpdatedColumn: function classObjectForDateUpdatedColumn() {
-      return {
-        sorting_asc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'asc',
-        sorting_desc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'desc',
-        sorting: this.searchParams.column != 'updated_at'
-      };
     }
   },
   methods: {
-    sortTable: function sortTable(column) {
-      this.searchParams.column = column;
-      this.searchParams.sort = this.searchParams.column == column ? this.searchParams.sort == 'asc' ? 'desc' : 'asc' : 'asc';
-      this.$router.push({
-        path: '/model',
-        query: this.searchParams
-      });
-    },
-    deleteModel: function deleteModel(model) {
-      var _this = this;
-
-      var confirm = window.confirm("Delete " + model.title + "?");
-
-      if (confirm) {
-        axios.delete("/api/content-model/".concat(model._id)).then(function () {
-          _this.$store.commit('updateErrorMessage', []);
-
-          _this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-
-          _this.getContentModels(_this.$route.query);
-
-          _this.$store.dispatch('getAllContentModels');
-        }).catch(function () {
-          _this.$store.commit('updateSuccessMessage', "");
-
-          _this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
-        });
-      }
-    },
-    getContentModels: function getContentModels(query) {
+    getRows: function getRows(query) {
       Object.assign(this.searchParams, query);
       this.$store.dispatch('getContentModels', this.searchParams);
     }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
-    this.getContentModels(to.query);
+    this.getRows(to.query);
     next();
   },
   mounted: function mounted() {
     this.$store.commit('updateTitlePage', 'Models');
-    this.getContentModels({});
+    this.getRows({});
   }
 });
 
@@ -30913,47 +30798,104 @@ var render = function() {
               ]),
               _vm._v(" "),
               _vm._l(_vm.modelFields, function(field) {
-                return _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: field.api_id } }, [
-                    _vm._v(_vm._s(field.name))
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fields.fields[field.api_id],
-                        expression: "fields.fields[field.api_id]"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class:
-                      _vm.errors && _vm.errors[field.api_id]
-                        ? "is-invalid"
-                        : "",
-                    attrs: { id: field.api_id },
-                    domProps: { value: _vm.fields.fields[field.api_id] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.fields.fields,
-                          field.api_id,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors && _vm.errors[field.api_id]
-                    ? _c("div", { staticClass: "invalid-feedback" }, [
-                        _vm._v(_vm._s(_vm.errors[field.api_id][0]))
-                      ])
-                    : _vm._e()
-                ])
+                return _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    field.type == "text"
+                      ? [
+                          _c("label", { attrs: { for: field.api_id } }, [
+                            _vm._v(_vm._s(field.name))
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fields.fields[field.api_id],
+                                expression: "fields.fields[field.api_id]"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class:
+                              _vm.errors && _vm.errors[field.api_id]
+                                ? "is-invalid"
+                                : "",
+                            attrs: { id: field.api_id },
+                            domProps: {
+                              value: _vm.fields.fields[field.api_id]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fields.fields,
+                                  field.api_id,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors && _vm.errors[field.api_id]
+                            ? _c("div", { staticClass: "invalid-feedback" }, [
+                                _vm._v(_vm._s(_vm.errors[field.api_id][0]))
+                              ])
+                            : _vm._e()
+                        ]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    field.type == "media"
+                      ? [
+                          _c("label", { attrs: { for: field.api_id } }, [
+                            _vm._v(_vm._s(field.name))
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fields.fields[field.api_id],
+                                expression: "fields.fields[field.api_id]"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class:
+                              _vm.errors && _vm.errors[field.api_id]
+                                ? "is-invalid"
+                                : "",
+                            attrs: { id: field.api_id },
+                            domProps: {
+                              value: _vm.fields.fields[field.api_id]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fields.fields,
+                                  field.api_id,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors && _vm.errors[field.api_id]
+                            ? _c("div", { staticClass: "invalid-feedback" }, [
+                                _vm._v(_vm._s(_vm.errors[field.api_id][0]))
+                              ])
+                            : _vm._e()
+                        ]
+                      : _vm._e()
+                  ],
+                  2
+                )
               })
             ],
             2
@@ -31272,9 +31214,9 @@ var render = function() {
           _c(
             "tbody",
             [
-              !_vm.contentEntries.data || !_vm.contentEntries.data.length
+              !_vm.rows.data || !_vm.rows.data.length
                 ? [_vm._m(0)]
-                : _vm._l(_vm.contentEntries.data, function(model) {
+                : _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -31345,7 +31287,7 @@ var render = function() {
       _c("pagination", {
         attrs: {
           currentPage: _vm.searchParams.page,
-          lastPage: _vm.contentEntries.last_page
+          lastPage: _vm.rows.last_page
         }
       })
     ],
@@ -31568,7 +31510,7 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  return _vm.addField("image")
+                  return _vm.addField("media")
                 }
               }
             },
@@ -32539,10 +32481,9 @@ var render = function() {
           _c(
             "tbody",
             [
-              _vm.contentModels.data === undefined ||
-              !_vm.contentModels.data.length
+              !_vm.rows.data || !_vm.rows.data.length
                 ? [_vm._m(0)]
-                : _vm._l(_vm.contentModels.data, function(model) {
+                : _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -32580,7 +32521,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  return _vm.deleteModel(model)
+                                  return _vm.deleteRow(model)
                                 }
                               }
                             },
@@ -32607,7 +32548,7 @@ var render = function() {
       _c("pagination", {
         attrs: {
           currentPage: _vm.searchParams.page,
-          lastPage: _vm.contentModels.last_page
+          lastPage: _vm.rows.last_page
         }
       })
     ],
@@ -52188,6 +52129,95 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.$store.commit('updateErrorMessage', ["Error occurred while getting field values"]);
       });
+    }
+  },
+  created: function created() {}
+});
+
+/***/ }),
+
+/***/ "./resources/js/mixins/Listing.js":
+/*!****************************************!*\
+  !*** ./resources/js/mixins/Listing.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../components/template-components/Pagination */ "./resources/js/components/template-components/Pagination.vue");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Pagination: _components_template_components_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      searchParams: {
+        column: this.$route.query.column ? this.$route.query.column : 'created_at',
+        sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
+        search: this.$route.query.search ? this.$route.query.search : '',
+        page: this.$route.query.page ? +this.$route.query.page : 1
+      }
+    };
+  },
+  computed: {
+    classObjectForTitleColumn: function classObjectForTitleColumn() {
+      return {
+        sorting_asc: this.searchParams.column == 'title' && this.searchParams.sort == 'asc',
+        sorting_desc: this.searchParams.column == 'title' && this.searchParams.sort == 'desc',
+        sorting: this.searchParams.column != 'title'
+      };
+    },
+    classObjectForPublishedColumn: function classObjectForPublishedColumn() {
+      return {
+        sorting_asc: this.searchParams.column == 'published' && this.searchParams.sort == 'asc',
+        sorting_desc: this.searchParams.column == 'published' && this.searchParams.sort == 'desc',
+        sorting: this.searchParams.column != 'published'
+      };
+    },
+    classObjectForDateCreatedColumn: function classObjectForDateCreatedColumn() {
+      return {
+        sorting_asc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'asc',
+        sorting_desc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'desc',
+        sorting: this.searchParams.column != 'created_at'
+      };
+    },
+    classObjectForDateUpdatedColumn: function classObjectForDateUpdatedColumn() {
+      return {
+        sorting_asc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'asc',
+        sorting_desc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'desc',
+        sorting: this.searchParams.column != 'updated_at'
+      };
+    }
+  },
+  methods: {
+    sortTable: function sortTable(column) {
+      this.searchParams.column = column;
+      this.searchParams.sort = this.searchParams.column == column ? this.searchParams.sort == 'asc' ? 'desc' : 'asc' : 'asc';
+      this.$router.push({
+        path: this.base_path,
+        query: this.searchParams
+      });
+    },
+    deleteRow: function deleteRow(row) {
+      var _this = this;
+
+      var confirm = window.confirm("Delete " + row.title + "?");
+
+      if (confirm) {
+        axios.delete("".concat(this.base_path_api).concat(row._id)).then(function () {
+          _this.$store.commit('updateErrorMessage', []);
+
+          _this.$store.commit('updateSuccessMessage', row.title + " was deleted");
+
+          _this.getRows(_this.$route.query);
+        }).catch(function () {
+          _this.$store.commit('updateSuccessMessage', "");
+
+          _this.$store.commit('updateErrorMessage', [row.title + " wasn't deleted"]);
+        });
+      }
     }
   },
   created: function created() {}

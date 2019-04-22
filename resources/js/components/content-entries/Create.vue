@@ -22,11 +22,21 @@
                     </div>
 
                     <div class="form-group" v-for="field in modelFields">
-                        <label :for="field.api_id">{{ field.name }}</label>
-                        <input :id="field.api_id" class="form-control"
-                               v-model="fields.fields[field.api_id]"
-                               :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
-                        <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                        <template v-if="field.type == 'text'">
+                            <label :for="field.api_id">{{ field.name }}</label>
+                            <input :id="field.api_id" class="form-control"
+                                   v-model="fields.fields[field.api_id]"
+                                   :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
+                            <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                        </template>
+
+                        <template v-if="field.type == 'media'">
+                            <label :for="field.api_id">{{ field.name }}</label>
+                            <input :id="field.api_id" class="form-control"
+                                   v-model="fields.fields[field.api_id]"
+                                   :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
+                            <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                        </template>
                     </div>
 
                 </div>

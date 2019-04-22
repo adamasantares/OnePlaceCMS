@@ -19,13 +19,13 @@
             </tr>
             </thead>
             <tbody>
-            <template v-if="!contentEntries.data || !contentEntries.data.length">
+            <template v-if="!rows.data || !rows.data.length">
                 <tr role="row" class="odd">
                     <td colspan="5" class="text-center"><h2>No data available</h2></td>
                 </tr>
             </template>
             <template v-else>
-                <tr v-for="model in contentEntries.data" :key="model.id">
+                <tr v-for="model in rows.data" :key="model.id">
                     <td>{{ model.title }}</td>
                     <td>{{ model.published ? 'Published' : 'Not published' }}</td>
                     <td>{{ model.created_at }}</td>
@@ -51,85 +51,30 @@
             </tr>
             </tfoot>
         </table>
-        <pagination :currentPage="searchParams.page" :lastPage="contentEntries.last_page"></pagination>
+        <pagination :currentPage="searchParams.page" :lastPage="rows.last_page"></pagination>
     </div>
 </template>
 
 <script>
-    import Pagination from '../template-components/Pagination';
+    import FunctionsMixin from '../../mixins/Listing';
 
     export default {
         name: 'list',
-        components: {
-            Pagination
-        },
+        mixins: [FunctionsMixin],
         data() {
             return {
-                entries: [],
                 model_id: this.$route.params.model,
-                searchParams: {
-                    column: this.$route.query.column ? this.$route.query.column : 'created_at',
-                    sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
-                    search: this.$route.query.search ? this.$route.query.search : '',
-                    page: this.$route.query.page ? +this.$route.query.page : 1
-                }
+                base_path: `/entry/${this.model_id}`,
+                base_path_api: '/api/content-entry/',
             }
         },
         computed: {
-            contentEntries() {
+            rows() {
                 return this.$store.getters.contentEntries;
-            },
-            classObjectForTitleColumn() {
-                return {
-                    sorting_asc: this.searchParams.column == 'title' && this.searchParams.sort == 'asc',
-                    sorting_desc: this.searchParams.column == 'title' && this.searchParams.sort == 'desc',
-                    sorting: this.searchParams.column != 'title'
-                }
-            },
-            classObjectForPublishedColumn() {
-                return {
-                    sorting_asc: this.searchParams.column == 'published' && this.searchParams.sort == 'asc',
-                    sorting_desc: this.searchParams.column == 'published' && this.searchParams.sort == 'desc',
-                    sorting: this.searchParams.column != 'published'
-                }
-            },
-            classObjectForDateCreatedColumn() {
-                return {
-                    sorting_asc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'asc',
-                    sorting_desc: this.searchParams.column == 'created_at' && this.searchParams.sort == 'desc',
-                    sorting: this.searchParams.column != 'created_at'
-                }
-            },
-            classObjectForDateUpdatedColumn() {
-                return {
-                    sorting_asc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'asc',
-                    sorting_desc: this.searchParams.column == 'updated_at' && this.searchParams.sort == 'desc',
-                    sorting: this.searchParams.column != 'updated_at'
-                }
             }
         },
         methods: {
-            sortTable(column) {
-                this.searchParams.column = column;
-                this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
-                this.$router.push({path: `/entry/${this.model_id}`, query: this.searchParams });
-            },
-            deleteRow(model) {
-                let confirm = window.confirm("Delete " + model.title + "?");
-
-                if(confirm) {
-                    axios.delete(`/api/content-entry/${model._id}`)
-                        .then(() => {
-                            this.$store.commit('updateErrorMessage', []);
-                            this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-                            this.getEntries(this.$route.query);
-                        }).catch(() => {
-                        this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
-                    });
-                }
-            },
-            getEntries(query) {
+            getRows(query) {
                 let params = Object.assign(this.searchParams, query);
                 params = Object.assign({model_id: this.model_id}, this.searchParams);
                 this.$store.dispatch('getEntries', params);
@@ -137,12 +82,12 @@
         },
         beforeRouteUpdate (to, from, next) {
             this.model_id = to.params.model;
-            this.getEntries(to.query);
+            this.getRows(to.query);
             next();
         },
         mounted() {
             this.$store.commit('updateTitlePage', 'Entries');
-            this.getEntries({});
+            this.getRows({});
         }
     }
 </script>
