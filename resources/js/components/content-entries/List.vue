@@ -19,22 +19,22 @@
             </tr>
             </thead>
             <tbody>
-            <template v-if="contentModels.data === undefined || !contentModels.data.length">
+            <template v-if="!contentEntries.data || !contentEntries.data.length">
                 <tr role="row" class="odd">
                     <td colspan="5" class="text-center"><h2>No data available</h2></td>
                 </tr>
             </template>
             <template v-else>
-                <tr v-for="model in contentModels.data" :key="model.id">
+                <tr v-for="model in contentEntries.data" :key="model.id">
                     <td>{{ model.title }}</td>
                     <td>{{ model.published ? 'Published' : 'Not published' }}</td>
                     <td>{{ model.created_at }}</td>
                     <td>{{ model.updated_at }}</td>
                     <td>
-                        <router-link :to="{ path: `/model/edit/${model._id}` }" class="btn btn btn-primary" >
+                        <router-link :to="{ path: `/entry/${model_id}/edit/${model._id}` }" class="btn btn btn-primary" >
                             <i class="fa fa-edit"></i>
                         </router-link>
-                        <a @click.prevent="deleteModel(model)" href="#" title="Delete" class="btn btn btn-danger">
+                        <a @click.prevent="deleteRow(model)" href="#" title="Delete" class="btn btn btn-danger">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
@@ -51,7 +51,7 @@
             </tr>
             </tfoot>
         </table>
-        <pagination :currentPage="searchParams.page" :lastPage="contentModels.last_page"></pagination>
+        <pagination :currentPage="searchParams.page" :lastPage="contentEntries.last_page"></pagination>
     </div>
 </template>
 
@@ -66,6 +66,7 @@
         data() {
             return {
                 entries: [],
+                model_id: this.$route.params.model,
                 searchParams: {
                     column: this.$route.query.column ? this.$route.query.column : 'created_at',
                     sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
@@ -76,7 +77,7 @@
         },
         computed: {
             contentEntries() {
-                return this.$store.getters.contentModels;
+                return this.$store.getters.contentEntries;
             },
             classObjectForTitleColumn() {
                 return {
@@ -109,38 +110,39 @@
         },
         methods: {
             sortTable(column) {
-                // this.searchParams.column = column;
-                // this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
-                // this.$router.push({path: '/entries', query: this.searchParams });
+                this.searchParams.column = column;
+                this.searchParams.sort = (this.searchParams.column == column) ? (this.searchParams.sort == 'asc') ? 'desc' : 'asc' : 'asc';
+                this.$router.push({path: `/entry/${this.model_id}`, query: this.searchParams });
             },
-            deleteModel(model) {
-                // let confirm = window.confirm("Delete " + model.title + "?");
-                //
-                // if(confirm) {
-                //     axios.delete(`/api/content-model/${model._id}`)
-                //         .then(() => {
-                //             this.$store.commit('updateErrorMessage', []);
-                //             this.$store.commit('updateSuccessMessage', model.title + " was deleted");
-                //             this.getEntries(this.$route.query);
-                //         }).catch(() => {
-                //         this.$store.commit('updateSuccessMessage', "");
-                //         this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
-                //     });
-                // }
+            deleteRow(model) {
+                let confirm = window.confirm("Delete " + model.title + "?");
 
+                if(confirm) {
+                    axios.delete(`/api/content-entry/${model._id}`)
+                        .then(() => {
+                            this.$store.commit('updateErrorMessage', []);
+                            this.$store.commit('updateSuccessMessage', model.title + " was deleted");
+                            this.getEntries(this.$route.query);
+                        }).catch(() => {
+                        this.$store.commit('updateSuccessMessage', "");
+                        this.$store.commit('updateErrorMessage', [model.title + " wasn't deleted"]);
+                    });
+                }
             },
             getEntries(query) {
-                Object.assign(this.searchParams, query);
-                this.$store.dispatch('getEntries', this.searchParams);
+                let params = Object.assign(this.searchParams, query);
+                params = Object.assign({model_id: this.model_id}, this.searchParams);
+                this.$store.dispatch('getEntries', params);
             }
         },
         beforeRouteUpdate (to, from, next) {
-            // this.getEntries(to.query);
+            this.model_id = to.params.model;
+            this.getEntries(to.query);
             next();
         },
         mounted() {
             this.$store.commit('updateTitlePage', 'Entries');
-            // this.getEntries({});
+            this.getEntries({});
         }
     }
 </script>

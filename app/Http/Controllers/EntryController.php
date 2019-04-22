@@ -14,17 +14,11 @@ class EntryController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $models = Entry::where('model_id', '=', request()->get('model_id'))
+                        ->where('title', 'like', request()->get('search').'%')
+                        ->orderBy(request()->get('column'), request()->get('sort'))->paginate(15);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json($models->appends(request()->except('page')), 200);
     }
 
     /**
@@ -36,7 +30,7 @@ class EntryController extends Controller
     public function store(Request $request)
     {
         try {
-            $model = Entry::create($request->only('title', 'published', 'fields'));
+            $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
             return response()->json([], 500);
@@ -49,20 +43,13 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function show(Entry $entry)
+    public function show(Entry $contentEntry)
     {
-        //
-    }
+        if (empty($contentEntry)) {
+            return response()->json([], 404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Entry  $entry
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Entry $entry)
-    {
-        //
+        return response()->json($contentEntry, 200);
     }
 
     /**
@@ -72,9 +59,15 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Entry $entry)
+    public function update(Request $request, Entry $contentEntry)
     {
-        //
+        try {
+            $contentEntry->update($request->only('title', 'published', 'fields'));
+
+            return response()->json([], 200);
+        } catch (\Exception $e) {
+            return response()->json([], 500);
+        }
     }
 
     /**
@@ -83,8 +76,7 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Entry $entry)
-    {
-        //
+    public function destroy(Entry $contentEntry) {
+        $contentEntry->delete();
     }
 }

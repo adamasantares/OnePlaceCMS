@@ -9,6 +9,7 @@ import EditContentModel from './components/content-models/Edit.vue';
 import ContentEntriesMain from './components/content-entries/Main.vue';
 import ContentEntriesList from './components/content-entries/List.vue';
 import CreateContentEntry from './components/content-entries/Create.vue';
+import EditContentEntry from './components/content-entries/Edit.vue';
 
 
 
@@ -82,7 +83,7 @@ export const routes = [
             },
             {
                 path: 'edit/:id',
-                component: EditContentModel,
+                component: EditContentEntry,
                 meta: {
                     type: 'view'
                 }

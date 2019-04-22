@@ -8,6 +8,7 @@ export default {
             fields: {
                 title: '',
                 published: false,
+                model_id: this.$route.params.model,
                 fields: {}
             },
             modelFields: [],
@@ -26,7 +27,7 @@ export default {
         },
 
         getFieldsFromModel() {
-            new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
                 axios.get(`/api/content-model/${this.$route.params.model}`).then(response => {
                     this.modelFields = response.data.fields;
                     this.errors = [];
@@ -43,7 +44,14 @@ export default {
         },
         fillFieldsFromModal() {
             axios.get(`/api/content-entry/${this.$route.params.id}`).then(response => {
-                this.fields.fileds = response.data;
+
+                this.$store.commit('updateTitlePage', `Edit ${response.data.title}`);
+
+                this.fields._id = response.data._id;
+                this.fields.title = response.data.title;
+                this.fields.published = response.data.published;
+                this.fields.fields = response.data.fields;
+
                 this.errors = [];
                 this.$store.commit('updateErrorMessage', []);
                 this.$store.commit('updateSuccessMessage', "");

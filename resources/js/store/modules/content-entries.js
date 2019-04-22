@@ -1,12 +1,16 @@
 export default {
     state: {
-
+        contentEntries: [],
     },
     getters: {
-
+        contentEntries(state) {
+            return state.contentEntries;
+        },
     },
     mutations: {
-
+        updateContentEntries(state, payload) {
+            state.contentEntries = payload;
+        },
     },
     actions: {
         getEntries(context, params) {
@@ -15,9 +19,9 @@ export default {
 
             axios.get(url)
                 .then((response) => {
-                    context.commit('updateEntries', response.data);
+                    context.commit('updateContentEntries', response.data);
                 }).catch(() => {
-                context.commit('updateEntries', {});
+                context.commit('updateContentEntries', {});
             });
         }
     }

@@ -47,38 +47,35 @@
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
 
     export default {
-        name: "Create",
+        name: "Edit",
         mixins: [FunctionsMixin],
         methods: {
             save() {
-                axios.post('/api/content-entry', this.fields).then(response => {
+                axios.put(`/api/content-entry/${this.fields._id}`, this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
-                    this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
+                    this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
-                    this.fields = {};
-
-                    this.$router.push(`/entry/${this.$route.params.model}/edit/${response.data._id}`);
-
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
                         this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', ["Entry wasn't created"]);
+                        this.$store.commit('updateErrorMessage', ["Entry wasn't updated"]);
                     } else {
                         this.errors = [];
                         this.$store.commit('updateSuccessMessage', "");
-                        this.$store.commit('updateErrorMessage', ["Error occurred while saving new entry"]);
+                        this.$store.commit('updateErrorMessage', ["Error occurred while updating entry"]);
                     }
                 });
             }
         },
         created() {
-            this.getFieldsFromModel();
-            this.$store.commit('updateTitlePage', 'Create entry');
+            this.getFieldsFromModel().then(resolve => {
+                this.fillFieldsFromModal();
+            });
         }
     }
 </script>
 
-<style lang="scss">
+<style scoped>
 
 </style>
