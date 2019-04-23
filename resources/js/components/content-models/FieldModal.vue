@@ -46,6 +46,7 @@
                                 </div>
                                 <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
                                     <text-validations v-if="fieldType == 'text'"></text-validations>
+                                    <image-validations v-if="fieldType == 'image'"></image-validations>
                                 </div>
                             </div>
                         </div>
@@ -63,11 +64,12 @@
 
 <script>
     import TextValidations from "./fields-validations/TextValidations";
+    import ImageValidations from "./fields-validations/ImageValidations";
 
     export default {
         name: "CreateFieldModal",
         components: {
-            TextValidations
+            TextValidations, ImageValidations
         },
         data() {
             return {

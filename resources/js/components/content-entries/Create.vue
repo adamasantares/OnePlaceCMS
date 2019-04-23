@@ -30,12 +30,8 @@
                             <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
                         </template>
 
-                        <template v-if="field.type == 'media'">
-                            <label :for="field.api_id">{{ field.name }}</label>
-                            <input :id="field.api_id" class="form-control"
-                                   v-model="fields.fields[field.api_id]"
-                                   :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
-                            <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                        <template v-if="field.type == 'image'">
+                            <image-field></image-field>
                         </template>
                     </div>
 
@@ -55,10 +51,12 @@
 
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
+    import ImageField from './fields/ImageField';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
+        components: {ImageField},
         methods: {
             save() {
                 axios.post('/api/content-entry', this.fields).then(response => {

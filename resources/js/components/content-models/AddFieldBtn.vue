@@ -5,7 +5,7 @@
         </button>
         <div :class="{ show: isOpened }" class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
             <a @click="addField('text')" class="dropdown-item" href="#">Text field</a>
-            <a @click="addField('media')" class="dropdown-item" href="#">Image</a>
+            <a @click="addField('image')" class="dropdown-item" href="#">Image</a>
         </div>
     </div>
 </template>
