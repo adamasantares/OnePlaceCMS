@@ -15,4 +15,7 @@ Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::resource('content-model', 'ContentModelController');
     Route::post('content-field/validate', 'ContentFieldController@validateFields');
     Route::resource('content-entry', 'EntryController');
+    Route::post('media', 'MediaController@store');
+    Route::delete('media/{media}', 'MediaController@destroy');
 });
+

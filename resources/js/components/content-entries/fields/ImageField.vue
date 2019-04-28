@@ -1,5 +1,6 @@
 <template>
     <div class="media-full">
+        <label>{{ labelProp }}</label>
         <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
             <h3>Drop files to upload</h3>
         </div>
@@ -22,7 +23,7 @@
                         <td colspan="7">
                             <div class="text-center p-5">
                                 <h4>Drop files anywhere to upload<br/>or</h4>
-                                <label :for="name" class="btn btn-lg btn-primary">Select Files</label>
+                                <label :for="apiId" class="btn btn-lg btn-primary">Select Files</label>
                             </div>
                         </td>
                     </tr>
@@ -87,6 +88,8 @@
                             v-model="files"
                             @input-filter="inputFilter"
                             @input-file="inputFile"
+                            @input="inputUpdate"
+                            :input-id="apiId"
                             ref="upload">
                         Select
                         <i class="fa fa-plus"></i>
@@ -221,10 +224,9 @@
         data() {
             return {
                 files: [],
-                accept: 'image/png,image/gif,image/jpeg,image/webp',
-                extensions: 'gif,jpg,jpeg,png,webp',
+                accept: 'image/png,image/gif,image/jpeg,image/webp,application/pdf',
+                extensions: 'gif,jpg,jpeg,png,webp,pdf',
                 // extensions: ['gif', 'jpg', 'jpeg','png', 'webp'],
-                // extensions: /\.(gif|jpe?g|png|webp)$/i,
                 minSize: 1024,
                 size: 1024 * 1024 * 10,
                 multiple: true,
@@ -232,15 +234,10 @@
                 drop: true,
                 addIndex: false,
                 thread: 3,
-                name: 'file',
-                routeLaravel: '/admin/media',
+                routeLaravel: '/api/media',
                 uploadHeaders: {
-                    'X-Csrf-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Authorization': 'Bearer ' + this.$store.getters.currentUser.token,
                     '_method': 'post'
-                },
-                deleteHeaders: {
-                    'X-Csrf-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    '_method': 'delete'
                 },
                 data: {
                 },
@@ -256,6 +253,11 @@
                     name: '',
                 }
             }
+        },
+        props: {
+            apiId: String,
+            filesProp: Array,
+            labelProp: String
         },
         watch: {
             'editFile.show'(newValue, oldValue) {
@@ -342,7 +344,7 @@
                 if (!newFile && oldFile) {
                     // remove
                     if (oldFile.success && oldFile.response.id) {
-                        axios.post(this.routeLaravel + "/" + oldFile.response.id, this.deleteHeaders).then(response => (console.log(response)))
+                        axios.post(this.routeLaravel + "/" + oldFile.response.id).then(response => (console.log(response)))
                             .catch((error) => {
                                 console.log('fail');
                             });
@@ -380,8 +382,22 @@
                     data.size = data.file.size
                 }
                 this.$refs.upload.update(this.editFile.id, data)
-                this.editFile.error = ''
+                this.editFile.error = '';
                 this.editFile.show = false
+            },
+            inputUpdate(files) {
+                this.$store.commit('updateMedias', { key: this.apiId, files: files});
+            },
+            formatImagesDataFromServer(files) {
+                this.files = files.map((file) => {
+                    file.speed = 100;
+                    file.active = false;
+                    file.postAction = this.routeLaravel;
+                    file.headers = this.uploadHeaders;
+                    file.success = true;
+                    file.progress = '0.00';
+                    return file;
+                });
             }
         },
         computed: {
@@ -390,6 +406,9 @@
                     display: this.editFile.show ? 'block' : 'none'
                 }
             }
+        },
+        mounted() {
+            this.formatImagesDataFromServer(this.filesProp);
         }
     }
 </script>

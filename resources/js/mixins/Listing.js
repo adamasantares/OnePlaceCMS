@@ -11,7 +11,8 @@ export default {
                 sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
                 search: this.$route.query.search ? this.$route.query.search : '',
                 page: this.$route.query.page ? +this.$route.query.page : 1
-            }
+            },
+            isLoaded: false
         }
     },
 

@@ -1,5 +1,8 @@
+window.$ = require('jquery');
 require('./bootstrap');
-// require('admin-lte');
+require('codemirror/lib/codemirror.js');
+require('codemirror/mode/javascript/javascript.js');
+require('summernote/dist/summernote-lite.js');
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
@@ -9,8 +12,6 @@ import StoreContentModels from './store/modules/content-models';
 import StoreContentEntries from './store/modules/content-entries';
 import MainApp from './components/MainApp.vue';
 import {initialize} from './helpers/general';
-// import BootstrapVue from 'bootstrap-vue'
-// Vue.use(BootstrapVue);
 import SlideUpDown from 'vue-slide-up-down';
 
 Vue.component('slide-up-down', SlideUpDown);
@@ -43,7 +44,7 @@ Vue.filter('formatSize', function (size) {
         return (size / 1024).toFixed(2) + ' KB'
     }
     return size.toString() + ' B'
-})
+});
 
 const app = new Vue({
     el: '#app',

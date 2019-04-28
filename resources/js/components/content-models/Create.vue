@@ -32,7 +32,7 @@
                                         </textarea>
                                             <div v-if="errors && errors.desc" class="invalid-feedback">{{ errors.desc[0] }}</div>
                                         </div>
-                                        <publish-toggle :is-published="fields.published" @onChangePublished="onChangePublished"></publish-toggle>
+                                        <publish-toggle :published.sync="fields.published"></publish-toggle>
                                     </div>
                                     <div class="col-5 offset-1">
                                         <div class="clearfix mb-3">

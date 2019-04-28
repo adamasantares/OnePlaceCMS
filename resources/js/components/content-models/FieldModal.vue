@@ -113,9 +113,7 @@
                 this.$store.commit('resetCurrentContentField');
                 this.$store.commit('resetCurrentValidationsRules');
             },
-            validateOnStorage() {
-                return new Promise((resolve, reject) => {
-
+            validate() {
                     var self = this;
 
                     let isInvalid = this.contentFields.find(function (field) {
@@ -123,56 +121,26 @@
                         }
                     );
 
-                    if(isInvalid) {
-                        this.errors = [];
-                        this.errors["api_id"] = ["The api id has already been taken."];
-                        reject();
-                    } else {
-                        resolve();
-                    }
-                });
-            },
-            validateOnServer() {
-                return new Promise((resolve, reject) => {
-                    axios.post('/api/content-field/validate', this.fields).then(response => {
-                        resolve();
-                    }).catch(error => {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors || {};
-                            this.$store.commit('updateSuccessMessage', "");
-                            this.$store.commit('updateErrorMessage', ["Field " + this.fields.name + " incorrect"]);
-                        } else {
-                            this.$store.commit('updateSuccessMessage', "");
-                            this.$store.commit('updateErrorMessage', ["Server error"]);
-                        }
-                        reject();
-                    });
-                });
+                    return !Boolean(isInvalid);
             },
             submit() {
-                this.validateOnStorage()
-                    .then(resolve => {
-                        this.validateOnServer().then(resolve => {
-                            let field = Object.assign({}, this.fields);
-                            field.validations = this.validations;
+                let validate = this.validate();
 
-                            if(this.fields._id) {
-                                this.$store.commit('updateContentField', field);
-                            } else {
-                                field._id = Date.now();
-                                this.$store.commit('addContentField', field);
-                            }
+                if(validate) {
+                    let field = Object.assign({}, this.fields);
+                    field.validations = this.validations;
 
-                            this.closeModal();
-                            this.resetFields();
-                        },
-                        reject => {
+                    if(this.fields._id) {
+                        this.$store.commit('updateContentField', field);
+                    } else {
+                        //TODO refactor!!!!!!!!
+                        field._id = Date.now();
+                        this.$store.commit('addContentField', field);
+                    }
 
-                        });
-                    },
-                    reject => {
-
-                    });
+                    this.closeModal();
+                    this.resetFields();
+                }
             }
         }
     }

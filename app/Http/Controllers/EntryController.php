@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Entry;
 use Illuminate\Http\Request;
+use App\MediaTemporaryStorage;
+use App\ContentField;
 
 class EntryController extends Controller
 {
@@ -31,6 +33,20 @@ class EntryController extends Controller
     {
         try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
+            $files = $request->input('files');
+
+            foreach ($files as  $collectionName => $collection) {
+                foreach ($collection as  $item) {
+
+                    if(isset($item['response']['id'])) {
+                        $media = MediaTemporaryStorage::find($item['response']['id']);
+
+                        $model->addMedia(storage_path("app/" . $media->path))
+                            ->toMediaCollection($collectionName);
+                    }
+                }
+            }
+
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
             return response()->json([], 500);
@@ -49,6 +65,27 @@ class EntryController extends Controller
             return response()->json([], 404);
         }
 
+        $contentEntry->files = [];
+
+        $mediaFields = ContentField::where('model_id', $contentEntry->model_id)->where('type', 'media')->get()->pluck('api_id');
+
+        foreach ($mediaFields as $field) {
+            $media = $contentEntry->getMedia($field);
+            $mediaFormatted = [];
+
+            foreach ($media as $item) {
+                $mediaFormatted[] = [
+                    'id' => $item->id,
+                    'thumb' => $item->getUrl('thumb'),
+                    'name' => $item->file_name,
+                    'size' => $item->size,
+                    'type' => $item->mime_type
+                ];
+            }
+
+            $contentEntry->files = array_merge($contentEntry->files, [$field => $mediaFormatted]);
+        }
+
         return response()->json($contentEntry, 200);
     }
 
@@ -63,6 +100,26 @@ class EntryController extends Controller
     {
         try {
             $contentEntry->update($request->only('title', 'published', 'fields'));
+
+            $files = $request->input('files');
+
+            foreach ($files as  $collectionName => $collection) {
+                foreach ($collection as  $item) {
+
+                    if(isset($item['response']['id'])) {
+                        $media = MediaTemporaryStorage::find($item['response']['id']);
+
+                        //TODO refactor upload method
+                        if(!empty($media)) {
+                            $contentEntry->addMedia(storage_path("app/" . $media->path))
+                                ->toMediaCollection($collectionName);
+
+                            $media->delete();
+                        }
+
+                    }
+                }
+            }
 
             return response()->json([], 200);
         } catch (\Exception $e) {

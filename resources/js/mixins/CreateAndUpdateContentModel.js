@@ -26,9 +26,6 @@ export default {
 
     methods: {
 
-        onChangePublished(value) {
-            this.fields.published = value;
-        },
 
     },
 

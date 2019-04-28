@@ -12,7 +12,8 @@ export default {
                 fields: {}
             },
             modelFields: [],
-            errors: []
+            errors: [],
+            fieldsIsFilled: false
         }
     },
 
@@ -21,10 +22,6 @@ export default {
     },
 
     methods: {
-
-        onChangePublished(value) {
-            this.fields.published = value;
-        },
 
         getFieldsFromModel() {
             return new Promise((resolve, reject) => {
@@ -51,6 +48,8 @@ export default {
                 this.fields.title = response.data.title;
                 this.fields.published = response.data.published;
                 this.fields.fields = response.data.fields;
+                this.fields.files = response.data.files;
+                this.fieldsIsFilled = true;
 
                 this.errors = [];
                 this.$store.commit('updateErrorMessage', []);

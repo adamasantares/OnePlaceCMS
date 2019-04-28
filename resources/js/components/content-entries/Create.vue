@@ -17,7 +17,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <publish-toggle :is-published="fields.published" @onChangePublished="onChangePublished"></publish-toggle>
+                            <publish-toggle :published.sync="fields.published"></publish-toggle>
                         </div>
                     </div>
 
@@ -30,8 +30,12 @@
                             <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
                         </template>
 
-                        <template v-if="field.type == 'image'">
-                            <image-field></image-field>
+                        <template v-if="field.type == 'media'">
+                            <image-field :api-id="field.api_id" :files-prop="[]" :label-prop="field.name"></image-field>
+                        </template>
+
+                        <template v-if="field.type == 'text_editor'">
+                            <text-editor :model.sync="fields.fields[field.api_id]"></text-editor>
                         </template>
                     </div>
 
@@ -52,13 +56,16 @@
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
     import ImageField from './fields/ImageField';
+    import TextEditor from './fields/TextEditor';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
-        components: {ImageField},
+        components: {ImageField, TextEditor},
         methods: {
             save() {
+                this.fields.files = this.$store.getters.medias;
+
                 axios.post('/api/content-entry', this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was created");

@@ -17,16 +17,26 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <publish-toggle :is-published="fields.published" @onChangePublished="onChangePublished"></publish-toggle>
+                            <publish-toggle :published.sync="fields.published"></publish-toggle>
                         </div>
                     </div>
 
-                    <div class="form-group" v-for="field in modelFields">
-                        <label :for="field.api_id">{{ field.name }}</label>
-                        <input :id="field.api_id" class="form-control"
-                               v-model="fields.fields[field.api_id]"
-                               :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
-                        <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                    <div class="form-group" v-if="fieldsIsFilled" v-for="field in modelFields">
+                        <template v-if="field.type == 'text'">
+                            <label :for="field.api_id">{{ field.name }}</label>
+                            <input :id="field.api_id" class="form-control"
+                                   v-model="fields.fields[field.api_id]"
+                                   :class="errors && errors[field.api_id] ? 'is-invalid' : ''">
+                            <div v-if="errors && errors[field.api_id]" class="invalid-feedback">{{ errors[field.api_id][0] }}</div>
+                        </template>
+
+                        <template v-if="field.type == 'media'">
+                            <image-field :api-id="field.api_id" :files-prop="fields.files[field.api_id] ? fields.files[field.api_id] : []" :label-prop="field.name"></image-field>
+                        </template>
+
+                        <template v-if="field.type == 'text_editor'">
+                            <text-editor :model.sync="fields.fields[field.api_id]"></text-editor>
+                        </template>
                     </div>
 
                 </div>
@@ -45,12 +55,16 @@
 
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
+    import ImageField from './fields/ImageField';
 
     export default {
         name: "Edit",
         mixins: [FunctionsMixin],
+        components: {ImageField},
         methods: {
             save() {
+                this.fields.files = this.$store.getters.medias;
+
                 axios.put(`/api/content-entry/${this.fields._id}`, this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
