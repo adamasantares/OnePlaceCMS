@@ -56,11 +56,12 @@
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
     import ImageField from './fields/ImageField';
+    import TextEditor from './fields/TextEditor';
 
     export default {
         name: "Edit",
         mixins: [FunctionsMixin],
-        components: {ImageField},
+        components: {ImageField, TextEditor},
         methods: {
             save() {
                 this.fields.files = this.$store.getters.medias;

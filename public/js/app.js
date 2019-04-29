@@ -2075,6 +2075,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_CreateAndUpdateEntry__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/CreateAndUpdateEntry */ "./resources/js/mixins/CreateAndUpdateEntry.js");
 /* harmony import */ var _fields_ImageField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fields/ImageField */ "./resources/js/components/content-entries/fields/ImageField.vue");
+/* harmony import */ var _fields_TextEditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fields/TextEditor */ "./resources/js/components/content-entries/fields/TextEditor.vue");
 //
 //
 //
@@ -2130,13 +2131,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Edit",
   mixins: [_mixins_CreateAndUpdateEntry__WEBPACK_IMPORTED_MODULE_0__["default"]],
   components: {
-    ImageField: _fields_ImageField__WEBPACK_IMPORTED_MODULE_1__["default"]
+    ImageField: _fields_ImageField__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TextEditor: _fields_TextEditor__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   methods: {
     save: function save() {
