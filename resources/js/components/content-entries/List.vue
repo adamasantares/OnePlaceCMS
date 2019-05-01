@@ -19,12 +19,12 @@
             </tr>
             </thead>
             <tbody>
-            <template v-if="!rows.data || !rows.data.length">
+            <template v-if="(!rows.data || !rows.data.length) && isLoaded">
                 <tr role="row" class="odd">
                     <td colspan="5" class="text-center"><h2>No data available</h2></td>
                 </tr>
             </template>
-            <template v-else>
+            <template v-else-if="isLoaded">
                 <tr v-for="model in rows.data" :key="model.id">
                     <td>{{ model.title }}</td>
                     <td>{{ model.published ? 'Published' : 'Not published' }}</td>
@@ -77,7 +77,14 @@
             getRows(query) {
                 let params = Object.assign(this.searchParams, query);
                 params = Object.assign({model_id: this.model_id}, this.searchParams);
-                this.$store.dispatch('getEntries', params);
+                this.$store.dispatch('getEntries', params).then(
+                    resolve => {
+                        this.isLoaded = true;
+                    },
+                    reject => {
+
+                    }
+                );;
             }
         },
         beforeRouteUpdate (to, from, next) {

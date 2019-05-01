@@ -2265,11 +2265,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getRows: function getRows(query) {
+      var _this = this;
+
       var params = Object.assign(this.searchParams, query);
       params = Object.assign({
         model_id: this.model_id
       }, this.searchParams);
-      this.$store.dispatch('getEntries', params);
+      this.$store.dispatch('getEntries', params).then(function (resolve) {
+        _this.isLoaded = true;
+      }, function (reject) {});
+      ;
     }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -2720,7 +2725,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (!newFile && oldFile) {
         // remove
-        if (oldFile.success && oldFile.response.id) {
+        if (oldFile.success && oldFile.response && oldFile.response.id) {
           axios.post(this.routeLaravel + "/" + oldFile.response.id).then(function (response) {
             return console.log(response);
           }).catch(function (error) {
@@ -3471,8 +3476,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getRows: function getRows(query) {
+      var _this = this;
+
       Object.assign(this.searchParams, query);
-      this.$store.dispatch('getContentModels', this.searchParams);
+      this.$store.dispatch('getContentModels', this.searchParams).then(function (resolve) {
+        _this.isLoaded = true;
+      }, function (reject) {});
     }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -3743,6 +3752,10 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       });
     },
     sections: function sections() {
+      if (this.$store.currentUser) {
+        return [];
+      }
+
       return [{
         title: 'Dashboard',
         link: '/dashboard',
@@ -64598,9 +64611,10 @@ var render = function() {
           _c(
             "tbody",
             [
-              !_vm.rows.data || !_vm.rows.data.length
+              (!_vm.rows.data || !_vm.rows.data.length) && _vm.isLoaded
                 ? [_vm._m(0)]
-                : _vm._l(_vm.rows.data, function(model) {
+                : _vm.isLoaded
+                ? _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -64660,6 +64674,7 @@ var render = function() {
                       )
                     ])
                   })
+                : _vm._e()
             ],
             2
           ),
@@ -66540,9 +66555,10 @@ var render = function() {
           _c(
             "tbody",
             [
-              !_vm.rows.data || !_vm.rows.data.length
+              (!_vm.rows.data || !_vm.rows.data.length) && _vm.isLoaded
                 ? [_vm._m(0)]
-                : _vm._l(_vm.rows.data, function(model) {
+                : _vm.isLoaded
+                ? _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -66596,6 +66612,7 @@ var render = function() {
                       )
                     ])
                   })
+                : _vm._e()
             ],
             2
           ),
@@ -66703,7 +66720,7 @@ var render = function() {
                                   "btn btn-success pull-right btn-create",
                                 attrs: { to: "/model/create" }
                               },
-                              [_vm._v("Create content model")]
+                              [_vm._v("Create model")]
                             )
                           ],
                           1
@@ -88845,14 +88862,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   actions: {
     getEntries: function getEntries(context, params) {
-      var queryString = Object.keys(params).map(function (key) {
-        return key + '=' + params[key];
-      }).join('&');
-      var url = '/api/content-entry?' + queryString;
-      axios.get(url).then(function (response) {
-        context.commit('updateContentEntries', response.data);
-      }).catch(function () {
-        context.commit('updateContentEntries', {});
+      return new Promise(function (resolve, reject) {
+        var queryString = Object.keys(params).map(function (key) {
+          return key + '=' + params[key];
+        }).join('&');
+        var url = '/api/content-entry?' + queryString;
+        axios.get(url).then(function (response) {
+          context.commit('updateContentEntries', response.data);
+          resolve();
+        }).catch(function () {
+          context.commit('updateContentEntries', {});
+          reject();
+        });
       });
     }
   }
@@ -88936,14 +88957,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   actions: {
     getContentModels: function getContentModels(context, params) {
-      var queryString = Object.keys(params).map(function (key) {
-        return key + '=' + params[key];
-      }).join('&');
-      var url = '/api/content-model?' + queryString;
-      axios.get(url).then(function (response) {
-        context.commit('updateContentModels', response.data);
-      }).catch(function () {
-        context.commit('updateContentModels', {});
+      return new Promise(function (resolve, reject) {
+        var queryString = Object.keys(params).map(function (key) {
+          return key + '=' + params[key];
+        }).join('&');
+        var url = '/api/content-model?' + queryString;
+        axios.get(url).then(function (response) {
+          context.commit('updateContentModels', response.data);
+          resolve();
+        }).catch(function () {
+          context.commit('updateContentModels', {});
+          reject();
+        });
       });
     }
   }

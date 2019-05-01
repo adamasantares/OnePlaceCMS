@@ -343,7 +343,7 @@
                 }
                 if (!newFile && oldFile) {
                     // remove
-                    if (oldFile.success && oldFile.response.id) {
+                    if (oldFile.success && oldFile.response && oldFile.response.id) {
                         axios.post(this.routeLaravel + "/" + oldFile.response.id).then(response => (console.log(response)))
                             .catch((error) => {
                                 console.log('fail');

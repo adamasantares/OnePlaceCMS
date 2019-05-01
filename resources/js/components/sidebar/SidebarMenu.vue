@@ -28,6 +28,10 @@
                 });
             },
             sections() {
+                if(this.$store.currentUser) {
+                    return [];
+                }
+
                 return [
                     {
                         title: 'Dashboard',

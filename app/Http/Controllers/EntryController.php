@@ -104,6 +104,20 @@ class EntryController extends Controller
             $files = $request->input('files');
 
             foreach ($files as  $collectionName => $collection) {
+
+                $exceptForDeleteMediaIds = [];
+
+                foreach ($collection as  $item) {
+
+                    if(isset($item['id'])) {
+                        array_push($exceptForDeleteMediaIds, $item['id']);
+                    }
+                }
+
+                $contentEntry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMediaIds);
+            }
+
+            foreach ($files as  $collectionName => $collection) {
                 foreach ($collection as  $item) {
 
                     if(isset($item['response']['id'])) {

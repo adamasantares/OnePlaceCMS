@@ -18,7 +18,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    <router-link to="/model/create" class="btn btn-success pull-right btn-create">Create content model</router-link>
+                                    <router-link to="/model/create" class="btn btn-success pull-right btn-create">Create model</router-link>
                                 </div>
                             </div>
                             <div class="row">

@@ -21,14 +21,18 @@ export default {
     },
     actions: {
         getEntries(context, params) {
-            let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-            let url = '/api/content-entry?' + queryString;
+            return new Promise((resolve, reject) => {
+                let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+                let url = '/api/content-entry?' + queryString;
 
-            axios.get(url)
-                .then((response) => {
-                    context.commit('updateContentEntries', response.data);
-                }).catch(() => {
-                context.commit('updateContentEntries', {});
+                axios.get(url)
+                    .then((response) => {
+                        context.commit('updateContentEntries', response.data);
+                        resolve();
+                    }).catch(() => {
+                    context.commit('updateContentEntries', {});
+                    reject();
+                });
             });
         }
     }

@@ -68,14 +68,18 @@ export default {
     },
     actions: {
         getContentModels(context, params) {
-            let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-            let url = '/api/content-model?' + queryString;
+            return new Promise((resolve, reject) => {
+                let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+                let url = '/api/content-model?' + queryString;
 
-            axios.get(url)
-                .then((response) => {
-                    context.commit('updateContentModels', response.data);
-                }).catch(() => {
-                context.commit('updateContentModels', {});
+                axios.get(url)
+                    .then((response) => {
+                        context.commit('updateContentModels', response.data);
+                        resolve();
+                    }).catch(() => {
+                    context.commit('updateContentModels', {});
+                    reject();
+                });
             });
         }
     }
