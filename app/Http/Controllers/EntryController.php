@@ -114,7 +114,15 @@ class EntryController extends Controller
                     }
                 }
 
-                $contentEntry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMediaIds);
+                $exceptForDeleteMedia = [];
+
+                foreach ($contentEntry->getMedia($collectionName) as $media) {
+                    if(in_array($media->id, $exceptForDeleteMediaIds)) {
+                        array_push($exceptForDeleteMedia, $media);
+                    }
+                }
+
+                $contentEntry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
             }
 
             foreach ($files as  $collectionName => $collection) {
