@@ -83,7 +83,7 @@
                             :thread="thread < 1 ? 1 : (thread > 5 ? 5 : thread)"
                             :headers="uploadHeaders"
                             :data="data"
-                            :drop="drop"
+                            drop="true"
                             :add-index="addIndex"
                             v-model="files"
                             @input-filter="inputFilter"
@@ -225,13 +225,11 @@
             return {
                 files: [],
                 accept: 'image/png,image/gif,image/jpeg,image/webp,application/pdf',
-                extensions: 'gif,jpg,jpeg,png,webp,pdf',
-                // extensions: ['gif', 'jpg', 'jpeg','png', 'webp'],
+                extensions: ['gif', 'jpg', 'jpeg','png', 'webp', 'pdf'],
                 minSize: 1024,
                 size: 1024 * 1024 * 10,
                 multiple: true,
                 directory: false,
-                drop: true,
                 addIndex: false,
                 thread: 3,
                 routeLaravel: '/api/media',
@@ -240,6 +238,8 @@
                     '_method': 'post'
                 },
                 data: {
+                    model_id: '',
+                    field_api_id: ''
                 },
                 uploadAuto: false,
                 addData: {
@@ -256,6 +256,7 @@
         },
         props: {
             apiId: String,
+            modelId: String,
             filesProp: Array,
             labelProp: String
         },
@@ -356,9 +357,7 @@
                         this.$refs.upload.active = true
                     }
                 }
-            },
-            alert(message) {
-                alert(message)
+
             },
             onEditFileShow(file) {
                 this.editFile = { ...file, show: true }
@@ -408,6 +407,9 @@
             }
         },
         mounted() {
+            this.data.field_api_id = this.apiId;
+            this.data.model_id = this.modelId;
+
             this.formatImagesDataFromServer(this.filesProp);
         }
     }

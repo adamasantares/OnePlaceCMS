@@ -31,7 +31,7 @@
                         </template>
 
                         <template v-if="field.type == 'media'">
-                            <image-field :api-id="field.api_id" :files-prop="[]" :label-prop="field.name"></image-field>
+                            <image-field :api-id="field.api_id" :model-id="fields.model_id" :files-prop="[]" :label-prop="field.name"></image-field>
                         </template>
 
                         <template v-if="field.type == 'text_editor'">

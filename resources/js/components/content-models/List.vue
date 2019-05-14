@@ -19,12 +19,17 @@
                 </tr>
             </thead>
             <tbody>
-                <template v-if="(!rows.data || !rows.data.length) && isLoaded">
+                <template v-if="!isLoaded">
+                    <tr role="row" class="odd">
+                        <td colspan="5" class="text-center"><h2>Loading...</h2></td>
+                    </tr>
+                </template>
+                <template v-else-if="!rows.data || !rows.data.length">
                     <tr role="row" class="odd">
                         <td colspan="5" class="text-center"><h2>No data available</h2></td>
                     </tr>
                 </template>
-                <template v-else-if="isLoaded">
+                <template v-else>
                     <tr v-for="model in rows.data" :key="model.id">
                         <td>{{ model.title }}</td>
                         <td>{{ model.published ? 'Published' : 'Not published' }}</td>

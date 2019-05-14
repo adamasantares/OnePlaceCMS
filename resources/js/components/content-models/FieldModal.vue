@@ -113,7 +113,7 @@
                 this.$store.commit('resetCurrentContentField');
                 this.$store.commit('resetCurrentValidationsRules');
             },
-            validate() {
+            validateUniqueApiIdByFieldsInStorage() {
                     var self = this;
 
                     let isInvalid = this.contentFields.find(function (field) {
@@ -123,24 +123,39 @@
 
                     return !Boolean(isInvalid);
             },
+            validateOnServer() {
+                // return new Promise(function(resolve, reject) {
+                    axios.post('/api/content-field/validate', this.validations).then(response => {
+                        console.log(response);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                // });
+            },
             submit() {
-                let validate = this.validate();
+                let validate = this.validateUniqueApiIdByFieldsInStorage();
 
-                if(validate) {
-                    let field = Object.assign({}, this.fields);
-                    field.validations = this.validations;
-
-                    if(this.fields._id) {
-                        this.$store.commit('updateContentField', field);
-                    } else {
-                        //TODO refactor!!!!!!!!
-                        field._id = Date.now();
-                        this.$store.commit('addContentField', field);
-                    }
-
-                    this.closeModal();
-                    this.resetFields();
+                if(!validate) {
+                    this.errors = [];
+                    this.errors['api_id'] = ['The api id has already been taken.'];
+                    return false;
                 }
+
+                this.validateOnServer();
+
+                let field = Object.assign({}, this.fields);
+                field.validations = this.validations;
+
+                if(this.fields._id) {
+                    this.$store.commit('updateContentField', field);
+                } else {
+                    //TODO refactor!!!!!!!!
+                    field._id = Date.now();
+                    this.$store.commit('addContentField', field);
+                }
+
+                this.closeModal();
+                this.resetFields();
             }
         }
     }

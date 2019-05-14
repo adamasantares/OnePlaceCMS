@@ -10,7 +10,7 @@ class MediaController extends Controller
 {
     public function store()
     {
-        $path = request()->file('file')->storeAs("/media/".date("Y-m-d"), request()->file('file')->getClientOriginalName());
+        $path = request()->file('file')->storeAs("/media-temp/".date("Y-m-d"), request()->file('file')->getClientOriginalName());
 
         $media = MediaTemporaryStorage::create([
             'name' => basename($path),
@@ -23,10 +23,5 @@ class MediaController extends Controller
             'name' => $media->name,
             'size' => $media->size
         ], 200);
-    }
-
-    public function destroy(MediaTemporaryStorage $media)
-    {
-
     }
 }

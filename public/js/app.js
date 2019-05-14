@@ -2247,6 +2247,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'list',
@@ -2274,7 +2279,6 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.dispatch('getEntries', params).then(function (resolve) {
         _this.isLoaded = true;
       }, function (reject) {});
-      ;
     }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -2596,13 +2600,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       files: [],
       accept: 'image/png,image/gif,image/jpeg,image/webp,application/pdf',
-      extensions: 'gif,jpg,jpeg,png,webp,pdf',
-      // extensions: ['gif', 'jpg', 'jpeg','png', 'webp'],
+      extensions: ['gif', 'jpg', 'jpeg', 'png', 'webp', 'pdf'],
       minSize: 1024,
       size: 1024 * 1024 * 10,
       multiple: true,
       directory: false,
-      drop: true,
       addIndex: false,
       thread: 3,
       routeLaravel: '/api/media',
@@ -2610,7 +2612,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'Authorization': 'Bearer ' + this.$store.getters.currentUser.token,
         '_method': 'post'
       },
-      data: {},
+      data: {
+        model_id: '',
+        field_api_id: ''
+      },
       uploadAuto: false,
       addData: {
         show: false,
@@ -2626,6 +2631,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   props: {
     apiId: String,
+    modelId: String,
     filesProp: Array,
     labelProp: String
   },
@@ -2741,19 +2747,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }
     },
-    alert: function (_alert) {
-      function alert(_x) {
-        return _alert.apply(this, arguments);
-      }
-
-      alert.toString = function () {
-        return _alert.toString();
-      };
-
-      return alert;
-    }(function (message) {
-      alert(message);
-    }),
     onEditFileShow: function onEditFileShow(file) {
       this.editFile = _objectSpread({}, file, {
         show: true
@@ -2817,6 +2810,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
+    this.data.field_api_id = this.apiId;
+    this.data.model_id = this.modelId;
     this.formatImagesDataFromServer(this.filesProp);
   }
 });
@@ -3323,31 +3318,44 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.commit('resetCurrentContentField');
       this.$store.commit('resetCurrentValidationsRules');
     },
-    validate: function validate() {
+    validateUniqueApiIdByFieldsInStorage: function validateUniqueApiIdByFieldsInStorage() {
       var self = this;
       var isInvalid = this.contentFields.find(function (field) {
         return field._id != self.fields._id && field.api_id === self.fields.api_id;
       });
       return !Boolean(isInvalid);
     },
+    validateOnServer: function validateOnServer() {
+      // return new Promise(function(resolve, reject) {
+      axios.post('/api/content-field/validate', this.validations).then(function (response) {
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      }); // });
+    },
     submit: function submit() {
-      var validate = this.validate();
+      var validate = this.validateUniqueApiIdByFieldsInStorage();
 
-      if (validate) {
-        var field = Object.assign({}, this.fields);
-        field.validations = this.validations;
-
-        if (this.fields._id) {
-          this.$store.commit('updateContentField', field);
-        } else {
-          //TODO refactor!!!!!!!!
-          field._id = Date.now();
-          this.$store.commit('addContentField', field);
-        }
-
-        this.closeModal();
-        this.resetFields();
+      if (!validate) {
+        this.errors = [];
+        this.errors['api_id'] = ['The api id has already been taken.'];
+        return false;
       }
+
+      this.validateOnServer();
+      var field = Object.assign({}, this.fields);
+      field.validations = this.validations;
+
+      if (this.fields._id) {
+        this.$store.commit('updateContentField', field);
+      } else {
+        //TODO refactor!!!!!!!!
+        field._id = Date.now();
+        this.$store.commit('addContentField', field);
+      }
+
+      this.closeModal();
+      this.resetFields();
     }
   }
 });
@@ -3402,6 +3410,11 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_Listing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/Listing */ "./resources/js/mixins/Listing.js");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -64211,6 +64224,7 @@ var render = function() {
                           _c("image-field", {
                             attrs: {
                               "api-id": field.api_id,
+                              "model-id": _vm.fields.model_id,
                               "files-prop": [],
                               "label-prop": field.name
                             }
@@ -64440,6 +64454,7 @@ var render = function() {
                               _c("image-field", {
                                 attrs: {
                                   "api-id": field.api_id,
+                                  "model-id": _vm.fields.model_id,
                                   "files-prop": _vm.fields.files[field.api_id]
                                     ? _vm.fields.files[field.api_id]
                                     : [],
@@ -64611,10 +64626,11 @@ var render = function() {
           _c(
             "tbody",
             [
-              (!_vm.rows.data || !_vm.rows.data.length) && _vm.isLoaded
+              !_vm.isLoaded
                 ? [_vm._m(0)]
-                : _vm.isLoaded
-                ? _vm._l(_vm.rows.data, function(model) {
+                : !_vm.rows.data || !_vm.rows.data.length
+                ? [_vm._m(1)]
+                : _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -64674,12 +64690,11 @@ var render = function() {
                       )
                     ])
                   })
-                : _vm._e()
             ],
             2
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ]
       ),
       _vm._v(" "),
@@ -64694,6 +64709,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticClass: "odd", attrs: { role: "row" } }, [
+      _c("td", { staticClass: "text-center", attrs: { colspan: "5" } }, [
+        _c("h2", [_vm._v("Loading...")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -65113,7 +65138,7 @@ var render = function() {
                   thread: _vm.thread < 1 ? 1 : _vm.thread > 5 ? 5 : _vm.thread,
                   headers: _vm.uploadHeaders,
                   data: _vm.data,
-                  drop: _vm.drop,
+                  drop: "true",
                   "add-index": _vm.addIndex,
                   "input-id": _vm.apiId
                 },
@@ -66555,10 +66580,11 @@ var render = function() {
           _c(
             "tbody",
             [
-              (!_vm.rows.data || !_vm.rows.data.length) && _vm.isLoaded
+              !_vm.isLoaded
                 ? [_vm._m(0)]
-                : _vm.isLoaded
-                ? _vm._l(_vm.rows.data, function(model) {
+                : !_vm.rows.data || !_vm.rows.data.length
+                ? [_vm._m(1)]
+                : _vm._l(_vm.rows.data, function(model) {
                     return _c("tr", { key: model.id }, [
                       _c("td", [_vm._v(_vm._s(model.title))]),
                       _vm._v(" "),
@@ -66612,12 +66638,11 @@ var render = function() {
                       )
                     ])
                   })
-                : _vm._e()
             ],
             2
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ]
       ),
       _vm._v(" "),
@@ -66632,6 +66657,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticClass: "odd", attrs: { role: "row" } }, [
+      _c("td", { staticClass: "text-center", attrs: { colspan: "5" } }, [
+        _c("h2", [_vm._v("Loading...")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

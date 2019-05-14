@@ -11,7 +11,7 @@ class ContentFieldController extends Controller
      * @param ContentFieldRequest $request
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function validateFields(ContentFieldRequest $request)
+    public function validate(ContentFieldRequest $request)
     {
         return response()->json('success', 200);
     }

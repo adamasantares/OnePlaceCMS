@@ -43,6 +43,8 @@ class EntryController extends Controller
 
                         $model->addMedia(storage_path("app/" . $media->path))
                             ->toMediaCollection($collectionName);
+
+                        $media->delete();
                     }
                 }
             }
@@ -104,43 +106,29 @@ class EntryController extends Controller
             $files = $request->input('files');
 
             foreach ($files as  $collectionName => $collection) {
+                //find medias by ids from request
+                $exceptForDeleteMedia = $contentEntry->getMedia($collectionName)->filter(function ($item) use ($collection) {
+                    return in_array($item->id, array_column($collection, 'id'));
+                })->all();
 
-                $exceptForDeleteMediaIds = [];
-
-                foreach ($collection as  $item) {
-
-                    if(isset($item['id'])) {
-                        array_push($exceptForDeleteMediaIds, $item['id']);
-                    }
-                }
-
-                $exceptForDeleteMedia = [];
-
-                foreach ($contentEntry->getMedia($collectionName) as $media) {
-                    if(in_array($media->id, $exceptForDeleteMediaIds)) {
-                        array_push($exceptForDeleteMedia, $media);
-                    }
-                }
-
+                //delete not found medias
                 $contentEntry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
-            }
 
-            foreach ($files as  $collectionName => $collection) {
-                foreach ($collection as  $item) {
+                //save new media
 
+                foreach ($collection as $item) {
                     if(isset($item['response']['id'])) {
                         $media = MediaTemporaryStorage::find($item['response']['id']);
 
-                        //TODO refactor upload method
                         if(!empty($media)) {
                             $contentEntry->addMedia(storage_path("app/" . $media->path))
                                 ->toMediaCollection($collectionName);
 
                             $media->delete();
                         }
-
                     }
                 }
+
             }
 
             return response()->json([], 200);
