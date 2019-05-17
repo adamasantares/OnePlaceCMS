@@ -6,6 +6,8 @@ use App\Entry;
 use Illuminate\Http\Request;
 use App\MediaTemporaryStorage;
 use App\ContentField;
+use App\Helpers\CmsHelper;
+
 
 class EntryController extends Controller
 {
@@ -31,9 +33,12 @@ class EntryController extends Controller
      */
     public function store(Request $request)
     {
+
+        CmsHelper::buildValidationsRules($request);
+
         try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
-            $files = $request->input('files');
+            $files = $request->input('files', []);
 
             foreach ($files as  $collectionName => $collection) {
                 foreach ($collection as  $item) {
@@ -100,10 +105,12 @@ class EntryController extends Controller
      */
     public function update(Request $request, Entry $contentEntry)
     {
+        CmsHelper::buildValidationsRules($request);
+
         try {
             $contentEntry->update($request->only('title', 'published', 'fields'));
 
-            $files = $request->input('files');
+            $files = $request->input('files', []);
 
             foreach ($files as  $collectionName => $collection) {
                 //find medias by ids from request

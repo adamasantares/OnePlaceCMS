@@ -2130,7 +2130,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -3765,7 +3764,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       });
     },
     sections: function sections() {
-      if (this.$store.currentUser) {
+      if (this.$store.currentUser && this.$store.currentUser.token) {
         return [];
       }
 
@@ -64190,7 +64189,7 @@ var render = function() {
                             ],
                             staticClass: "form-control",
                             class:
-                              _vm.errors && _vm.errors[field.api_id]
+                              _vm.errors && _vm.errors["fields." + field.api_id]
                                 ? "is-invalid"
                                 : "",
                             attrs: { id: field.api_id },
@@ -64211,9 +64210,13 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          _vm.errors && _vm.errors[field.api_id]
+                          _vm.errors && _vm.errors["fields." + field.api_id]
                             ? _c("div", { staticClass: "invalid-feedback" }, [
-                                _vm._v(_vm._s(_vm.errors[field.api_id][0]))
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.errors["fields." + field.api_id][0]
+                                  )
+                                )
                               ])
                             : _vm._e()
                         ]
@@ -64414,7 +64417,8 @@ var render = function() {
                                 ],
                                 staticClass: "form-control",
                                 class:
-                                  _vm.errors && _vm.errors[field.api_id]
+                                  _vm.errors &&
+                                  _vm.errors["fields." + field.api_id]
                                     ? "is-invalid"
                                     : "",
                                 attrs: { id: field.api_id },
@@ -64435,13 +64439,17 @@ var render = function() {
                                 }
                               }),
                               _vm._v(" "),
-                              _vm.errors && _vm.errors[field.api_id]
+                              _vm.errors && _vm.errors["fields." + field.api_id]
                                 ? _c(
                                     "div",
                                     { staticClass: "invalid-feedback" },
                                     [
                                       _vm._v(
-                                        _vm._s(_vm.errors[field.api_id][0])
+                                        _vm._s(
+                                          _vm.errors[
+                                            "fields." + field.api_id
+                                          ][0]
+                                        )
                                       )
                                     ]
                                   )

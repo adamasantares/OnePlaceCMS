@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\ContentModel;
 use App\ContentField;
-use Illuminate\Http\Request;
 use App\Http\Requests\ContentModelRequest;
 
 class ContentModelController extends Controller
