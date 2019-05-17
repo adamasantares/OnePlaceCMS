@@ -3649,6 +3649,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TextValidations",
   computed: {
@@ -66997,51 +67009,31 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
+    _c("b", [_vm._v("Specific pattern")]),
+    _vm._v(" "),
     _c("div", { staticClass: "form-check" }, [
       _c("input", {
         directives: [
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.validations.email,
-            expression: "validations.email"
+            value: _vm.validations.specific,
+            expression: "validations.specific"
           }
         ],
         staticClass: "form-check-input",
-        attrs: { type: "checkbox", id: "email-rule" },
-        domProps: {
-          checked: Array.isArray(_vm.validations.email)
-            ? _vm._i(_vm.validations.email, null) > -1
-            : _vm.validations.email
-        },
+        attrs: { type: "radio", value: "email", id: "email" },
+        domProps: { checked: _vm._q(_vm.validations.specific, "email") },
         on: {
           change: function($event) {
-            var $$a = _vm.validations.email,
-              $$el = $event.target,
-              $$c = $$el.checked ? true : false
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v)
-              if ($$el.checked) {
-                $$i < 0 && _vm.$set(_vm.validations, "email", $$a.concat([$$v]))
-              } else {
-                $$i > -1 &&
-                  _vm.$set(
-                    _vm.validations,
-                    "email",
-                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                  )
-              }
-            } else {
-              _vm.$set(_vm.validations, "email", $$c)
-            }
+            return _vm.$set(_vm.validations, "specific", "email")
           }
         }
       }),
       _vm._v(" "),
       _c(
         "label",
-        { staticClass: "form-check-label", attrs: { for: "email-rule" } },
+        { staticClass: "form-check-label", attrs: { for: "email" } },
         [_vm._v("\n            E-mail\n        ")]
       )
     ]),
@@ -67052,47 +67044,76 @@ var render = function() {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.validations.url,
-            expression: "validations.url"
+            value: _vm.validations.specific,
+            expression: "validations.specific"
           }
         ],
         staticClass: "form-check-input",
-        attrs: { type: "checkbox", id: "url-rule" },
-        domProps: {
-          checked: Array.isArray(_vm.validations.url)
-            ? _vm._i(_vm.validations.url, null) > -1
-            : _vm.validations.url
-        },
+        attrs: { type: "radio", value: "url", id: "url" },
+        domProps: { checked: _vm._q(_vm.validations.specific, "url") },
         on: {
           change: function($event) {
-            var $$a = _vm.validations.url,
-              $$el = $event.target,
-              $$c = $$el.checked ? true : false
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v)
-              if ($$el.checked) {
-                $$i < 0 && _vm.$set(_vm.validations, "url", $$a.concat([$$v]))
-              } else {
-                $$i > -1 &&
-                  _vm.$set(
-                    _vm.validations,
-                    "url",
-                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                  )
-              }
-            } else {
-              _vm.$set(_vm.validations, "url", $$c)
-            }
+            return _vm.$set(_vm.validations, "specific", "url")
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("label", { staticClass: "form-check-label", attrs: { for: "url" } }, [
+        _vm._v("\n            URL\n        ")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-check" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.validations.specific,
+            expression: "validations.specific"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "radio", value: "pattern", id: "pattern" },
+        domProps: { checked: _vm._q(_vm.validations.specific, "pattern") },
+        on: {
+          change: function($event) {
+            return _vm.$set(_vm.validations, "specific", "pattern")
           }
         }
       }),
       _vm._v(" "),
       _c(
         "label",
-        { staticClass: "form-check-label", attrs: { for: "url-rule" } },
-        [_vm._v("\n            URL\n        ")]
-      )
+        { staticClass: "form-check-label", attrs: { for: "pattern" } },
+        [_vm._v("\n            Regular pattern\n        ")]
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _vm.validations.specific == "pattern"
+        ? _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.validations.pattern,
+                expression: "validations.pattern"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.validations.pattern },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.validations, "pattern", $event.target.value)
+              }
+            }
+          })
+        : _vm._e()
     ])
   ])
 }

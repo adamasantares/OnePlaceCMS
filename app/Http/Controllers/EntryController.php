@@ -33,6 +33,11 @@ class EntryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'model_id' => 'required',
+            'published' => 'required'
+        ]);
 
         CmsHelper::buildValidationsRules($request);
 
@@ -105,6 +110,12 @@ class EntryController extends Controller
      */
     public function update(Request $request, Entry $contentEntry)
     {
+        $request->validate([
+            'title' => 'required',
+            'model_id' => 'required',
+            'published' => 'required'
+        ]);
+
         CmsHelper::buildValidationsRules($request);
 
         try {
