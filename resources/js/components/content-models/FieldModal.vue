@@ -46,7 +46,7 @@
                                 </div>
                                 <div :class="activeTab == 'validations' ? 'show active' : ''" class="tab-pane fade" >
                                     <text-validations v-if="fieldType == 'text'"></text-validations>
-                                    <image-validations v-if="fieldType == 'image'"></image-validations>
+                                    <image-validations v-if="fieldType == 'media'"></image-validations>
                                 </div>
                             </div>
                         </div>

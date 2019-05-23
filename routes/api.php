@@ -13,7 +13,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::get('content-model/all', 'ContentModelController@all');
     Route::resource('content-model', 'ContentModelController');
-    Route::post('content-field/validate', 'ContentFieldController@validate');
+    Route::post('content-field/validate', 'ContentFieldController@validateFields');
     Route::resource('content-entry', 'EntryController');
     Route::post('media', 'MediaController@store');
     Route::delete('media/{media}', 'MediaController@destroy');

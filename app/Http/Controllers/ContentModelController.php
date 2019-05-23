@@ -86,14 +86,14 @@ class ContentModelController extends Controller
 
                 $field =  ContentField::updateOrCreate(
                     [
-                        'api_id' => $value['api_id']
+                        'api_id' => $value['api_id'],
+                        'model_id' => $contentModel->id
                     ],
                     [
                         'name' => $value['name'],
                         'type' => $value['type'],
                         'validations' => $value['validations'],
-                        'order' => $index,
-                        'model_id' => $contentModel->id
+                        'order' => $index
                     ]
                 );
 

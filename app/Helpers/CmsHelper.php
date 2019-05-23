@@ -2,18 +2,16 @@
 
 namespace App\Helpers;
 use Illuminate\Http\Request;
-use App\ContentModel;
+use App\ContentField;
 
 
 class CmsHelper
 {
-    public static function buildValidationsRules(Request $request)
+    public static function buildValidationsRules($fields)
     {
-        $validationsModel = ContentModel::find($request->input('model_id'))->fields()->select('api_id', 'validations')->get()->toArray();
-
         $validations = [];
 
-        foreach ($validationsModel as $item) {
+        foreach ($fields as $item) {
 
             foreach ($item['validations'] as $validation => $value) {
 
@@ -33,6 +31,28 @@ class CmsHelper
         }
 
         $validations = array_map(function($rules) { return implode('|', $rules); }, $validations);
+
+        return $validations;
+    }
+
+    public static function validationFiles(Request $request)
+    {
+        $field = ContentField::where('model_id', $request->input('model_id'))
+                            ->where('api_id', $request->input('field_api_id'))
+                            ->firstOrFail();
+
+        $validations = 'mimes:' . implode(',', $field->validations['mime']);
+
+        return $request->validate([
+            'file' => $validations
+        ]);
+    }
+
+    public static function validationFields(Request $request)
+    {
+        $fields = ContentField::where('model_id', $request->input('model_id'))->where('type', '!=', 'media')->select('api_id', 'validations')->get()->toArray();
+
+        $validations = self::buildValidationsRules($fields);
 
         return $request->validate($validations);
     }

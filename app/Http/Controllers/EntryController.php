@@ -8,7 +8,6 @@ use App\MediaTemporaryStorage;
 use App\ContentField;
 use App\Helpers\CmsHelper;
 
-
 class EntryController extends Controller
 {
     /**
@@ -39,7 +38,7 @@ class EntryController extends Controller
             'published' => 'required'
         ]);
 
-        CmsHelper::buildValidationsRules($request);
+        CmsHelper::validationFields($request);
 
         try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
@@ -116,7 +115,7 @@ class EntryController extends Controller
             'published' => 'required'
         ]);
 
-        CmsHelper::buildValidationsRules($request);
+        CmsHelper::validationFields($request);
 
         try {
             $contentEntry->update($request->only('title', 'published', 'fields'));
@@ -161,7 +160,8 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Entry $contentEntry) {
+    public function destroy(Entry $contentEntry)
+    {
         $contentEntry->delete();
     }
 }

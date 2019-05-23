@@ -30,13 +30,17 @@
                             <div v-if="errors && errors['fields.' + field.api_id]" class="invalid-feedback">{{ errors['fields.' + field.api_id][0] }}</div>
                         </template>
 
-                        <template v-if="field.type == 'media'">
-                            <image-field :api-id="field.api_id" :model-id="fields.model_id" :files-prop="[]" :label-prop="field.name"></image-field>
-                        </template>
+                        <!--<text-field v-if="field.type == 'text'"-->
+                            <!--:errors="errors['fields.' + field.api_id]"-->
+                            <!--:model.sync="fields.fields[field.api_id]"-->
+                        <!--&gt;</text-field>-->
 
-                        <template v-if="field.type == 'text_editor'">
-                            <text-editor :model.sync="fields.fields[field.api_id]"></text-editor>
-                        </template>
+                        <image-field v-if="field.type == 'media'"
+                                     :api-id="field.api_id" :model-id="fields.model_id" :files-prop="[]" :label-prop="field.name"></image-field>
+
+                        <text-editor v-if="field.type == 'text_editor'"
+                                    :model.sync="fields.fields[field.api_id]"
+                        ></text-editor>
                     </div>
 
                 </div>
@@ -57,11 +61,12 @@
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
     import ImageField from './fields/ImageField';
     import TextEditor from './fields/TextEditor';
+    import TextField from './fields/TextField';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
-        components: {ImageField, TextEditor},
+        components: {ImageField, TextEditor, TextField},
         methods: {
             save() {
                 this.fields.files = this.$store.getters.medias;

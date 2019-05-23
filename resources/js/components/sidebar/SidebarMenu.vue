@@ -28,9 +28,6 @@
                 });
             },
             sections() {
-                if(this.$store.currentUser && this.$store.currentUser.token) {
-                    return [];
-                }
 
                 return [
                     {

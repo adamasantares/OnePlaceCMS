@@ -25,9 +25,7 @@ class ContentFieldRequest extends FormRequest
     {
         return [
             'name' => 'max:255|required',
-            'api_id' => 'max:255|required',
-            'list' => 'boolean',
-            'validations.*' => 'boolean'
+            'api_id' => 'max:255|required'
         ];
     }
 }

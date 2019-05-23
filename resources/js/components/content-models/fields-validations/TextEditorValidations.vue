@@ -1,31 +1,38 @@
 <template>
-    <editor-content :editor="editor" />
+    <div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" v-model="validations.required" id="required-rule">
+            <label class="form-check-label" for="required-rule">
+                Required
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="accept">File extensions</label>
+            <select v-model="validations.mime" class="form-control" id="accept">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="gif">GIF</option>
+                <option value="pdf">PDF</option>
+            </select>
+        </div>
+
+    </div>
 </template>
 
 <script>
-    import { Editor, EditorContent } from 'tiptap'
-
     export default {
         name: "TextEditorValidations",
-        components: {
-            EditorContent,
-        },
-        data() {
-            return {
-                editor: null,
+        computed: {
+            validations: {
+                get() {
+                    return this.$store.getters.currentValidationsRules;
+                },
+                set(value) {
+                    this.$store.commit('setCurrentValidationsRules', value);
+                }
             }
-        },
-        mounted() {
-            // Create an `Editor` instance with some default content. The editor is
-            // then passed to the `EditorContent` component as a `prop`
-            this.editor = new Editor({
-                content: '<p>This is just a boring paragraph</p>',
-            })
-        },
-        beforeDestroy() {
-            // Always destroy your editor instance when it's no longer needed
-            this.editor.destroy()
-        },
+        }
     }
 </script>
 
