@@ -1,5 +1,5 @@
 <template>
-    <nav class="mt-2">
+    <nav v-if="isLoggedIn" class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <template v-for="section in sections">
                 <sidebar-menu-section v-if="section.childs.length" :key="section.title" :section="section"></sidebar-menu-section>
@@ -23,12 +23,15 @@
             allContentModelsList() {
                 let models = [...this.$store.getters.allContentModels];
 
+                if(!models.length) {
+                    return [];
+                }
+
                 return models.map((model) => {
                     return Object.assign(model, {link: `/entry/${model._id}`, icon: 'fa-circle-o'});
                 });
             },
             sections() {
-
                 return [
                     {
                         title: 'Dashboard',
@@ -49,6 +52,9 @@
                         childs: this.allContentModelsList
                     }
                 ]
+            },
+            isLoggedIn() {
+                return this.$store.getters.isLoggedIn;
             }
         },
         created() {

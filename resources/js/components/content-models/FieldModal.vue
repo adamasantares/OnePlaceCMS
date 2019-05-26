@@ -124,13 +124,7 @@
                     return !Boolean(isInvalid);
             },
             validateOnServer() {
-                // return new Promise(function(resolve, reject) {
-                    axios.post('/api/content-field/validate', this.validations).then(response => {
-                        console.log(response);
-                    }).catch(error => {
-                        console.log(error);
-                    });
-                // });
+                return axios.post('/api/content-field/validate', this.fields);
             },
             submit() {
                 let validate = this.validateUniqueApiIdByFieldsInStorage();
@@ -141,21 +135,29 @@
                     return false;
                 }
 
-                this.validateOnServer();
+                this.validateOnServer().then(
+                    resolve => {
+                        this.errors = [];
 
-                let field = Object.assign({}, this.fields);
-                field.validations = this.validations;
+                        let field = Object.assign({}, this.fields);
+                        field.validations = this.validations;
 
-                if(this.fields._id) {
-                    this.$store.commit('updateContentField', field);
-                } else {
-                    //TODO refactor!!!!!!!!
-                    field._id = Date.now();
-                    this.$store.commit('addContentField', field);
-                }
+                        if(this.fields._id) {
+                            this.$store.commit('updateContentField', field);
+                        } else {
+                            field._id = Date.now();
+                            this.$store.commit('addContentField', field);
+                        }
 
-                this.closeModal();
-                this.resetFields();
+                        this.closeModal();
+                        this.resetFields();
+                    },
+                    reject => {
+                        if (reject.response.status === 422) {
+                            this.errors = reject.response.data.errors || {};
+                        }
+                    }
+                );
             }
         }
     }

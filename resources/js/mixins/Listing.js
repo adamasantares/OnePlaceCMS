@@ -63,6 +63,7 @@ export default {
                         this.$store.commit('updateErrorMessage', []);
                         this.$store.commit('updateSuccessMessage', row.title + " was deleted");
                         this.getRows(this.$route.query);
+                        this.$store.dispatch('getAllContentModels');
                     }).catch(() => {
                     this.$store.commit('updateSuccessMessage', "");
                     this.$store.commit('updateErrorMessage', [row.title + " wasn't deleted"]);

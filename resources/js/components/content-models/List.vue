@@ -88,7 +88,7 @@
 
                     }
                 );
-            }
+            },
         },
         beforeRouteUpdate (to, from, next) {
             this.getRows(to.query);
