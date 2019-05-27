@@ -157,7 +157,7 @@ class EntryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Entry  $entry
+     * @param  \App\Entry  $contentEntry
      * @return \Illuminate\Http\Response
      */
     public function destroy(Entry $contentEntry)

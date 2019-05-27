@@ -90,7 +90,7 @@ export default {
                 .then((response) => {
                     context.commit('updateAllContentModels', response.data);
                 }).catch(() => {
-                    context.commit('updateAllContentModels', {});
+                    context.commit('updateAllContentModels', []);
             });
         }
     }

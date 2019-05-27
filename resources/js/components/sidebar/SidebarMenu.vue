@@ -21,11 +21,7 @@
         },
         computed: {
             allContentModelsList() {
-                let models = [...this.$store.getters.allContentModels];
-
-                if(!models.length) {
-                    return [];
-                }
+                let models = this.$store.getters.allContentModels;
 
                 return models.map((model) => {
                     return Object.assign(model, {link: `/entry/${model._id}`, icon: 'fa-circle-o'});
@@ -57,8 +53,17 @@
                 return this.$store.getters.isLoggedIn;
             }
         },
+        watch: {
+            isLoggedIn: function (newValue, oldValue) {
+                if(newValue === true && oldValue === false) {
+                    this.$store.dispatch('getAllContentModels');
+                }
+            }
+        },
         created() {
-            this.$store.dispatch('getAllContentModels');
+            if(this.isLoggedIn === true) {
+                this.$store.dispatch('getAllContentModels');
+            }
         }
     }
 </script>
