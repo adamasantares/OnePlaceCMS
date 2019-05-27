@@ -227,7 +227,7 @@
                 accept: 'image/png,image/gif,image/jpeg,image/webp,application/pdf',
                 extensions: ['gif', 'jpg', 'jpeg','png', 'webp', 'pdf'],
                 minSize: 1024,
-                size: 1024 * 1024 * 10,
+                size: 1024 * 1024 * 20,
                 multiple: true,
                 directory: false,
                 addIndex: false,
@@ -389,7 +389,7 @@
             },
             formatImagesDataFromServer(files) {
                 this.files = files.map((file) => {
-                    file.speed = 100;
+                    file.speed = '';
                     file.active = false;
                     file.postAction = this.routeLaravel;
                     file.headers = this.uploadHeaders;
