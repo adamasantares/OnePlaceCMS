@@ -2608,7 +2608,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       accept: 'image/png,image/gif,image/jpeg,image/webp,application/pdf',
       extensions: ['gif', 'jpg', 'jpeg', 'png', 'webp', 'pdf'],
       minSize: 1024,
-      size: 1024 * 1024 * 10,
+      size: 1024 * 1024 * 20,
       multiple: true,
       directory: false,
       addIndex: false,
@@ -2798,7 +2798,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.files = files.map(function (file) {
-        file.speed = 100;
+        file.speed = '';
         file.active = false;
         file.postAction = _this.routeLaravel;
         file.headers = _this.uploadHeaders;
@@ -3435,6 +3435,14 @@ __webpack_require__.r(__webpack_exports__);
         return Object.assign({
           droppable: false
         }, field);
+      });
+    }
+  },
+  methods: {
+    drop: function drop(node, targetTree, oldTree) {
+      var fields = targetTree.getPureData();
+      fields.forEach(function (field) {
+        console.log(field); // this.$store.commit('updateOrderOfField', {api_id: field.api_id, order: field.order});
       });
     }
   }
@@ -64188,7 +64196,7 @@ var render = function() {
                 _c("div", { staticClass: "col-9" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { attrs: { for: "title-field" } }, [
-                      _vm._v("Title")
+                      _vm._v("Entity name")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -64411,7 +64419,7 @@ var render = function() {
                 _c("div", { staticClass: "col-9" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { attrs: { for: "title-field" } }, [
-                      _vm._v("Title")
+                      _vm._v("Entity name")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -66572,6 +66580,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("DraggableTree", {
     attrs: { data: _vm.fields, draggable: "draggable", "cross-tree": false },
+    on: { drop: _vm.drop },
     scopedSlots: _vm._u([
       {
         key: "default",
@@ -89222,6 +89231,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     resetCurrentValidationsRules: function resetCurrentValidationsRules(state) {
       state.currentValidationsRules = {};
+    },
+    updateOrderOfField: function updateOrderOfField(state, payload) {
+      state.contentModelsFields = state.contentModelsFields.map(function (field) {
+        if (payload.api_id == field.api_id) {
+          field.order = payload.order;
+        }
+
+        return field;
+      });
     }
   },
   actions: {

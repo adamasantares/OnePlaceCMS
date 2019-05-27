@@ -1,5 +1,5 @@
 <template>
-    <DraggableTree :data="fields" draggable="draggable" :cross-tree="false">
+    <DraggableTree :data="fields" @drop="drop" draggable="draggable" :cross-tree="false">
         <content-field slot-scope="{data, store}" :field-prop="data"></content-field>
     </DraggableTree>
 </template>
@@ -17,8 +17,17 @@
                     return Object.assign({droppable: false}, field);
                 });
             }
-        }
+        },
+        methods: {
+            drop(node, targetTree, oldTree) {
+                let fields = targetTree.getPureData();
 
+                fields.forEach((field) => {
+                    console.log(field);
+                    // this.$store.commit('updateOrderOfField', {api_id: field.api_id, order: field.order});
+                });
+            },
+        }
     }
 </script>
 
@@ -27,16 +36,13 @@
         border: 1px solid #ccc;
         padding: 20px;
     }
-    .tree-node{
-    }
+
     .tree-node-inner {
         padding: 5px;
         border: 1px solid #ccc;
         cursor: pointer;
     }
-    .draggable-placeholder{
 
-    }
     .draggable-placeholder-inner{
         border: 1px dashed #0088F8;
         box-sizing: border-box;
