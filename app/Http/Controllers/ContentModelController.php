@@ -63,7 +63,7 @@ class ContentModelController extends Controller
             return response()->json([], 404);
         }
 
-        return response()->json(['model' => $contentModel, 'fields' => $contentModel->fields()->get()], 200);
+        return response()->json(['model' => $contentModel, 'fields' => $contentModel->fields()->orderBy('order')->get()], 200);
     }
 
     /**
