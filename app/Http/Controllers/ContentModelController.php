@@ -93,7 +93,7 @@ class ContentModelController extends Controller
                         'name' => $value['name'],
                         'type' => $value['type'],
                         'validations' => $value['validations'],
-                        'order' => $value['order']
+                        'order' => $index
                     ]
                 );
 
