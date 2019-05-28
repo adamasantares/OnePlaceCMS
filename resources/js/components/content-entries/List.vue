@@ -69,7 +69,7 @@
         data() {
             return {
                 model_id: this.$route.params.model,
-                base_path: `/entry/${this.model_id}`,
+                base_path: `/entry/${this.$route.params.model}`,
                 base_path_api: '/api/content-entry/',
             }
         },

@@ -21,11 +21,20 @@
         methods: {
             drop(node, targetTree, oldTree) {
                 let fields = targetTree.getPureData();
+                let sortedFields = [];
+                let element;
 
                 fields.forEach((field) => {
-                    console.log(field);
-                    // this.$store.commit('updateOrderOfField', {api_id: field.api_id, order: field.order});
+                    element = this.$store.getters.contentModelsFields.find((fieldState) => {
+                        if(fieldState.api_id == field.api_id) {
+                            return fieldState;
+                        }
+                    });
+
+                    sortedFields.push(element);
                 });
+
+                this.$store.commit('setContentFields', sortedFields);
             },
         }
     }

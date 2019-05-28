@@ -11,8 +11,6 @@ import ContentEntriesList from './components/content-entries/List.vue';
 import CreateContentEntry from './components/content-entries/Create.vue';
 import EditContentEntry from './components/content-entries/Edit.vue';
 
-
-
 export const routes = [
     {
         path: '/',

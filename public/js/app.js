@@ -2265,7 +2265,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       model_id: this.$route.params.model,
-      base_path: "/entry/".concat(this.model_id),
+      base_path: "/entry/".concat(this.$route.params.model),
       base_path_api: '/api/content-entry/'
     };
   },
@@ -3440,10 +3440,20 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     drop: function drop(node, targetTree, oldTree) {
+      var _this = this;
+
       var fields = targetTree.getPureData();
+      var sortedFields = [];
+      var element;
       fields.forEach(function (field) {
-        console.log(field); // this.$store.commit('updateOrderOfField', {api_id: field.api_id, order: field.order});
+        element = _this.$store.getters.contentModelsFields.find(function (fieldState) {
+          if (fieldState.api_id == field.api_id) {
+            return fieldState;
+          }
+        });
+        sortedFields.push(element);
       });
+      this.$store.commit('setContentFields', sortedFields);
     }
   }
 });
@@ -89232,14 +89242,8 @@ __webpack_require__.r(__webpack_exports__);
     resetCurrentValidationsRules: function resetCurrentValidationsRules(state) {
       state.currentValidationsRules = {};
     },
-    updateOrderOfField: function updateOrderOfField(state, payload) {
-      state.contentModelsFields = state.contentModelsFields.map(function (field) {
-        if (payload.api_id == field.api_id) {
-          field.order = payload.order;
-        }
-
-        return field;
-      });
+    setContentFields: function setContentFields(state, payload) {
+      state.contentModelsFields = payload;
     }
   },
   actions: {

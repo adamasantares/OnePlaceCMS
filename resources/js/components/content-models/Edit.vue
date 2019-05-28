@@ -29,7 +29,7 @@
                                             <textarea v-model="fields.desc" id="desc-field" class="form-control"
                                                       :class="errors && errors.desc ? 'is-invalid' : ''"
                                                       rows="5">
-                                        </textarea>
+                                            </textarea>
                                             <div v-if="errors && errors.desc" class="invalid-feedback">{{ errors.desc[0] }}</div>
                                         </div>
                                         <publish-toggle :published.sync="fields.published"></publish-toggle>

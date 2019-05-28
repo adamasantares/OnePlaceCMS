@@ -65,16 +65,8 @@ export default {
         resetCurrentValidationsRules(state) {
             state.currentValidationsRules = {};
         },
-        updateOrderOfField(state, payload) {
-            state.contentModelsFields = state.contentModelsFields.map((field) => {
-
-                if(payload.api_id == field.api_id) {
-                    field.order = payload.order;
-                }
-
-                return field;
-
-            });
+        setContentFields(state, payload) {
+            state.contentModelsFields = payload;
         }
     },
     actions: {
