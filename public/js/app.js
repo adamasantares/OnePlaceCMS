@@ -3845,8 +3845,22 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    projects: function projects() {
+      var models = this.$store.getters.projects;
+      return models.map(function (model) {
+        return Object.assign(model, {
+          link: "/project/".concat(model._id),
+          icon: 'fa-circle-o'
+        });
+      });
+    },
     sections: function sections() {
       return [{
+        title: 'Projects',
+        link: '/project',
+        icon: 'fa-university',
+        childs: this.projects
+      }, {
         title: 'Dashboard',
         link: '/dashboard',
         icon: 'fa-dashboard',
@@ -3871,12 +3885,14 @@ __webpack_require__.r(__webpack_exports__);
     isLoggedIn: function isLoggedIn(newValue, oldValue) {
       if (newValue === true && oldValue === false) {
         this.$store.dispatch('getAllContentModels');
+        this.$store.dispatch('getAllProjects');
       }
     }
   },
   created: function created() {
     if (this.isLoggedIn === true) {
       this.$store.dispatch('getAllContentModels');
+      this.$store.dispatch('getAllProjects');
     }
   }
 });
@@ -86100,9 +86116,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
 /* harmony import */ var _store_modules_content_models__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/modules/content-models */ "./resources/js/store/modules/content-models.js");
 /* harmony import */ var _store_modules_content_entries__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store/modules/content-entries */ "./resources/js/store/modules/content-entries.js");
-/* harmony import */ var _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/MainApp.vue */ "./resources/js/components/MainApp.vue");
-/* harmony import */ var _helpers_general__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./helpers/general */ "./resources/js/helpers/general.js");
-/* harmony import */ var vue_slide_up_down__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-slide-up-down */ "./node_modules/vue-slide-up-down/dist/vue-slide-up-down.m.js");
+/* harmony import */ var _store_modules_projects__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./store/modules/projects */ "./resources/js/store/modules/projects.js");
+/* harmony import */ var _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/MainApp.vue */ "./resources/js/components/MainApp.vue");
+/* harmony import */ var _helpers_general__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./helpers/general */ "./resources/js/helpers/general.js");
+/* harmony import */ var vue_slide_up_down__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-slide-up-down */ "./node_modules/vue-slide-up-down/dist/vue-slide-up-down.m.js");
 window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
@@ -86123,19 +86140,21 @@ __webpack_require__(/*! summernote/dist/summernote-lite.js */ "./node_modules/su
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('slide-up-down', vue_slide_up_down__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('slide-up-down', vue_slide_up_down__WEBPACK_IMPORTED_MODULE_10__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store(_store_store__WEBPACK_IMPORTED_MODULE_4__["default"]);
 store.registerModule('models', _store_modules_content_models__WEBPACK_IMPORTED_MODULE_5__["default"]);
 store.registerModule('entries', _store_modules_content_entries__WEBPACK_IMPORTED_MODULE_6__["default"]);
+store.registerModule('projects', _store_modules_projects__WEBPACK_IMPORTED_MODULE_7__["default"]);
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: _routes__WEBPACK_IMPORTED_MODULE_3__["routes"],
   mode: 'history',
   linkActiveClass: "active",
   linkExactActiveClass: "active"
 });
-Object(_helpers_general__WEBPACK_IMPORTED_MODULE_8__["initialize"])(store, router);
+Object(_helpers_general__WEBPACK_IMPORTED_MODULE_9__["initialize"])(store, router);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.filter('formatSize', function (size) {
   if (!size) {
     return '';
@@ -86158,7 +86177,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   router: router,
   store: store,
   components: {
-    MainApp: _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
+    MainApp: _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
   }
 });
 
@@ -89260,6 +89279,42 @@ __webpack_require__.r(__webpack_exports__);
           context.commit('updateContentModels', {});
           reject();
         });
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/projects.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/modules/projects.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    projects: []
+  },
+  getters: {
+    projects: function projects(state) {
+      return state.projects;
+    }
+  },
+  mutations: {
+    updateProjects: function updateProjects(state, payload) {
+      state.projects = payload;
+    }
+  },
+  actions: {
+    getAllProjects: function getAllProjects(context) {
+      axios.get('/api/project').then(function (response) {
+        context.commit('updateProjects', response.data);
+      }).catch(function () {
+        context.commit('updateProjects', []);
       });
     }
   }

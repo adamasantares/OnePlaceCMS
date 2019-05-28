@@ -1,7 +1,6 @@
 <?php
 
 Route::group(['prefix' => 'auth'], function ($router) {
-
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
@@ -16,6 +15,6 @@ Route::group(['middleware' => 'jwt.auth'], function ($router) {
     Route::post('content-field/validate', 'ContentFieldController@validateFields');
     Route::resource('content-entry', 'EntryController');
     Route::post('media', 'MediaController@store');
-    Route::delete('media/{media}', 'MediaController@destroy');
+    Route::resource('project', 'ProjectController');
 });
 
