@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-9">
                             <div class="form-group">
-                                <label for="title-field">Entity name</label>
+                                <label for="title-field">Title</label>
                                 <input v-model="fields.title" id="title-field" class="form-control"
                                        :class="errors && errors.title ? 'is-invalid' : ''">
                                 <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>

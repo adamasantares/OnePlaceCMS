@@ -116,14 +116,12 @@
                 this.$store.commit('resetCurrentValidationsRules');
             },
             validateUniqueApiIdByFieldsInStorage() {
-                    var self = this;
+                let isInvalid = this.contentFields.find(field => {
+                        return field._id != this.fields._id && field.api_id === this.fields.api_id;
+                    }
+                );
 
-                    let isInvalid = this.contentFields.find(function (field) {
-                            return field._id != self.fields._id && field.api_id === self.fields.api_id;
-                        }
-                    );
-
-                    return !Boolean(isInvalid);
+                return !Boolean(isInvalid);
             },
             validateOnServer() {
                 return axios.post('/api/content-field/validate', this.fields);

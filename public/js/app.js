@@ -3564,9 +3564,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.commit('resetCurrentValidationsRules');
     },
     validateUniqueApiIdByFieldsInStorage: function validateUniqueApiIdByFieldsInStorage() {
-      var self = this;
+      var _this = this;
+
       var isInvalid = this.contentFields.find(function (field) {
-        return field._id != self.fields._id && field.api_id === self.fields.api_id;
+        return field._id != _this.fields._id && field.api_id === _this.fields.api_id;
       });
       return !Boolean(isInvalid);
     },
@@ -3574,7 +3575,7 @@ __webpack_require__.r(__webpack_exports__);
       return axios.post('/api/content-field/validate', this.fields);
     },
     submit: function submit() {
-      var _this = this;
+      var _this2 = this;
 
       var validate = this.validateUniqueApiIdByFieldsInStorage();
 
@@ -3585,24 +3586,24 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.validateOnServer().then(function (resolve) {
-        _this.errors = [];
-        var field = Object.assign({}, _this.fields);
-        field.validations = _this.validations;
+        _this2.errors = [];
+        var field = Object.assign({}, _this2.fields);
+        field.validations = _this2.validations;
 
-        if (_this.fields._id) {
-          _this.$store.commit('updateContentField', field);
+        if (_this2.fields._id) {
+          _this2.$store.commit('updateContentField', field);
         } else {
           field._id = Date.now();
 
-          _this.$store.commit('addContentField', field);
+          _this2.$store.commit('addContentField', field);
         }
 
-        _this.closeModal();
+        _this2.closeModal();
 
-        _this.resetFields();
+        _this2.resetFields();
       }, function (reject) {
         if (reject.response.status === 422) {
-          _this.errors = reject.response.data.errors || {};
+          _this2.errors = reject.response.data.errors || {};
         }
       });
     }
@@ -3876,21 +3877,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ImageValidations",
   mixins: [_mixins_ValidationFields__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: {
-    validations: {
-      get: function get() {
-        return this.$store.getters.currentValidationsRules;
-      },
-      set: function set(value) {
-        this.$store.commit('setCurrentValidationsRules', value);
-      }
-    }
-  },
   created: function created() {
     if (!this.validations.mime) {
-      this.$store.commit('setCurrentValidationsRules', {
-        mime: []
-      });
+      this.validations.mime = [];
     }
   }
 });
@@ -4000,17 +3989,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TextValidations",
-  mixins: [_mixins_ValidationFields__WEBPACK_IMPORTED_MODULE_0__["default"]],
-  computed: {
-    validations: {
-      get: function get() {
-        return this.$store.getters.currentValidationsRules;
-      },
-      set: function set(value) {
-        this.$store.commit('setCurrentValidationsRules', value);
-      }
-    }
-  }
+  mixins: [_mixins_ValidationFields__WEBPACK_IMPORTED_MODULE_0__["default"]]
 });
 
 /***/ }),
@@ -64916,7 +64895,7 @@ var render = function() {
                 _c("div", { staticClass: "col-9" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { attrs: { for: "title-field" } }, [
-                      _vm._v("Entity name")
+                      _vm._v("Title")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -65149,7 +65128,7 @@ var render = function() {
                 _c("div", { staticClass: "col-9" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { attrs: { for: "title-field" } }, [
-                      _vm._v("Entity name")
+                      _vm._v("Title")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -89278,9 +89257,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {};
-  },
   computed: {
     validations: {
       get: function get() {

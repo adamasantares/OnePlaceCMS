@@ -26,19 +26,9 @@
     export default {
         name: "ImageValidations",
         mixins: [ValidationMixin],
-        computed: {
-            validations: {
-                get() {
-                    return this.$store.getters.currentValidationsRules;
-                },
-                set(value) {
-                    this.$store.commit('setCurrentValidationsRules', value);
-                }
-            }
-        },
         created() {
             if(!this.validations.mime) {
-                this.$store.commit('setCurrentValidationsRules', { mime: [] });
+                this.validations.mime = [];
             }
         }
     }

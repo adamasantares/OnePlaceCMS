@@ -1,8 +1,4 @@
 export default {
-    data() {
-        return {}
-    },
-
     computed: {
         validations: {
             get() {
