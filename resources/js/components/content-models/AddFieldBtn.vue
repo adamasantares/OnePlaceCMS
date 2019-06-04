@@ -7,6 +7,7 @@
             <a @click="addField('text')" class="dropdown-item" href="#">Text field</a>
             <a @click="addField('media')" class="dropdown-item" href="#">Media</a>
             <a @click="addField('text_editor')" class="dropdown-item" href="#">Text Editor</a>
+            <a @click="addField('relation')" class="dropdown-item" href="#">Relation</a>
         </div>
     </div>
 </template>

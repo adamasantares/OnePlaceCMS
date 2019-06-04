@@ -28,9 +28,9 @@
                 });
             },
             projects() {
-                let models = this.$store.getters.projects;
+                let projects = this.$store.getters.projects;
 
-                return models.map((model) => {
+                return projects.map((model) => {
                     return Object.assign(model, {link: `/project/${model._id}`, icon: 'fa-circle-o'});
                 });
             },

@@ -40,7 +40,7 @@ export default {
             })
         },
         fillFieldsFromModal() {
-            axios.get(`/api/content-entry/${this.$route.params.id}`).then(response => {
+            axios.get(`/api/entry/${this.$route.params.id}`).then(response => {
 
                 this.$store.commit('updateTitlePage', `Edit ${response.data.title}`);
 

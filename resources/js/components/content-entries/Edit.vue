@@ -37,6 +37,10 @@
                         <template v-if="field.type == 'text_editor'">
                             <text-editor :model.sync="fields.fields[field.api_id]"></text-editor>
                         </template>
+
+                        <relation-field v-if="field.type == 'relation'"
+                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
+                        ></relation-field>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -56,16 +60,17 @@
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
     import ImageField from './fields/ImageField';
     import TextEditor from './fields/TextEditor';
+    import RelationField from './fields/RelationField';
 
     export default {
         name: "Edit",
         mixins: [FunctionsMixin],
-        components: {ImageField, TextEditor},
+        components: {ImageField, TextEditor, RelationField},
         methods: {
             save() {
                 this.fields.files = this.$store.getters.medias;
 
-                axios.put(`/api/content-entry/${this.fields._id}`, this.fields).then(response => {
+                axios.put(`/api/entry/${this.fields._id}`, this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];

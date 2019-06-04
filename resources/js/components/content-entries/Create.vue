@@ -41,6 +41,10 @@
                         <text-editor v-if="field.type == 'text_editor'"
                                     :model.sync="fields.fields[field.api_id]"
                         ></text-editor>
+
+                        <relation-field v-if="field.type == 'relation'"
+                                     :model.sync="fields.fields[field.api_id]" :field="field"
+                        ></relation-field>
                     </div>
 
                 </div>
@@ -62,16 +66,17 @@
     import ImageField from './fields/ImageField';
     import TextEditor from './fields/TextEditor';
     import TextField from './fields/TextField';
+    import RelationField from './fields/RelationField';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
-        components: {ImageField, TextEditor, TextField},
+        components: {ImageField, TextEditor, TextField, RelationField},
         methods: {
             save() {
                 this.fields.files = this.$store.getters.medias;
 
-                axios.post('/api/content-entry', this.fields).then(response => {
+                axios.post('/api/entry', this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
                     this.errors = [];

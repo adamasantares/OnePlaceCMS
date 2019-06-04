@@ -70,18 +70,18 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function show(Entry $contentEntry)
+    public function show(Entry $entry)
     {
-        if (empty($contentEntry)) {
+        if (empty($entry)) {
             return response()->json([], 404);
         }
 
-        $contentEntry->files = [];
+        $entry->files = [];
 
-        $mediaFields = ContentField::where('model_id', $contentEntry->model_id)->where('type', 'media')->get()->pluck('api_id');
+        $mediaFields = ContentField::where('model_id', $entry->model_id)->where('type', 'media')->get()->pluck('api_id');
 
         foreach ($mediaFields as $field) {
-            $media = $contentEntry->getMedia($field);
+            $media = $entry->getMedia($field);
             $mediaFormatted = [];
 
             foreach ($media as $item) {
@@ -94,10 +94,10 @@ class EntryController extends Controller
                 ];
             }
 
-            $contentEntry->files = array_merge($contentEntry->files, [$field => $mediaFormatted]);
+            $entry->files = array_merge($entry->files, [$field => $mediaFormatted]);
         }
 
-        return response()->json($contentEntry, 200);
+        return response()->json($entry, 200);
     }
 
     /**
@@ -107,7 +107,7 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Entry $contentEntry)
+    public function update(Request $request, Entry $entry)
     {
         $request->validate([
             'title' => 'required',
@@ -118,27 +118,26 @@ class EntryController extends Controller
         CmsHelper::validationFields($request);
 
         try {
-            $contentEntry->update($request->only('title', 'published', 'fields'));
+            $entry->update($request->only('title', 'published', 'fields'));
 
             $files = $request->input('files', []);
 
             foreach ($files as  $collectionName => $collection) {
                 //find medias by ids from request
-                $exceptForDeleteMedia = $contentEntry->getMedia($collectionName)->filter(function ($item) use ($collection) {
+                $exceptForDeleteMedia = $entry->getMedia($collectionName)->filter(function ($item) use ($collection) {
                     return in_array($item->id, array_column($collection, 'id'));
                 })->all();
 
                 //delete not found medias
-                $contentEntry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
+                $entry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
 
                 //save new media
-
                 foreach ($collection as $item) {
                     if(isset($item['response']['id'])) {
                         $media = MediaTemporaryStorage::find($item['response']['id']);
 
                         if(!empty($media)) {
-                            $contentEntry->addMedia(storage_path("app/" . $media->path))
+                            $entry->addMedia(storage_path("app/" . $media->path))
                                 ->toMediaCollection($collectionName);
 
                             $media->delete();
@@ -157,11 +156,18 @@ class EntryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Entry  $contentEntry
+     * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Entry $contentEntry)
+    public function destroy(Entry $entry)
     {
-        $contentEntry->delete();
+        $entry->delete();
+    }
+
+    public function getByModel($model_id)
+    {
+        $entries = Entry::where('model_id', $model_id)->where('published', true)->get();
+
+        return response()->json($entries, 200);
     }
 }

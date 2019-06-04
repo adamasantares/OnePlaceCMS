@@ -23,7 +23,7 @@ export default {
         getEntries(context, params) {
             return new Promise((resolve, reject) => {
                 let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-                let url = '/api/content-entry?' + queryString;
+                let url = '/api/entry?' + queryString;
 
                 axios.get(url)
                     .then((response) => {

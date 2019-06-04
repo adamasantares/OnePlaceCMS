@@ -21,8 +21,11 @@
 </template>
 
 <script>
+    import ValidationMixin from '../../../mixins/ValidationFields';
+
     export default {
         name: "ImageValidations",
+        mixins: [ValidationMixin],
         computed: {
             validations: {
                 get() {

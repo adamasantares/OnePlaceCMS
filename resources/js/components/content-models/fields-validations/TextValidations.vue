@@ -43,8 +43,11 @@
 </template>
 
 <script>
+    import ValidationMixin from '../../../mixins/ValidationFields';
+
     export default {
         name: "TextValidations",
+        mixins: [ValidationMixin],
         computed: {
             validations: {
                 get() {

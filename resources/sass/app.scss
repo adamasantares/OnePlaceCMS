@@ -14,3 +14,17 @@
 @import "~summernote/dist/summernote-lite.css";
 @import "~codemirror/lib/codemirror.css";
 @import "~codemirror/theme/monokai.css";
+@import "~vue-select/src/scss/vue-select.scss";
+
+.v-select {
+  &.is-invalid {
+
+    .vs__dropdown-toggle {
+      border-color: #dc3545;
+    }
+
+    &+.invalid-feedback {
+     display: block;
+    }
+  }
+}

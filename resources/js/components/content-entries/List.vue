@@ -70,7 +70,7 @@
             return {
                 model_id: this.$route.params.model,
                 base_path: `/entry/${this.$route.params.model}`,
-                base_path_api: '/api/content-entry/',
+                base_path_api: '/api/entry/',
             }
         },
         computed: {

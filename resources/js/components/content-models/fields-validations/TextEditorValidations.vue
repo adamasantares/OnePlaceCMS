@@ -21,8 +21,11 @@
 </template>
 
 <script>
+    import ValidationMixin from '../../../mixins/ValidationFields';
+
     export default {
         name: "TextEditorValidations",
+        mixins: [ValidationMixin],
         computed: {
             validations: {
                 get() {
