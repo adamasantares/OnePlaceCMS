@@ -80,8 +80,8 @@ export default {
                         context.commit('updateContentModels', response.data);
                         resolve();
                     }).catch(() => {
-                    context.commit('updateContentModels', {});
-                    reject();
+                        context.commit('updateContentModels', {});
+                        reject();
                 });
             });
         }

@@ -3426,6 +3426,10 @@ __webpack_require__.r(__webpack_exports__);
       _this2.$store.commit('updateTitlePage', 'Edit ' + _this2.fields.title);
 
       response.data.fields.forEach(function (field) {
+        if (Array.isArray(field.validations)) {
+          field.validations = {};
+        }
+
         _this2.$store.commit('addContentField', field);
       });
     });
@@ -3942,7 +3946,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_ValidationFields__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/ValidationFields */ "./resources/js/mixins/ValidationFields.js");
-//
 //
 //
 //

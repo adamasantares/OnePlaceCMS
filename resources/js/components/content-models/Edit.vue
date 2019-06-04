@@ -93,6 +93,11 @@
                     this.fields = response.data.model;
                     this.$store.commit('updateTitlePage', 'Edit ' + this.fields.title);
                     response.data.fields.forEach((field) => {
+
+                        if(Array.isArray(field.validations)) {
+                            field.validations = {};
+                        }
+
                         this.$store.commit('addContentField', field);
                     });
                 });

@@ -38,7 +38,6 @@
             <br>
             <input v-if="validations.specific == 'pattern'" class="form-control" type="text" v-model="validations.pattern">
         </div>
-
     </div>
 </template>
 

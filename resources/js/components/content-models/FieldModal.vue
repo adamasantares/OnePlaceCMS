@@ -99,7 +99,7 @@
                 return this.$store.getters.currentContentField.type;
             },
             validations() {
-                return this.$store.getters.currentValidationsRules;
+                return this.$store.getters.currentValidationsRules ;
             }
         },
         methods: {
