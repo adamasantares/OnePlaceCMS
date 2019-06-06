@@ -1,5 +1,8 @@
 <template>
-    <textarea id="editor"></textarea>
+    <div>
+        <label>{{ label }}</label>
+        <textarea ref="editor"></textarea>
+    </div>
 </template>
 
 <script>
@@ -11,7 +14,10 @@
             },
             height: {
                 type: String,
-                default: '150'
+                default: '250'
+            },
+            label: {
+                type: String
             }
         },
         mounted() {
@@ -40,13 +46,13 @@
             let vm = this;
             config.callbacks = {
                 onInit: function () {
-                    $(vm.$el).summernote("code", vm.model);
+                    $(vm.$refs.editor).summernote("code", vm.model);
                 },
                 onChange: function () {
-                    vm.$emit('update:model', $(vm.$el).summernote('code'));
+                    vm.$emit('update:model', $(vm.$refs.editor).summernote('code'));
                 },
             };
-            $(this.$el).summernote(config);
+            $(this.$refs.editor).summernote(config);
         }
     }
 </script>

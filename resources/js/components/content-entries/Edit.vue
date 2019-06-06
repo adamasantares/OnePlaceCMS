@@ -35,7 +35,9 @@
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
-                            <text-editor :model.sync="fields.fields[field.api_id]"></text-editor>
+                            <text-editor :model.sync="fields.fields[field.api_id]"
+                                         :label="field.name"
+                            ></text-editor>
                         </template>
 
                         <relation-field v-if="field.type == 'relation'"

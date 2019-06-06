@@ -2122,6 +2122,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2188,6 +2189,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fields_ImageField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fields/ImageField */ "./resources/js/components/content-entries/fields/ImageField.vue");
 /* harmony import */ var _fields_TextEditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fields/TextEditor */ "./resources/js/components/content-entries/fields/TextEditor.vue");
 /* harmony import */ var _fields_RelationField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fields/RelationField */ "./resources/js/components/content-entries/fields/RelationField.vue");
+//
+//
 //
 //
 //
@@ -3039,6 +3042,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TextEditor",
   props: {
@@ -3047,7 +3053,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     height: {
       type: String,
-      "default": '150'
+      "default": '250'
+    },
+    label: {
+      type: String
     }
   },
   mounted: function mounted() {
@@ -3066,13 +3075,13 @@ __webpack_require__.r(__webpack_exports__);
     var vm = this;
     config.callbacks = {
       onInit: function onInit() {
-        $(vm.$el).summernote("code", vm.model);
+        $(vm.$refs.editor).summernote("code", vm.model);
       },
       onChange: function onChange() {
-        vm.$emit('update:model', $(vm.$el).summernote('code'));
+        vm.$emit('update:model', $(vm.$refs.editor).summernote('code'));
       }
     };
-    $(this.$el).summernote(config);
+    $(this.$refs.editor).summernote(config);
   }
 });
 
@@ -65017,7 +65026,10 @@ var render = function() {
                     _vm._v(" "),
                     field.type == "text_editor"
                       ? _c("text-editor", {
-                          attrs: { model: _vm.fields.fields[field.api_id] },
+                          attrs: {
+                            model: _vm.fields.fields[field.api_id],
+                            label: field.name
+                          },
                           on: {
                             "update:model": function($event) {
                               _vm.$set(_vm.fields.fields, field.api_id, $event)
@@ -65264,7 +65276,8 @@ var render = function() {
                           ? [
                               _c("text-editor", {
                                 attrs: {
-                                  model: _vm.fields.fields[field.api_id]
+                                  model: _vm.fields.fields[field.api_id],
+                                  label: field.name
                                 },
                                 on: {
                                   "update:model": function($event) {
@@ -66368,7 +66381,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("textarea", { attrs: { id: "editor" } })
+  return _c("div", [
+    _c("label", [_vm._v(_vm._s(_vm.label))]),
+    _vm._v(" "),
+    _c("textarea", { ref: "editor" })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

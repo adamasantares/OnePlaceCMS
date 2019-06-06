@@ -40,6 +40,7 @@
 
                         <text-editor v-if="field.type == 'text_editor'"
                                     :model.sync="fields.fields[field.api_id]"
+                                     :label="field.name"
                         ></text-editor>
 
                         <relation-field v-if="field.type == 'relation'"
