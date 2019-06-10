@@ -9,7 +9,8 @@ export default {
                 title: '',
                 published: false,
                 model_id: this.$route.params.model,
-                fields: {}
+                fields: {},
+                files: {}
             },
             modelFields: [],
             errors: [],
@@ -23,13 +24,12 @@ export default {
 
     methods: {
 
-        getFieldsFromModel() {
+        getFields() {
             return new Promise((resolve, reject) => {
                 axios.get(`/api/content-model/${this.$route.params.model}`).then(response => {
                     this.modelFields = response.data.fields;
                     this.errors = [];
                     this.$store.commit('updateErrorMessage', []);
-                    this.$store.commit('updateSuccessMessage', "");
                     resolve();
                 }).catch(error => {
                     this.errors = [];
@@ -39,7 +39,7 @@ export default {
                 });
             })
         },
-        fillFieldsFromModal() {
+        fillFields() {
             axios.get(`/api/entry/${this.$route.params.id}`).then(response => {
 
                 this.$store.commit('updateTitlePage', `Edit ${response.data.title}`);
@@ -53,7 +53,6 @@ export default {
 
                 this.errors = [];
                 this.$store.commit('updateErrorMessage', []);
-                this.$store.commit('updateSuccessMessage', "");
             }).catch(error => {
                 this.errors = [];
                 this.$store.commit('updateSuccessMessage', "");
@@ -64,6 +63,6 @@ export default {
     },
 
     created() {
-
+        this.$store.commit('resetMedias');
     }
 }

@@ -1,22 +1,35 @@
-<template>
-    <div>
-        {{ model }}
+<template v-if="field.type == 'text'">
+    <div class="form-group">
+        <label :for="field.api_id">{{ field.name }}</label>
+        <input :id="field.api_id" class="form-control"
+               v-model="value"
+               :class="errors ? 'is-invalid' : ''">
+        <div v-if="errors" class="invalid-feedback">{{ errors[0] }}</div>
     </div>
 </template>
 
 <script>
     export default {
         name: "TextField",
+        data() {
+            return {
+                value: ''
+            };
+        },
         props: {
             model: {
                 required: true
             },
-            errors: Array
+            errors: Array,
+            field: Object
         },
-        methods: {
-            onChange: function () {
-                vm.$emit('update:model', this.model);
+        watch: {
+            value(value) {
+                this.$emit('update:model', value);
             }
+        },
+        created() {
+            this.value = this.model;
         }
     }
 </script>

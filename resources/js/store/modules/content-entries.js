@@ -17,6 +17,9 @@ export default {
         },
         updateMedias(state, payload) {
             state.medias[payload.key] = payload.files;
+        },
+        resetMedias(state) {
+            state.medias = {};
         }
     },
     actions: {

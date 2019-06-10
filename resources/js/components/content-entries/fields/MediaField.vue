@@ -149,69 +149,6 @@
         </div>
     </div>
 </template>
-<style>
-    .media-full .btn-group .dropdown-menu {
-        display: block;
-        visibility: hidden;
-        transition: all .2s
-    }
-    .media-full .btn-group:hover > .dropdown-menu {
-        visibility: visible;
-    }
-    .media-full label.dropdown-item {
-        margin-bottom: 0;
-    }
-    .media-full .btn-group .dropdown-toggle {
-        margin-right: .6rem
-    }
-    .media-full .filename {
-        margin-bottom: .3rem
-    }
-    .media-full .media-foorer {
-        padding: .5rem 0;
-        border-top: 1px solid #e9ecef;
-        border-bottom: 1px solid #e9ecef;
-    }
-    .media-full .edit-image img {
-        max-width: 100%;
-    }
-    .media-full .edit-image-tool {
-        margin-top: .6rem;
-    }
-    .media-full .edit-image-tool .btn-group{
-        margin-right: .6rem;
-    }
-    .media-full .footer-status {
-        padding-top: .4rem;
-    }
-    .media-full .drop-active {
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        position: fixed;
-        z-index: 9999;
-        opacity: .6;
-        text-align: center;
-        background: #000;
-    }
-    .media-full .drop-active h3 {
-        margin: -.5em 0 0;
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        font-size: 40px;
-        color: #fff;
-        padding: 0;
-    }
-    .media-full .table-responsive {
-        overflow-x: visible;
-    }
-</style>
 
 <script>
     import Cropper from 'cropperjs'
@@ -414,3 +351,67 @@
         }
     }
 </script>
+
+<style>
+    .media-full .btn-group .dropdown-menu {
+        display: block;
+        visibility: hidden;
+        transition: all .2s
+    }
+    .media-full .btn-group:hover > .dropdown-menu {
+        visibility: visible;
+    }
+    .media-full label.dropdown-item {
+        margin-bottom: 0;
+    }
+    .media-full .btn-group .dropdown-toggle {
+        margin-right: .6rem
+    }
+    .media-full .filename {
+        margin-bottom: .3rem
+    }
+    .media-full .media-foorer {
+        padding: .5rem 0;
+        border-top: 1px solid #e9ecef;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .media-full .edit-image img {
+        max-width: 100%;
+    }
+    .media-full .edit-image-tool {
+        margin-top: .6rem;
+    }
+    .media-full .edit-image-tool .btn-group{
+        margin-right: .6rem;
+    }
+    .media-full .footer-status {
+        padding-top: .4rem;
+    }
+    .media-full .drop-active {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        position: fixed;
+        z-index: 9999;
+        opacity: .6;
+        text-align: center;
+        background: #000;
+    }
+    .media-full .drop-active h3 {
+        margin: -.5em 0 0;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        font-size: 40px;
+        color: #fff;
+        padding: 0;
+    }
+    .media-full .table-responsive {
+        overflow-x: visible;
+    }
+</style>

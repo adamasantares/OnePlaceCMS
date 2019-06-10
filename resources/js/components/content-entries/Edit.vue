@@ -6,7 +6,7 @@
                     <h3 class="card-title">Entry</h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
+                <div class="card-body"  v-if="fieldsIsFilled">
                     <div class="row">
                         <div class="col-9">
                             <div class="form-group">
@@ -15,23 +15,22 @@
                                        :class="errors && errors.title ? 'is-invalid' : ''">
                                 <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
                             </div>
+                            <text-field :model.sync="fields.title" :field="{api_id: 'title', name: 'Title'}" :errors="errors.title">
+                            </text-field>
                         </div>
                         <div class="col-3">
                             <publish-toggle :published.sync="fields.published"></publish-toggle>
                         </div>
                     </div>
 
-                    <div class="form-group" v-if="fieldsIsFilled" v-for="field in modelFields">
-                        <template v-if="field.type == 'text'">
-                            <label :for="field.api_id">{{ field.name }}</label>
-                            <input :id="field.api_id" class="form-control"
-                                   v-model="fields.fields[field.api_id]"
-                                   :class="errors && errors['fields.' + field.api_id] ? 'is-invalid' : ''">
-                            <div v-if="errors && errors['fields.' + field.api_id]" class="invalid-feedback">{{ errors['fields.' + field.api_id][0] }}</div>
-                        </template>
+                    <div class="form-group"  v-for="field in modelFields">
+                        <text-field v-if="field.type == 'text'"
+                                    :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
+                        >
+                        </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <image-field :api-id="field.api_id" :model-id="fields.model_id" :files-prop="fields.files[field.api_id] ? fields.files[field.api_id] : []" :label-prop="field.name"></image-field>
+                            <media-field :api-id="field.api_id" :model-id="fields.model_id" :files-prop="fields.files[field.api_id] ? fields.files[field.api_id] : []" :label-prop="field.name"></media-field>
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
@@ -60,14 +59,15 @@
 
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
-    import ImageField from './fields/ImageField';
+    import TextField from './fields/TextField';
+    import MediaField from './fields/MediaField';
     import TextEditor from './fields/TextEditor';
     import RelationField from './fields/RelationField';
 
     export default {
         name: "Edit",
         mixins: [FunctionsMixin],
-        components: {ImageField, TextEditor, RelationField},
+        components: {TextField, MediaField, TextEditor, RelationField},
         methods: {
             save() {
                 this.fields.files = this.$store.getters.medias;
@@ -90,8 +90,8 @@
             }
         },
         created() {
-            this.getFieldsFromModel().then(resolve => {
-                this.fillFieldsFromModal();
+            this.getFields().then(resolve => {
+                this.fillFields();
             });
         }
     }

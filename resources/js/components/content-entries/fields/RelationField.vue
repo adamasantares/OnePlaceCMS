@@ -10,7 +10,6 @@
             :reduce="option => option._id"
             multiple
             :class="errors ? 'is-invalid' : ''">
-        >
         </v-select>
         <div v-if="errors" class="invalid-feedback">{{ errors[0] }}</div>
     </div>
