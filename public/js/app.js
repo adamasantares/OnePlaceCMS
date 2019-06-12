@@ -86112,8 +86112,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/MainApp.vue */ "./resources/js/components/MainApp.vue");
 /* harmony import */ var _helpers_general__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./helpers/general */ "./resources/js/helpers/general.js");
 /* harmony import */ var vue_slide_up_down__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-slide-up-down */ "./node_modules/vue-slide-up-down/dist/vue-slide-up-down.m.js");
-window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! codemirror/lib/codemirror.js */ "./node_modules/codemirror/lib/codemirror.js");
@@ -86182,11 +86180,11 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"); // try {
-//     window.$ = window.jQuery = require('jquery');
-//
-//     require('bootstrap');
-// } catch (e) {}
+window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
+try {
+  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+} catch (e) {}
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

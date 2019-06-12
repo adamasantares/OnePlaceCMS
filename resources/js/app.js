@@ -1,4 +1,3 @@
-window.$ = require('jquery');
 require('./bootstrap');
 require('codemirror/lib/codemirror.js');
 require('codemirror/mode/javascript/javascript.js');
