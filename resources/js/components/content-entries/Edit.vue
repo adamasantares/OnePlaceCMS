@@ -9,12 +9,6 @@
                 <div class="card-body"  v-if="fieldsIsFilled">
                     <div class="row">
                         <div class="col-9">
-                            <div class="form-group">
-                                <label for="title-field">Title</label>
-                                <input v-model="fields.title" id="title-field" class="form-control"
-                                       :class="errors && errors.title ? 'is-invalid' : ''">
-                                <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
-                            </div>
                             <text-field :model.sync="fields.title" :field="{api_id: 'title', name: 'Title'}" :errors="errors.title">
                             </text-field>
                         </div>
