@@ -9,12 +9,6 @@
                 <div class="card-body"  v-if="fieldsIsFilled">
                     <div class="row">
                         <div class="col-9">
-                            <div class="form-group">
-                                <label for="title-field">Title</label>
-                                <input v-model="fields.title" id="title-field" class="form-control"
-                                       :class="errors && errors.title ? 'is-invalid' : ''">
-                                <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
-                            </div>
                             <text-field :model.sync="fields.title" :field="{api_id: 'title', name: 'Title'}" :errors="errors.title">
                             </text-field>
                         </div>
@@ -30,7 +24,7 @@
                         </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <media-field :api-id="field.api_id" :model-id="fields.model_id" :files-prop="fields.files[field.api_id] ? fields.files[field.api_id] : []" :label-prop="field.name"></media-field>
+                            <media-field :api_id="field.api_id" :label="field.name" @uploadFiles="filesUploaded"></media-field>
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
@@ -60,7 +54,7 @@
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
     import TextField from './fields/TextField';
-    import MediaField from './fields/MediaField';
+    import MediaField from './fields/MediaUploadField';
     import TextEditor from './fields/TextEditor';
     import RelationField from './fields/RelationField';
 
@@ -69,10 +63,19 @@
         mixins: [FunctionsMixin],
         components: {TextField, MediaField, TextEditor, RelationField},
         methods: {
-            save() {
-                this.fields.files = this.$store.getters.medias;
 
-                axios.put(`/api/entry/${this.fields._id}`, this.fields).then(response => {
+            save() {
+                this.prepareFieldsForRequest();
+
+                this.formData.append('_method', 'PATCH');
+
+                axios.post(`/api/entry/${this.fields._id}`,
+                    this.formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];

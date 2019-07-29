@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entry;
 use Illuminate\Http\Request;
-use App\MediaTemporaryStorage;
 use App\ContentField;
 use App\Helpers\CmsHelper;
 
@@ -42,21 +41,21 @@ class EntryController extends Controller
 
         try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
-            $files = $request->input('files', []);
-
-            foreach ($files as  $collectionName => $collection) {
-                foreach ($collection as  $item) {
-
-                    if(isset($item['response']['id'])) {
-                        $media = MediaTemporaryStorage::find($item['response']['id']);
-
-                        $model->addMedia(storage_path("app/" . $media->path))
-                            ->toMediaCollection($collectionName);
-
-                        $media->delete();
-                    }
-                }
-            }
+//            $files = $request->input('files', []);
+//
+//            foreach ($files as  $collectionName => $collection) {
+//                foreach ($collection as  $item) {
+//
+//                    if(isset($item['response']['id'])) {
+//                        $media = MediaTemporaryStorage::find($item['response']['id']);
+//
+//                        $model->addMedia(storage_path("app/" . $media->path))
+//                            ->toMediaCollection($collectionName);
+//
+//                        $media->delete();
+//                    }
+//                }
+//            }
 
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
@@ -109,6 +108,7 @@ class EntryController extends Controller
      */
     public function update(Request $request, Entry $entry)
     {
+
         $request->validate([
             'title' => 'required',
             'model_id' => 'required',
@@ -120,32 +120,31 @@ class EntryController extends Controller
         try {
             $entry->update($request->only('title', 'published', 'fields'));
 
-            $files = $request->input('files', []);
-
-            foreach ($files as  $collectionName => $collection) {
-                //find medias by ids from request
-                $exceptForDeleteMedia = $entry->getMedia($collectionName)->filter(function ($item) use ($collection) {
-                    return in_array($item->id, array_column($collection, 'id'));
-                })->all();
-
-                //delete not found medias
-                $entry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
-
-                //save new media
-                foreach ($collection as $item) {
-                    if(isset($item['response']['id'])) {
-                        $media = MediaTemporaryStorage::find($item['response']['id']);
-
-                        if(!empty($media)) {
-                            $entry->addMedia(storage_path("app/" . $media->path))
-                                ->toMediaCollection($collectionName);
-
-                            $media->delete();
-                        }
-                    }
-                }
-
-            }
+//            $files = $request->input('files', []);
+//
+//            foreach ($files as  $collectionName => $collection) {
+//                //find medias by ids from request
+//                $exceptForDeleteMedia = $entry->getMedia($collectionName)->filter(function ($item) use ($collection) {
+//                    return in_array($item->id, array_column($collection, 'id'));
+//                })->all();
+//
+//                //delete not found medias
+//                $entry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
+//
+//                //save new media
+//                foreach ($collection as $item) {
+//                    if(isset($item['response']['id'])) {
+//                        $media = MediaTemporaryStorage::find($item['response']['id']);
+//
+//                        if(!empty($media)) {
+//                            $entry->addMedia(storage_path("app/" . $media->path))
+//                                ->toMediaCollection($collectionName);
+//
+//                            $media->delete();
+//                        }
+//                    }
+//                }
+//            }
 
             return response()->json([], 200);
         } catch (\Exception $e) {

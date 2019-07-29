@@ -35,22 +35,9 @@ class CmsHelper
         return $validations;
     }
 
-    public static function validationFiles(Request $request)
-    {
-        $field = ContentField::where('model_id', $request->input('model_id'))
-                            ->where('api_id', $request->input('field_api_id'))
-                            ->firstOrFail();
-
-        $validations = 'mimes:' . implode(',', $field->validations['mime']);
-
-        return $request->validate([
-            'file' => $validations
-        ]);
-    }
-
     public static function validationFields(Request $request)
     {
-        $fields = ContentField::where('model_id', $request->input('model_id'))->where('type', '!=', 'media')->select('api_id', 'validations')->get()->toArray();
+        $fields = ContentField::where('model_id', $request->input('model_id'))->select('api_id', 'validations')->get()->toArray();
 
         $validations = self::buildValidationsRules($fields);
 

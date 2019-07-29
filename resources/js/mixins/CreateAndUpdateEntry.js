@@ -9,21 +9,41 @@ export default {
                 title: '',
                 published: false,
                 model_id: this.$route.params.model,
-                fields: {},
-                files: {}
+                fields: {}
             },
+            formData: new FormData(),
             modelFields: [],
             errors: [],
             fieldsIsFilled: false
         }
     },
-
     computed: {
 
     },
-
     methods: {
+        filesUploaded(payload) {
+            this.fields.fields[payload.api_id] = [];
 
+            payload['files'].forEach((file) => {
+                this.fields.fields[payload.api_id].push(file);
+            });
+
+        },
+        prepareFieldsForRequest() {
+            for (let [api_id, field] of Object.entries(this.fields.fields)) {
+                if(Array.isArray(field)) {
+                    field.forEach((value, index) => {
+                        this.formData.append('fields[' + api_id + '][' + index + ']', value);
+                    });
+                } else {
+                    this.formData.append('fields[' + api_id + ']', field);
+                }
+            }
+
+            this.formData.append('title', this.fields.title);
+            this.formData.append('published', this.fields.published);
+            this.formData.append('model_id', this.fields.model_id);
+        },
         getFields() {
             return new Promise((resolve, reject) => {
                 axios.get(`/api/content-model/${this.$route.params.model}`).then(response => {

@@ -23,8 +23,9 @@
                         >
                         </text-field>
 
-                        <media-field v-if="field.type == 'media'"
-                                     :api-id="field.api_id" :model-id="fields.model_id" :files-prop="[]" :label-prop="field.name"></media-field>
+                        <template v-if="field.type == 'media'">
+                            <media-field :api_id="field.api_id" :label="field.name"></media-field>
+                        </template>
 
                         <text-editor v-if="field.type == 'text_editor'"
                                     :model.sync="fields.fields[field.api_id]"
@@ -52,16 +53,20 @@
 
 <script>
     import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
-    import MediaField from './fields/MediaField';
+    import MediaField from './fields/MediaUploadField';
     import TextEditor from './fields/TextEditor';
     import TextField from './fields/TextField';
     import RelationField from './fields/RelationField';
+    import { mapMutations } from 'vuex';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
         components: {MediaField, TextEditor, TextField, RelationField},
         methods: {
+            ...mapMutations([
+                'updateTitlePage'
+            ]),
             save() {
                 this.fields.files = this.$store.getters.medias;
 
@@ -88,7 +93,7 @@
         },
         created() {
             this.getFields();
-            this.$store.commit('updateTitlePage', 'Create entry');
+            this.updateTitlePage('Create entry');
         }
     }
 </script>
