@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\ContentModel;
 use App\Entry;
 use Illuminate\Http\Request;
-use App\ContentField;
 use App\Helpers\CmsHelper;
 
 class EntryController extends Controller
@@ -77,7 +77,14 @@ class EntryController extends Controller
 
         $entry->files = [];
 
-        $mediaFields = ContentField::where('model_id', $entry->model_id)->where('type', 'media')->get()->pluck('api_id');
+        $model = ContentModel::where('_id', $entry->model_id)->first();
+        $fields = $model->fields;
+
+        $mediaFields = [];
+        $keys = array_keys(array_column($fields, 'type'), 'media');
+        foreach ($keys as $key) {
+            $mediaFields[] = $fields[$key]['api_id'];
+        }
 
         foreach ($mediaFields as $field) {
             $media = $entry->getMedia($field);

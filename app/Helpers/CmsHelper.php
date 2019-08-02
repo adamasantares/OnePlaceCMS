@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Helpers;
+use App\ContentModel;
 use Illuminate\Http\Request;
-use App\ContentField;
 
 
 class CmsHelper
@@ -37,9 +37,13 @@ class CmsHelper
 
     public static function validationFields(Request $request)
     {
-        $fields = ContentField::where('model_id', $request->input('model_id'))->select('api_id', 'validations')->get()->toArray();
+        $model = ContentModel::where('_id', $request->input('model_id'))->first();
+        $fields = $model->fields;
 
-        $validations = self::buildValidationsRules($fields);
+        $keysSelect = ['api_id', 'validations'];
+        $filteredArray = array_columns($fields, $keysSelect);
+
+        $validations = self::buildValidationsRules($filteredArray);
 
         return $request->validate($validations);
     }

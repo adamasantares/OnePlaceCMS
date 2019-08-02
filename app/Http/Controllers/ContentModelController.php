@@ -29,21 +29,23 @@ class ContentModelController extends Controller
     public function store(ContentModelRequest $request)
     {
         try {
-            $model = ContentModel::create($request->only('title', 'api_id', 'desc', 'published'));
-            $fields = $request->input('contentFields');
+            $inputFields = $request->input('contentFields');
 
-            foreach ($fields as $index => $value) {
-               ContentField::create(
-                    [
-                        'api_id' => $value['api_id'],
-                        'name' => $value['name'],
-                        'type' => $value['type'],
-                        'validations' => $value['validations'],
-                        'order' => $index,
-                        'model_id' => $model->id
-                    ]
-                );
+            $fields['fields'] = [];
+            foreach ($inputFields as $index => $value) {
+                $fields['fields'][] = [
+                    '_id' => $value['_id'],
+                    'api_id' => $value['api_id'],
+                    'name' => $value['name'],
+                    'type' => $value['type'],
+                    'validations' => $value['validations'],
+                    'order' => $index,
+                ];
             }
+
+            $attributes = $request->only('title', 'api_id', 'desc', 'published');
+            $attributes = array_merge($attributes, $fields);
+            $model = ContentModel::create($attributes);
 
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
@@ -63,7 +65,7 @@ class ContentModelController extends Controller
             return response()->json([], 404);
         }
 
-        return response()->json(['model' => $contentModel, 'fields' => $contentModel->fields()->orderBy('order')->get()], 200);
+        return response()->json(['model' => $contentModel, 'fields' => $contentModel->fields], 200);
     }
 
     /**
@@ -76,35 +78,25 @@ class ContentModelController extends Controller
     public function update(ContentModelRequest $request, ContentModel $contentModel)
     {
         try {
-            $contentModel->update($request->only('title', 'desc', 'published'));
-            $contentModelFieldsIds = $contentModel->fields()->get()->pluck('_id')->toArray();
+            $inputFields = $request->input('contentFields');
 
-            $fields = $request->input('contentFields');
-            $fieldsIds = [];
-
-            foreach ($fields as $index => $value) {
-
-                $field =  ContentField::updateOrCreate(
-                    [
-                        'api_id' => $value['api_id'],
-                        'model_id' => $contentModel->id
-                    ],
-                    [
-                        'name' => $value['name'],
-                        'type' => $value['type'],
-                        'validations' => $value['validations'],
-                        'order' => $index
-                    ]
-                );
-
-                array_push($fieldsIds, $field->id);
+            $fields['fields'] = [];
+            foreach ($inputFields as $index => $value) {
+                $fields['fields'][] = [
+                    '_id' => $value['_id'],
+                    'api_id' => $value['api_id'],
+                    'name' => $value['name'],
+                    'type' => $value['type'],
+                    'validations' => $value['validations'],
+                    'order' => $index,
+                ];
             }
 
-            $fieldsIdsForDelete = array_diff($contentModelFieldsIds, $fieldsIds);
+            $attributes = $request->only('title', 'api_id', 'desc', 'published');
+            $attributes = array_merge($attributes, $fields);
+            $contentModel->update($attributes);
 
-            ContentField::destroy($fieldsIdsForDelete);
-
-            return response()->json([], 200);
+            return response()->json(['_id' => $contentModel->id], 200);
         } catch (\Exception $e) {
             return response()->json([], 500);
         }
@@ -118,7 +110,6 @@ class ContentModelController extends Controller
      */
     public function destroy(ContentModel $contentModel)
     {
-        $contentModel->fields()->delete();
         $contentModel->delete();
     }
 

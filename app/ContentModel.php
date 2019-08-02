@@ -6,10 +6,7 @@ use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 class ContentModel extends Eloquent
 {
-    protected $fillable = ['title', 'api_id', 'desc', 'published'];
+    protected $table = 'models';
 
-    public function fields()
-    {
-        return $this->hasMany('App\ContentField', 'model_id', 'id');
-    }
+    protected $fillable = ['title', 'fields', 'api_id', 'desc', 'published'];
 }

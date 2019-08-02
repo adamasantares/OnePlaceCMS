@@ -25,7 +25,7 @@ class ContentModelRequest extends FormRequest
     {
         return [
             'title' => 'max:255|required',
-            'api_id' => 'max:255||required|unique:content_models,api_id,'.request()->input('_id').',_id',
+            'api_id' => 'max:255||required|unique:models,api_id,'.request()->input('_id').',_id',
             'desc' => 'max:1024',
         ];
     }

@@ -35,6 +35,9 @@
         }
     },
     "autoload": {
+        "files" : [
+            "bootstrap/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Spatie\\MediaLibrary\\Models\\": "src/CustomMediaLibrary"
