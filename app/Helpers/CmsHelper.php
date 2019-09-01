@@ -32,6 +32,7 @@ class CmsHelper
 
         $validations = array_map(function($rules) { return implode('|', $rules); }, $validations);
 
+
         return $validations;
     }
 

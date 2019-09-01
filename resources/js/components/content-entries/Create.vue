@@ -22,9 +22,8 @@
                                     :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
                         >
                         </text-field>
-
                         <template v-if="field.type == 'media'">
-                            <media-field :api_id="field.api_id" :label="field.name"></media-field>
+                            <media-field :api_id="field.api_id" :label="field.name" @uploadFiles="filesUploaded"></media-field>
                         </template>
 
                         <text-editor v-if="field.type == 'text_editor'"
@@ -52,7 +51,7 @@
 </template>
 
 <script>
-    import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
+    import FunctionsMixin from '../../mixins/entry-mixin';
     import MediaField from './fields/MediaUploadField';
     import TextEditor from './fields/TextEditor';
     import TextField from './fields/TextField';
@@ -68,9 +67,15 @@
                 'updateTitlePage'
             ]),
             save() {
-                this.fields.files = this.$store.getters.medias;
+                this.prepareFieldsForRequest();
 
-                axios.post('/api/entry', this.fields).then(response => {
+                axios.post('/api/entry',
+                    this.formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
                     this.errors = [];

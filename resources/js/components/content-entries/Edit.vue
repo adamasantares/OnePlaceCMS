@@ -52,7 +52,7 @@
 </template>
 
 <script>
-    import FunctionsMixin from '../../mixins/CreateAndUpdateEntry';
+    import FunctionsMixin from '../../mixins/entry-mixin';
     import TextField from './fields/TextField';
     import MediaField from './fields/MediaUploadField';
     import TextEditor from './fields/TextEditor';
