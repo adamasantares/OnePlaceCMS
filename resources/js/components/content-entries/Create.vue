@@ -77,12 +77,12 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(response => {
-                    // this.$store.commit('updateErrorMessage', []);
-                    // this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
-                    // this.errors = [];
-                    // this.fields = {};
+                    this.$store.commit('updateErrorMessage', []);
+                    this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
+                    this.errors = [];
+                    this.fields = {};
 
-                    // this.$router.push(`/entry/${this.$route.params.model}/edit/${response.data._id}`);
+                    this.$router.push(`/entry/${this.$route.params.model}/edit/${response.data._id}`);
 
                 }).catch(error => {
                     if (error.response.status === 422) {
