@@ -8,7 +8,7 @@
         <div class="col-lg-10 col-sm-8 col-12 cell">
             <ul class="list-group" v-if="files">
                 <li class="list-group-item list-group-item-action clearfix" v-for="(file, index) in files">
-                    <img :src="getUrlForFile(file)" width="60">
+                    <img :src="getUrlForThumb(file)" width="60">
                     <span>{{ file.name }} - {{ file.size }} Kb</span>
                     <button @click.prevent="deleteFile(file.name, index)" href="#" title="Delete" class="btn btn btn-danger pull-right"><i aria-hidden="true" class="fa fa-trash"></i></button>
                 </li>
@@ -27,7 +27,8 @@
         },
         props: {
             label: String,
-            api_id: String
+            api_id: String,
+            uploadedFiles: Array
         },
         methods: {
             handleFilesUpload(){
@@ -38,7 +39,7 @@
 
                 this.$emit('uploadFiles', { files: this.files, api_id: this.api_id });
             },
-            getUrlForFile(file) {
+            getUrlForThumb(file) {
                 if(file.type == 'application/pdf') {
                     return '/images/icons/pdf-icon.png'
                 }
@@ -55,10 +56,7 @@
 
                     this.$emit('uploadFiles', { files: this.files, api_id: this.api_id });
                 }
-            },
-            submitFiles(){
-                console.log(this.files)
-            },
+            }
         }
     }
 </script>
