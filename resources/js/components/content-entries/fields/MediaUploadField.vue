@@ -7,10 +7,10 @@
         </div>
         <div class="col-lg-10 col-sm-8 col-12 cell">
             <ul class="list-group" v-if="files">
-                <li class="list-group-item list-group-item-action clearfix" v-for="file in files">
+                <li class="list-group-item list-group-item-action clearfix" v-for="(file, index) in files">
                     <img :src="getUrlForFile(file)" width="60">
                     <span>{{ file.name }} - {{ file.size }} Kb</span>
-                    <button @click.prevent="deleteFile(file)" href="#" title="Delete" class="btn btn btn-danger pull-right"><i aria-hidden="true" class="fa fa-trash"></i></button>
+                    <button @click.prevent="deleteFile(file.name, index)" href="#" title="Delete" class="btn btn btn-danger pull-right"><i aria-hidden="true" class="fa fa-trash"></i></button>
                 </li>
             </ul>
         </div>
@@ -43,20 +43,17 @@
                     return '/images/icons/pdf-icon.png'
                 }
 
-                if(file.type == 'image/png') {
+                if(file.type.match('image.*')) {
                     return  URL.createObjectURL(file);
                 }
             },
-            deleteFile(file) {
-                const confirm = window.confirm("Delete " + file.name + " ?");
-                const file_id = file.id;
+            deleteFile(file_name, index) {
+                const confirm = window.confirm("Delete " + file_name + " ?");
 
                 if(confirm) {
-                    this.files = this.files.filter((current_file) => {
-                        if(current_file.id != file_id) {
-                            return file;
-                        }
-                    });
+                    this.$delete(this.files, index);
+
+                    this.$emit('uploadFiles', { files: this.files, api_id: this.api_id });
                 }
             },
             submitFiles(){

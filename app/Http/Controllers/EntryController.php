@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\ContentModel;
 use App\Entry;
-use Illuminate\Http\Request;
 use App\Helpers\CmsHelper;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Http\Requests\EntryRequest;
