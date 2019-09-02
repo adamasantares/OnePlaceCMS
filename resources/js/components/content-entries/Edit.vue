@@ -65,7 +65,7 @@
         methods: {
 
             save() {
-                this.prepareFieldsForRequest();
+                this.prepareDataForRequest();
 
                 this.formData.append('_method', 'PATCH');
 

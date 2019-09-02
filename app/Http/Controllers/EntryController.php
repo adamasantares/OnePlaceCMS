@@ -6,6 +6,9 @@ use App\ContentModel;
 use App\Entry;
 use Illuminate\Http\Request;
 use App\Helpers\CmsHelper;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Http\Requests\EntryRequest;
+
 
 class EntryController extends Controller
 {
@@ -16,9 +19,14 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $models = Entry::where('model_id', '=', request()->get('model_id'))
-                        ->where('title', 'like', request()->get('search').'%')
-                        ->orderBy(request()->get('column'), request()->get('sort'))->paginate(15);
+        $modelId = request()->get('model_id');
+        $search = request()->get('search');
+        $column = request()->get('column');
+        $sort = request()->get('sort');
+
+        $models = Entry::where('model_id', '=', $modelId)
+                        ->where('title', 'like', "{$search}%")
+                        ->orderBy($column, $sort)->paginate(15);
 
         return response()->json($models->appends(request()->except('page')), 200);
     }
@@ -29,34 +37,18 @@ class EntryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EntryRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'model_id' => 'required',
-            'published' => 'required'
-        ]);
-
-        CmsHelper::validationFields($request);
-
         try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
-//            $files = $request->input('files', []);
-//
-//            foreach ($files as  $collectionName => $collection) {
-//                foreach ($collection as  $item) {
-//
-//                    if(isset($item['response']['id'])) {
-//                        $media = MediaTemporaryStorage::find($item['response']['id']);
-//
-//                        $model->addMedia(storage_path("app/" . $media->path))
-//                            ->toMediaCollection($collectionName);
-//
-//                        $media->delete();
-//                    }
-//                }
-//            }
+            $requestFiles = $request->allFiles();
+            $files = $requestFiles['files'] ?? [];
 
+            foreach ($files as  $collectionName => $collection) {
+                foreach ($collection as  $item) {
+                    $model->addMedia($item)->toMediaCollection($collectionName);
+                }
+            }
             return response()->json(['_id' => $model->id], 200);
         } catch (\Exception $e) {
             return response()->json([], 500);
@@ -113,17 +105,8 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Entry $entry)
+    public function update(EntryRequest $request, Entry $entry)
     {
-
-        $request->validate([
-            'title' => 'required',
-            'model_id' => 'required',
-            'published' => 'required'
-        ]);
-
-        CmsHelper::validationFields($request);
-
         try {
             $entry->update($request->only('title', 'published', 'fields'));
 
@@ -170,6 +153,12 @@ class EntryController extends Controller
         $entry->delete();
     }
 
+    /**
+     * Get entries by ContentModel id
+     *
+     * @param $model_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getByModel($model_id)
     {
         $entries = Entry::where('model_id', $model_id)->where('published', true)->get();

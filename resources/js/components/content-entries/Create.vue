@@ -22,6 +22,7 @@
                                     :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
                         >
                         </text-field>
+
                         <template v-if="field.type == 'media'">
                             <media-field :api_id="field.api_id" :label="field.name" @uploadFiles="filesUploaded"></media-field>
                         </template>
@@ -67,7 +68,7 @@
                 'updateTitlePage'
             ]),
             save() {
-                this.prepareFieldsForRequest();
+                this.prepareDataForRequest();
 
                 axios.post('/api/entry',
                     this.formData,
@@ -76,12 +77,12 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(response => {
-                    this.$store.commit('updateErrorMessage', []);
-                    this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
-                    this.errors = [];
-                    this.fields = {};
+                    // this.$store.commit('updateErrorMessage', []);
+                    // this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
+                    // this.errors = [];
+                    // this.fields = {};
 
-                    this.$router.push(`/entry/${this.$route.params.model}/edit/${response.data._id}`);
+                    // this.$router.push(`/entry/${this.$route.params.model}/edit/${response.data._id}`);
 
                 }).catch(error => {
                     if (error.response.status === 422) {

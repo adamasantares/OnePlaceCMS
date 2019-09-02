@@ -9,7 +9,8 @@ export default {
                 title: '',
                 published: false,
                 model_id: this.$route.params.model,
-                fields: {}
+                fields: {},
+                files: {}
             },
             formData: new FormData(),
             modelFields: [],
@@ -22,14 +23,14 @@ export default {
     },
     methods: {
         filesUploaded(payload) {
-            this.fields.fields[payload.api_id] = [];
+            this.fields.files[payload.api_id] = [];
 
             payload['files'].forEach((file) => {
-                this.fields.fields[payload.api_id].push(file);
+                this.fields.files[payload.api_id].push(file);
             });
 
         },
-        prepareFieldsForRequest() {
+        prepareDataForRequest() {
             for (let [api_id, field] of Object.entries(this.fields.fields)) {
                 if(Array.isArray(field)) {
                     field.forEach((value, index) => {
@@ -37,6 +38,16 @@ export default {
                     });
                 } else {
                     this.formData.append('fields[' + api_id + ']', field);
+                }
+            }
+
+            for (let [api_id, file] of Object.entries(this.fields.files)) {
+                if(Array.isArray(file)) {
+                    file.forEach((value, index) => {
+                        this.formData.append('files[' + api_id + '][' + index + ']', value);
+                    });
+                } else {
+                    this.formData.append('files[' + api_id + ']', file);
                 }
             }
 
