@@ -24,7 +24,12 @@
                         </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <media-field :api_id="field.api_id" :label="field.name"  :uploaded-files-prop="uploadedFiles[field.api_id]" @uploadFiles="filesUploaded" @deleteUploadedFile="deleteUploadedFile"></media-field>
+                            <media-field :api_id="field.api_id"
+                                         :label="field.name"
+                                         :uploaded-files-prop="uploadedFiles[field.api_id]"
+                                         :errors="errors['files.' + field.api_id]"
+                                         @uploadFiles="filesUploaded"
+                                         @deleteUploadedFile="deleteUploadedFile" />
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
@@ -34,7 +39,7 @@
                         </template>
 
                         <relation-field v-if="field.type == 'relation'"
-                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
+                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['files.' + field.api_id]"
                         ></relation-field>
                     </div>
                 </div>
@@ -66,14 +71,26 @@
             deleteUploadedFile(file_id) {
                 this.filesForDelete.push(file_id)
             },
-            save() {
-                this.prepareDataForRequest();
-
+            additionalPrepareDataForReqeust() {
                 this.formData.append('_method', 'PATCH');
 
                 this.filesForDelete.forEach((value, index) => {
                     this.formData.append('deleted_files_ids[' + index + ']', value);
                 });
+
+                //if previously uploaded files exist. It for request validation
+
+                Object.keys(this.uploadedFiles).map((objectKey) => {
+                    let items = this.uploadedFiles[objectKey];
+                    if(items.length > 0) {
+                        this.formData.append('old_files_info[' + objectKey + ']', 'true');
+                    }
+                })
+
+            },
+            save() {
+                this.prepareDataForRequest();
+                this.additionalPrepareDataForReqeust();
 
                 axios.post(`/api/entry/${this.fields._id}`,
                     this.formData,
@@ -85,6 +102,8 @@
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
+
+                    this.$router.push(`/entry/${this.$route.params.model}/edit/${this.fields._id}`);
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};

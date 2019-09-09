@@ -92,10 +92,15 @@ class EntryRequest extends FormRequest
     private function createRulesForMediaFields($fields)
     {
         $rules = [];
+        $oldFilesInfo = $this->request->get('old_files_info');
 
         foreach ($fields as $item) {
 
             foreach ($item['validations'] as $validation => $value) {
+
+                if(isset($oldFilesInfo[$item['api_id']]) && ($validation == 'required')) {
+                    continue;
+                }
 
                 if($value === true) {
                     $rules['files.' . $item['api_id']][] = $validation;
@@ -106,6 +111,7 @@ class EntryRequest extends FormRequest
                 $rules['files.' . $item['api_id'] . '.*'][] = "mimes:" . implode(",", $item['validations']['mime']);
             }
         }
+
 
         $rules = array_map(function($rules) { return implode('|', $rules); }, $rules);
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entry;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Http\Requests\EntryRequest;
-use Illuminate\Http\Request;
 
 class EntryController extends Controller
 {
@@ -69,6 +68,7 @@ class EntryController extends Controller
         foreach ($fields as $field) {
             if($field['type'] != 'media') continue;
 
+            $uploadedFiles = [];
             $media = $entry->getMedia($field['api_id']);
 
             foreach ($media as $item) {
@@ -93,7 +93,7 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Entry $entry)
+    public function update(EntryRequest $request, Entry $entry)
     {
         try {
             $entry->update($request->only('title', 'published', 'fields'));

@@ -24,7 +24,9 @@
                         </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <media-field :api_id="field.api_id" :label="field.name" @uploadFiles="filesUploaded"></media-field>
+                            <media-field :api_id="field.api_id" :label="field.name"
+                                         :errors="errors['files.' + field.api_id]"
+                                         @uploadFiles="filesUploaded"></media-field>
                         </template>
 
                         <text-editor v-if="field.type == 'text_editor'"
