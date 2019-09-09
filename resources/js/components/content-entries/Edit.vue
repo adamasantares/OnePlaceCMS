@@ -103,7 +103,6 @@
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
 
-                    this.$router.push(`/entry/${this.$route.params.model}/edit/${this.fields._id}`);
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
