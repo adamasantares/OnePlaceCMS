@@ -24,7 +24,7 @@
                         </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <media-field :api_id="field.api_id" :label="field.name" @uploadFiles="filesUploaded"></media-field>
+                            <media-field :api_id="field.api_id" :label="field.name"  :uploaded-files-prop="uploadedFiles[field.api_id]" @uploadFiles="filesUploaded" @deleteUploadedFile="deleteUploadedFile"></media-field>
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
@@ -63,11 +63,17 @@
         mixins: [FunctionsMixin],
         components: {TextField, MediaField, TextEditor, RelationField},
         methods: {
-
+            deleteUploadedFile(file_id) {
+                this.filesForDelete.push(file_id)
+            },
             save() {
                 this.prepareDataForRequest();
 
                 this.formData.append('_method', 'PATCH');
+
+                this.filesForDelete.forEach((value, index) => {
+                    this.formData.append('deleted_files_ids[' + index + ']', value);
+                });
 
                 axios.post(`/api/entry/${this.fields._id}`,
                     this.formData,

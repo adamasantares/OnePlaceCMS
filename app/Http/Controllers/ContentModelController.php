@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\ContentModel;
-use App\ContentField;
 use App\Http\Requests\ContentModelRequest;
 
 class ContentModelController extends Controller

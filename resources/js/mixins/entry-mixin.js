@@ -10,8 +10,10 @@ export default {
                 published: false,
                 model_id: this.$route.params.model,
                 fields: {},
-                files: {}
+                files: {},
             },
+            filesForDelete: [],
+            uploadedFiles: [],
             formData: new FormData(),
             modelFields: [],
             errors: [],
@@ -28,7 +30,6 @@ export default {
             payload['files'].forEach((file) => {
                 this.fields.files[payload.api_id].push(file);
             });
-
         },
         prepareDataForRequest() {
             for (let [api_id, field] of Object.entries(this.fields.fields)) {
@@ -41,13 +42,15 @@ export default {
                 }
             }
 
-            for (let [api_id, file] of Object.entries(this.fields.files)) {
-                if(Array.isArray(file)) {
-                    file.forEach((value, index) => {
-                        this.formData.append('files[' + api_id + '][' + index + ']', value);
-                    });
-                } else {
-                    this.formData.append('files[' + api_id + ']', file);
+            if(this.fields.files) {
+                for (let [api_id, file] of Object.entries(this.fields.files)) {
+                    if(Array.isArray(file)) {
+                        file.forEach((value, index) => {
+                            this.formData.append('files[' + api_id + '][' + index + ']', value);
+                        });
+                    } else {
+                        this.formData.append('files[' + api_id + ']', file);
+                    }
                 }
             }
 
@@ -77,9 +80,10 @@ export default {
 
                 this.fields._id = response.data._id;
                 this.fields.title = response.data.title;
-                this.fields.published = response.data.published;
+                this.fields.published = (response.data.published === 'true');
                 this.fields.fields = response.data.fields;
-                this.fields.files = response.data.files;
+                this.fields.fields.files = [];
+                this.uploadedFiles = response.data.uploadedFiles || [];
                 this.fieldsIsFilled = true;
 
                 this.errors = [];

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\ContentModel;
 use App\Entry;
-use App\Helpers\CmsHelper;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Http\Requests\EntryRequest;
-
+use Illuminate\Http\Request;
 
 class EntryController extends Controller
 {
@@ -66,23 +64,15 @@ class EntryController extends Controller
             return response()->json([], 404);
         }
 
-        $entry->files = [];
+        $fields = $entry->model->fields;
 
-        $model = ContentModel::where('_id', $entry->model_id)->first();
-        $fields = $model->fields;
+        foreach ($fields as $field) {
+            if($field['type'] != 'media') continue;
 
-        $mediaFields = [];
-        $keys = array_keys(array_column($fields, 'type'), 'media');
-        foreach ($keys as $key) {
-            $mediaFields[] = $fields[$key]['api_id'];
-        }
-
-        foreach ($mediaFields as $field) {
-            $media = $entry->getMedia($field);
-            $mediaFormatted = [];
+            $media = $entry->getMedia($field['api_id']);
 
             foreach ($media as $item) {
-                $mediaFormatted[] = [
+                $uploadedFiles[$field['api_id']][] = [
                     'id' => $item->id,
                     'thumb' => $item->getUrl('thumb'),
                     'name' => $item->file_name,
@@ -90,8 +80,7 @@ class EntryController extends Controller
                     'type' => $item->mime_type
                 ];
             }
-
-            $entry->files = array_merge($entry->files, [$field => $mediaFormatted]);
+            $entry->uploadedFiles = $uploadedFiles;
         }
 
         return response()->json($entry, 200);
@@ -104,36 +93,35 @@ class EntryController extends Controller
      * @param  \App\Entry  $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(EntryRequest $request, Entry $entry)
+    public function update(Request $request, Entry $entry)
     {
         try {
             $entry->update($request->only('title', 'published', 'fields'));
+            $requestFiles = $request->allFiles();
+            $files = $requestFiles['files'] ?? [];
+            $deletedFilesIds = $request->input('deleted_files_ids') ? $request->input('deleted_files_ids') : [];
 
-//            $files = $request->input('files', []);
-//
-//            foreach ($files as  $collectionName => $collection) {
-//                //find medias by ids from request
-//                $exceptForDeleteMedia = $entry->getMedia($collectionName)->filter(function ($item) use ($collection) {
-//                    return in_array($item->id, array_column($collection, 'id'));
-//                })->all();
-//
-//                //delete not found medias
-//                $entry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
-//
-//                //save new media
-//                foreach ($collection as $item) {
-//                    if(isset($item['response']['id'])) {
-//                        $media = MediaTemporaryStorage::find($item['response']['id']);
-//
-//                        if(!empty($media)) {
-//                            $entry->addMedia(storage_path("app/" . $media->path))
-//                                ->toMediaCollection($collectionName);
-//
-//                            $media->delete();
-//                        }
-//                    }
-//                }
-//            }
+            $fields = $entry->model->fields;
+            $mediaFields = array_filter($fields, function ($field) {
+                return $field['type'] == 'media';
+            });
+
+            foreach ($mediaFields as $field) {
+                $collectionName = $field['api_id'];
+
+                $exceptForDeleteMedia = $entry->getMedia($collectionName)->filter(function ($item) use ($deletedFilesIds) {
+                    return !in_array($item->id, $deletedFilesIds);
+                })->all();
+
+                $entry->clearMediaCollectionExcept($collectionName, $exceptForDeleteMedia);
+            }
+
+            //save new media
+            foreach ($files as  $collectionName => $collection) {
+                foreach ($collection as  $item) {
+                    $entry->addMedia($item)->toMediaCollection($collectionName);
+                }
+            }
 
             return response()->json([], 200);
         } catch (\Exception $e) {

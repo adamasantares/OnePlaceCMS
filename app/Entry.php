@@ -20,4 +20,9 @@ class Entry extends Eloquent implements HasMedia
             ->height(232)
             ->sharpen(10);
     }
+
+    public function model()
+    {
+        return $this->belongsTo('App\ContentModel', 'model_id');
+    }
 }
