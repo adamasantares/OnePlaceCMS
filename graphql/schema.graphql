@@ -10,14 +10,14 @@ scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 type Query {
 #    entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
     entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
-    entry(id: ID @eq): Entry @find(model: "App\\Entry")
+    entry(_id: ID @eq): Entry @find(model: "App\\Entry")
 }
 
 type Entry {
     id: ID!
     title: String!
     published: Boolean!
-    fields_formatted: JSON!
+    fields: JSON! @field(resolver: "App\\GraphQL\\Queries\\EntryQuery@formatFields")
     created_at: DateTime!
     updated_at: DateTime!
 }
