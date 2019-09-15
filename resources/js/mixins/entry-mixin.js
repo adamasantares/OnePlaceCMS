@@ -80,7 +80,7 @@ export default {
 
                 this.fields._id = response.data._id;
                 this.fields.title = response.data.title;
-                this.fields.published = (response.data.published === 'true');
+                this.fields.published = response.data.published;
                 this.fields.fields = response.data.fields;
                 this.fields.fields.files = [];
                 this.uploadedFiles = response.data.uploadedFiles || [];

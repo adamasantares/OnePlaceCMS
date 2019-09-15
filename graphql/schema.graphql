@@ -1,0 +1,23 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
+
+
+type Query {
+#    entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
+    entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
+    entry(id: ID @eq): Entry @find(model: "App\\Entry")
+}
+
+type Entry {
+    id: ID!
+    title: String!
+    published: Boolean!
+    fields_formatted: JSON!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
