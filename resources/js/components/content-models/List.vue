@@ -3,18 +3,10 @@
         <table class="table table-bordered table-striped dataTable" role="grid" >
             <thead>
                 <tr role="row">
-                    <th @click="sortTable('title')" :class="classObjectForTitleColumn">
-                        Title
-                    </th>
-                    <th @click="sortTable('published')" :class="classObjectForPublishedColumn" style="width: 200px">
-                        Published
-                    </th>
-                    <th @click="sortTable('created_at')" :class="classObjectForDateCreatedColumn" style="width: 200px">
-                        Date create
-                    </th>
-                    <th @click="sortTable('updated_at')" :class="classObjectForDateUpdatedColumn" style="width: 200px">
-                        Date update
-                    </th>
+                    <table-header-cell :searchParams="searchParams" label="Title" parameter="title" />
+                    <table-header-cell :searchParams="searchParams" label="Published" parameter="published" />
+                    <table-header-cell :searchParams="searchParams" label="Date create" parameter="created_at" />
+                    <table-header-cell :searchParams="searchParams" label="Date update" parameter="updated_at" />
                     <th style="width: 84px">Action</th>
                 </tr>
             </thead>
@@ -61,15 +53,23 @@
 </template>
 
 <script>
+    import TableHeaderCell from '../template-components/TableHeaderCell'
     import FunctionsMixin from '../../mixins/Listing';
 
     export default {
         name: 'list',
+        components: { TableHeaderCell },
         mixins: [FunctionsMixin],
         data() {
             return {
                 base_path: '/model',
                 base_path_api: '/api/content-model/',
+                searchParams: {
+                    column: this.$route.query.column ? this.$route.query.column : 'created_at',
+                    sort: this.$route.query.sort ? this.$route.query.sort : 'desc',
+                    search: this.$route.query.search ? this.$route.query.search : '',
+                    page: this.$route.query.page ? +this.$route.query.page : 1
+                }
             }
         },
         computed: {

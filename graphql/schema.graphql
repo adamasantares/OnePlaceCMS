@@ -9,7 +9,7 @@ scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 
 type Query {
 #    entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
-    entries(model_id: ID @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
+    entries(api_id: String @eq): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
     entry(_id: ID @eq): Entry @find(model: "App\\Entry")
 }
 

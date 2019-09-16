@@ -9,6 +9,7 @@ export default {
                 title: '',
                 published: false,
                 model_id: this.$route.params.model,
+                api_id: '',
                 fields: {},
                 files: {},
             },
@@ -32,6 +33,7 @@ export default {
             });
         },
         prepareDataForRequest() {
+
             for (let [api_id, field] of Object.entries(this.fields.fields)) {
                 if(Array.isArray(field)) {
                     field.forEach((value, index) => {
@@ -57,6 +59,7 @@ export default {
             this.formData.append('title', this.fields.title);
             this.formData.append('published', this.fields.published);
             this.formData.append('model_id', this.fields.model_id);
+            this.formData.append('api_id', this.fields.api_id);
         },
         getFields() {
             return new Promise((resolve, reject) => {
@@ -81,6 +84,7 @@ export default {
                 this.fields._id = response.data._id;
                 this.fields.title = response.data.title;
                 this.fields.published = response.data.published;
+                this.fields.api_id = response.data.model.api_id;
                 this.fields.fields = response.data.fields;
                 this.fields.fields.files = [];
                 this.uploadedFiles = response.data.uploadedFiles || [];
