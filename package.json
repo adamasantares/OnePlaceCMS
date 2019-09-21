@@ -29,14 +29,14 @@
     "admin-lte": "^3.0.0-alpha.2",
     "codemirror": "^5.46.0",
     "cropperjs": "^1.5.1",
+    "datatables.net-bs4": "^1.10.19",
+    "font-awesome": "^4.7.0",
     "summernote": "^0.8.11",
     "tiptap": "^1.16.2",
-    "validate.js": "^0.12.0",
     "vue-draggable-nested-tree": "^2.2.10",
     "vue-router": "^3.0.2",
     "vue-select": "^3.1.0",
     "vue-slide-up-down": "^1.6.0",
-    "vue-upload-component": "^2.8.20",
     "vuedraggable": "^2.17.0",
     "vuex": "^3.1.0"
   }
