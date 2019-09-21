@@ -84,7 +84,6 @@ export default {
                 this.fields._id = response.data._id;
                 this.fields.title = response.data.title;
                 this.fields.published = response.data.published;
-                this.fields.api_id = response.data.model.api_id;
                 this.fields.fields = response.data.fields;
                 this.fields.fields.files = [];
                 this.uploadedFiles = response.data.uploadedFiles || [];

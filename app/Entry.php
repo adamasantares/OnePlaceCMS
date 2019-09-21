@@ -12,7 +12,16 @@ class Entry extends Eloquent implements HasMedia
     use HasMediaTrait;
 
     protected $fillable = ['title', 'published', 'model_id', 'api_id', 'fields'];
-    protected $appends = ['formatted_fields'];
+    protected $appends = ['fields_formatted'];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->api_id = $model->model->api_id;
+        });
+    }
 
     public function registerMediaConversions(Media $media = null)
     {
@@ -32,7 +41,7 @@ class Entry extends Eloquent implements HasMedia
         $this->attributes['published'] = ($value === 'true') || ($value === true);
     }
 
-    public function getFormattedFieldsAttribute()
+    public function getFieldsFormattedAttribute()
     {
         $result = [];
         $modelFields = $this->model->fields;

@@ -36,7 +36,7 @@ class EntryController extends Controller
     public function store(EntryRequest $request)
     {
         try {
-            $model = Entry::create($request->only('title', 'published', 'model_id', 'api_id', 'fields'));
+            $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
             $requestFiles = $request->allFiles();
             $files = $requestFiles['files'] ?? [];
 
@@ -97,7 +97,7 @@ class EntryController extends Controller
     {
         try {
 
-            $entry->update($request->only('title', 'published', 'api_id', 'fields'));
+            $entry->update($request->only('title', 'published', 'fields'));
             $requestFiles = $request->allFiles();
             $files = $requestFiles['files'] ?? [];
             $deletedFilesIds = $request->input('deleted_files_ids') ? $request->input('deleted_files_ids') : [];
