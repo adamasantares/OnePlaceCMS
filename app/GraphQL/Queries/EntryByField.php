@@ -18,6 +18,6 @@ class EntryByField
      */
     public function __invoke($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        return \App\Entry::where("fields.{$args['field']}", $args['value'])->where("api_id", $args['api_id'])->first();
+        return \App\Entry::where("fields.{$args['field']}", $args['value'])->where("api_id", $args['api_id'])->where('published', true)->first();
     }
 }
