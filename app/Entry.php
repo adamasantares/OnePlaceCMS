@@ -71,7 +71,7 @@ class Entry extends Eloquent implements HasMedia
                     break;
 
                 default:
-                    $result[$key] = $this->fields[$key];
+                    $result[$key] = $this->fields[$key] ?? null;
 
                     break;
             }
