@@ -37,6 +37,12 @@
                         <relation-field v-if="field.type == 'relation'"
                                      :model.sync="fields.fields[field.api_id]" :field="field"
                         ></relation-field>
+
+                        <date-field v-if="field.type == 'date'"
+                                    :model.sync="fields.fields[field.api_id]"
+                                    :field="field"
+                                    :errors="errors['fields.' + field.api_id]"
+                        ></date-field>
                     </div>
 
                 </div>
@@ -59,12 +65,13 @@
     import TextEditor from './fields/TextEditor';
     import TextField from './fields/TextField';
     import RelationField from './fields/RelationField';
+    import DateField from './fields/DateField';
     import { mapMutations } from 'vuex';
 
     export default {
         name: "Create",
         mixins: [FunctionsMixin],
-        components: {MediaField, TextEditor, TextField, RelationField},
+        components: {MediaField, TextEditor, TextField, DateField, RelationField},
         methods: {
             ...mapMutations([
                 'updateTitlePage'

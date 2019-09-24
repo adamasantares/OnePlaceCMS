@@ -39,8 +39,14 @@
                         </template>
 
                         <relation-field v-if="field.type == 'relation'"
-                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['files.' + field.api_id]"
+                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
                         ></relation-field>
+
+                        <date-field v-if="field.type == 'date'"
+                                    :model.sync="fields.fields[field.api_id]"
+                                    :field="field"
+                                    :errors="errors['fields.' + field.api_id]"
+                        ></date-field>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -61,12 +67,13 @@
     import TextField from './fields/TextField';
     import MediaField from './fields/MediaUploadField';
     import TextEditor from './fields/TextEditor';
+    import DateField from './fields/DateField';
     import RelationField from './fields/RelationField';
 
     export default {
         name: "Edit",
         mixins: [FunctionsMixin],
-        components: {TextField, MediaField, TextEditor, RelationField},
+        components: {TextField, MediaField, TextEditor, DateField, RelationField},
         methods: {
             deleteUploadedFile(file_id) {
                 this.filesForDelete.push(file_id)

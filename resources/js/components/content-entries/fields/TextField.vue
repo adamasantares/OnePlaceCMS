@@ -1,4 +1,4 @@
-<template v-if="field.type == 'text'">
+<template>
     <div class="form-group">
         <label :for="field.api_id">{{ field.name }}</label>
         <input :id="field.api_id" class="form-control"

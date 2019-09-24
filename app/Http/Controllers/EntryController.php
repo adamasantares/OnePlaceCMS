@@ -35,7 +35,7 @@ class EntryController extends Controller
      */
     public function store(EntryRequest $request)
     {
-        try {
+//        try {
             $model = Entry::create($request->only('title', 'published', 'model_id', 'fields'));
             $requestFiles = $request->allFiles();
             $files = $requestFiles['files'] ?? [];
@@ -46,9 +46,9 @@ class EntryController extends Controller
                 }
             }
             return response()->json(['_id' => $model->id], 200);
-        } catch (\Exception $e) {
-            return response()->json([], 500);
-        }
+//        } catch (\Exception $e) {
+//            return response()->json([], 500);
+//        }
     }
 
     /**
