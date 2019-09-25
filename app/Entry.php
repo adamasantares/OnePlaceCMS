@@ -32,6 +32,19 @@ class Entry extends Eloquent implements HasMedia
 
             $model->api_id = $model->model->api_id;
         });
+
+        self::updating(function ($model) {
+
+            foreach ($model->model->fields as $item) {
+                $key = $item['api_id'];
+
+                if($item['type'] === 'date' && is_string($model->fields[$key])) {
+                    $model->fields = array_merge($model->fields, [
+                        $key => new \MongoDB\BSON\UTCDateTime($model->fields[$key])
+                    ]);
+                }
+            }
+        });
     }
 
     public function registerMediaConversions(Media $media = null)
