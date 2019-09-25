@@ -37,9 +37,14 @@
             }
         },
         created() {
-            console.log(this.model);
+            //TODO refactor
+            if(this.model.$date) {
+                let date = new Date();
 
-            this.value = this.model;
+                date.setTime(this.model.$date.$numberLong);
+
+                this.value = date;
+            }
         }
     }
 </script>
