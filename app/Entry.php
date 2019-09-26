@@ -94,6 +94,17 @@ class Entry extends Eloquent implements HasMedia
 
                     break;
 
+                case "date":
+
+                    if(isset($this->fields[$key]) && ($this->fields[$key] instanceof \MongoDB\BSON\UTCDateTime)) {
+                        $date = $this->fields[$key]->toDateTime();
+                        $result[$key] = $date->format('d.m.Y');
+                    } else {
+                        $result[$key] = null;
+                    }
+
+                    break;
+
                 default:
                     $result[$key] = $this->fields[$key] ?? null;
 
