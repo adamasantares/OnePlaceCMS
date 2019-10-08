@@ -63,12 +63,12 @@ class EntryController extends Controller
             return response()->json([], 404);
         }
 
+        $uploadedFiles = [];
         $fields = $entry->model->fields;
 
         foreach ($fields as $field) {
             if($field['type'] != 'media') continue;
 
-            $uploadedFiles = [];
             $media = $entry->getMedia($field['api_id']);
 
             foreach ($media as $item) {
