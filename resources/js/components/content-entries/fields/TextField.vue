@@ -29,7 +29,9 @@
             }
         },
         created() {
-            this.value = this.model;
+            if(this.model) {
+                this.value = this.model;
+            }
         }
     }
 </script>

@@ -79,12 +79,14 @@ export default {
         fillFields() {
             axios.get(`/api/entry/${this.$route.params.id}`).then(response => {
 
+                console.log(response.data)
+
                 this.$store.commit('updateTitlePage', `Edit ${response.data.title}`);
 
                 this.fields._id = response.data._id;
                 this.fields.title = response.data.title;
                 this.fields.published = response.data.published;
-                this.fields.fields = response.data.fields;
+                this.fields.fields = response.data.fields || {};
                 this.fields.fields.files = [];
                 this.uploadedFiles = response.data.uploadedFiles || [];
                 this.fieldsIsFilled = true;

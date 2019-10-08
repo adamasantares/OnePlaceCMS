@@ -23,7 +23,7 @@ class Entry extends Eloquent implements HasMedia
             foreach ($model->model->fields as $item) {
                 $key = $item['api_id'];
 
-                if($item['type'] === 'date' && is_string($model->fields[$key])) {
+                if($item['type'] === 'date' && isset($model->fields[$key]) && is_string($model->fields[$key])) {
                     $model->fields = array_merge($model->fields, [
                         $key => new \MongoDB\BSON\UTCDateTime($model->fields[$key])
                     ]);
@@ -38,7 +38,7 @@ class Entry extends Eloquent implements HasMedia
             foreach ($model->model->fields as $item) {
                 $key = $item['api_id'];
 
-                if($item['type'] === 'date' && is_string($model->fields[$key])) {
+                if($item['type'] === 'date' && isset($model->fields[$key]) && is_string($model->fields[$key])) {
                     $model->fields = array_merge($model->fields, [
                         $key => new \MongoDB\BSON\UTCDateTime($model->fields[$key])
                     ]);

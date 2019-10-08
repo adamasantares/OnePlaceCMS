@@ -42,7 +42,9 @@
             errors: Array,
             uploadedFilesProp: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             }
         },
         methods: {

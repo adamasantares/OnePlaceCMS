@@ -80,8 +80,9 @@ class EntryController extends Controller
                     'type' => $item->mime_type
                 ];
             }
-            $entry->uploadedFiles = $uploadedFiles;
         }
+
+        $entry->uploadedFiles = $uploadedFiles;
 
         return response()->json($entry, 200);
     }
