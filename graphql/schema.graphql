@@ -7,7 +7,7 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 
 type Query {
-    entries(api_id: String @eq, orderBy: [OrderByClause!] @orderBy): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
+    entries(api_id: String @eq, published: Boolean @eq, orderBy: [OrderByClause!] @orderBy): [Entry!]!  @paginate(type: "paginator" model: "App\\Entry")
     entry(_id: ID @eq): Entry @find(model: "App\\Entry")
     entryByField(field: String!, value: String!, api_id: String!): Entry
 }
