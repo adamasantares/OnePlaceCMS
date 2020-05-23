@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-lg-2 col-sm-4 col-12 cell">
             <div class="form-group">
-                <label :for="api_id">{{ label }}</label>
-                <input type="file" :id="api_id"
+                <label :for="slug">{{ label }}</label>
+                <input type="file" :id="slug"
                        class="form-control" :class="errors ? 'is-invalid' : ''"
                        ref="files" multiple v-on:change="handleFilesUpload()"/>
                 <div v-if="errors" class="invalid-feedback">{{ errors[0] }}</div>
@@ -38,7 +38,7 @@
         },
         props: {
             label: String,
-            api_id: String,
+            slug: String,
             errors: Array,
             uploadedFilesProp: {
                 type: Array,
@@ -54,7 +54,7 @@
                     this.files.push(file);
                 }
 
-                this.$emit('uploadFiles', { files: this.files, api_id: this.api_id });
+                this.$emit('uploadFiles', { files: this.files, slug: this.slug });
             },
             getUrlForThumb(file) {
                 if(file.type == 'application/pdf') {
@@ -71,7 +71,7 @@
                 if(confirm) {
                     this.$delete(this.files, index);
 
-                    this.$emit('uploadFiles', { files: this.files, api_id: this.api_id });
+                    this.$emit('uploadFiles', { files: this.files, slug: this.slug });
                 }
             },
             deleteUploadedFile(file, index) {

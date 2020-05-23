@@ -8,12 +8,13 @@ Route::group(['prefix' => 'auth'], function ($router) {
 });
 
 
-Route::group(['middleware' => 'jwt.auth'], function ($router) {
-    Route::get('content-model/all', 'ContentModelController@all');
-    Route::resource('content-model', 'ContentModelController');
-    Route::post('content-field/validate', 'ContentFieldController@validateFields');
-    Route::resource('entry', 'EntryController');
-    Route::get('entry/{model_id}/get-by-model', 'EntryController@getByModel');
-    Route::resource('project', 'ProjectController');
+Route::group([
+    'middleware' => 'jwt.auth',
+    'namespace' => 'Api'
+], function ($router) {
+    Route::get('meta-content/all', 'MetaContentController@all');
+    Route::resource('meta-content', 'MetaContentController');
+    Route::resource('content', 'ContentController');
+//    Route::get('entry/{model_id}/get-by-model', 'EntryController@getByModel');
 });
 

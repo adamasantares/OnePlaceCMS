@@ -1,6 +1,6 @@
 <template>
     <footer class="main-footer">
-        <strong>Copyright &copy; KOYU {{ date }}</strong>
+        <strong>Copyright &copy; {{ date }}</strong>
     </footer>
 </template>
 

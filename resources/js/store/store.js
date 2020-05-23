@@ -86,7 +86,7 @@ export default {
             context.commit("login");
         },
         getAllContentModels(context) {
-            axios.get('/api/content-model/all')
+            axios.get('/api/meta-content/all')
                 .then((response) => {
                     context.commit('updateAllContentModels', response.data);
                 }).catch(() => {

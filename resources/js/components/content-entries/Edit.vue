@@ -9,7 +9,7 @@
                 <div class="card-body"  v-if="fieldsIsFilled">
                     <div class="row">
                         <div class="col-9">
-                            <text-field :model.sync="fields.title" :field="{api_id: 'title', name: 'Title'}" :errors="errors.title">
+                            <text-field :model.sync="fields.title" :field="{slug: 'title', title: 'Title'}" :errors="errors.title">
                             </text-field>
                         </div>
                         <div class="col-3">
@@ -19,33 +19,33 @@
 
                     <div class="form-group"  v-for="field in modelFields">
                         <text-field v-if="field.type == 'text'"
-                                    :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
+                                    :model.sync="fields.fields[field.slug]" :field="field" :errors="errors['fields.' + field.slug]"
                         >
                         </text-field>
 
                         <template v-if="field.type == 'media'">
-                            <media-field :api_id="field.api_id"
-                                         :label="field.name"
-                                         :uploaded-files-prop="uploadedFiles[field.api_id]"
-                                         :errors="errors['files.' + field.api_id]"
+                            <media-field :slug="field.slug"
+                                         :label="field.title"
+                                         :uploaded-files-prop="uploadedFiles[field.slug]"
+                                         :errors="errors['files.' + field.slug]"
                                          @uploadFiles="filesUploaded"
                                          @deleteUploadedFile="deleteUploadedFile" />
                         </template>
 
                         <template v-if="field.type == 'text_editor'">
-                            <text-editor :model.sync="fields.fields[field.api_id]"
-                                         :label="field.name"
+                            <text-editor :model.sync="fields.fields[field.slug]"
+                                         :label="field.title"
                             ></text-editor>
                         </template>
 
                         <relation-field v-if="field.type == 'relation'"
-                                        :model.sync="fields.fields[field.api_id]" :field="field" :errors="errors['fields.' + field.api_id]"
+                                        :model.sync="fields.fields[field.slug]" :field="field" :errors="errors['fields.' + field.slug]"
                         ></relation-field>
 
                         <date-field v-if="field.type == 'date'"
-                                    :model.sync="fields.fields[field.api_id]"
+                                    :model.sync="fields.fields[field.slug]"
                                     :field="field"
-                                    :errors="errors['fields.' + field.api_id]"
+                                    :errors="errors['fields.' + field.slug]"
                         ></date-field>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                 <div class="card-footer">
                     <div class="btn-group pull-right" role="group" aria-label="...">
                         <input class="btn btn-success" name="save" type="submit" value="Save">
-                        <router-link :to="`/entry/${fields.model_id}`" class="btn btn-default">Close</router-link>
+                        <router-link :to="`/entry/${fields.meta_content_id}`" class="btn btn-default">Close</router-link>
                     </div>
                 </div>
                 <!-- /.card-footer-->
@@ -75,14 +75,14 @@
         mixins: [FunctionsMixin],
         components: {TextField, MediaField, TextEditor, DateField, RelationField},
         methods: {
-            deleteUploadedFile(file_id) {
-                this.filesForDelete.push(file_id)
+            deleteUploadedFile(fileid) {
+                this.filesForDelete.push(fileid)
             },
             additionalPrepareDataForReqeust() {
                 this.formData.append('_method', 'PATCH');
 
                 this.filesForDelete.forEach((value, index) => {
-                    this.formData.append('deleted_files_ids[' + index + ']', value);
+                    this.formData.append('deleted_filesids[' + index + ']', value);
                 });
 
                 //if previously uploaded files exist. It for request validation
@@ -99,7 +99,7 @@
                 this.prepareDataForRequest();
                 this.additionalPrepareDataForReqeust();
 
-                axios.post(`/api/entry/${this.fields._id}`,
+                axios.post(`/api/content/${this.fields.id}`,
                     this.formData,
                     {
                         headers: {

@@ -15,7 +15,7 @@
         <div class="form-group">
             <label for="model">Content Model</label>
             <select v-model="validations.model" class="form-control" id="model">
-                <option v-for="model in models" :value="model._id">{{ model.title }}</option>
+                <option v-for="model in models" :value="model.id">{{ model.title }}</option>
             </select>
         </div>
     </div>

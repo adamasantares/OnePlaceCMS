@@ -20,7 +20,7 @@ export default {
             let confirm = window.confirm("Delete " + row.title + "?");
 
             if(confirm) {
-                axios.delete(`${this.base_path_api}${row._id}`)
+                axios.delete(`${this.base_path_api}${row.id}`)
                     .then(() => {
                         this.$store.commit('updateErrorMessage', []);
                         this.$store.commit('updateSuccessMessage', row.title + " was deleted");

@@ -1,6 +1,6 @@
 <template>
     <div class="clearfix">
-        <span>{{fieldProp.name}}</span>
+        <span>{{fieldProp.title}}</span>
         <div class="pull-right">
             <button @click.prevent="editField" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
             <button @click.prevent="deleteField" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -21,10 +21,10 @@
                 this.$store.commit('updateFieldFormDisplay', true);
             },
             deleteField() {
-                let confirm = window.confirm("Delete " + this.fieldProp.name + "?");
+                let confirm = window.confirm("Delete " + this.fieldProp.title + "?");
 
                 if(confirm) {
-                    this.$store.commit('removeContentField', this.fieldProp.api_id);
+                    this.$store.commit('removeContentField', this.fieldProp.slug);
                 }
 
             }

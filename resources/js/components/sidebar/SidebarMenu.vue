@@ -24,24 +24,18 @@
                 let models = this.$store.getters.allContentModels;
 
                 return models.map((model) => {
-                    return Object.assign(model, {link: `/entry/${model._id}`, icon: 'fa-circle-o'});
+                    return Object.assign(model, {link: `/entry/${model.id}`, icon: 'fa-circle-o'});
                 });
             },
             projects() {
                 let projects = this.$store.getters.projects;
 
                 return projects.map((model) => {
-                    return Object.assign(model, {link: `/project/${model._id}`, icon: 'fa-circle-o'});
+                    return Object.assign(model, {link: `/project/${model.id}`, icon: 'fa-circle-o'});
                 });
             },
             sections() {
                 return [
-                    {
-                        title: 'Projects',
-                        link: '/project',
-                        icon: 'fa-university',
-                        childs: this.projects
-                    },
                     {
                         title: 'Dashboard',
                         link: '/dashboard',
@@ -70,14 +64,12 @@
             isLoggedIn: function (newValue, oldValue) {
                 if(newValue === true && oldValue === false) {
                     this.$store.dispatch('getAllContentModels');
-                    this.$store.dispatch('getAllProjects');
                 }
             }
         },
         created() {
             if(this.isLoggedIn === true) {
                 this.$store.dispatch('getAllContentModels');
-                this.$store.dispatch('getAllProjects');
             }
         }
     }

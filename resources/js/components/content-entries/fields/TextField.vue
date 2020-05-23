@@ -1,7 +1,7 @@
 <template>
     <div class="form-group">
-        <label :for="field.api_id">{{ field.name }}</label>
-        <input :id="field.api_id" class="form-control"
+        <label :for="field.slug">{{ field.title }}</label>
+        <input :id="field.slug" class="form-control"
                v-model="value"
                :class="errors ? 'is-invalid' : ''">
         <div v-if="errors" class="invalid-feedback">{{ errors[0] }}</div>

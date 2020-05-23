@@ -9,7 +9,6 @@ import {routes} from './routes';
 import StoreData from './store/store';
 import StoreContentModels from './store/modules/content-models';
 import StoreContentEntries from './store/modules/content-entries';
-import StoreProjects from './store/modules/projects';
 import MainApp from './components/MainApp.vue';
 import {initialize} from './helpers/general';
 import SlideUpDown from 'vue-slide-up-down';
@@ -23,7 +22,6 @@ const store = new Vuex.Store(StoreData);
 
 store.registerModule('models', StoreContentModels);
 store.registerModule('entries', StoreContentEntries);
-store.registerModule('projects', StoreProjects);
 
 const router = new VueRouter({
     routes,

@@ -11,7 +11,7 @@
                                 <li class="nav-item">
                                     <a :class="activeTab == 'settings' ? 'active' : ''" @click="setActiveTab('settings')" class="nav-link" href="#">Settings</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" v-if="false">
                                     <a :class="activeTab == 'validations' ? 'active' : ''" @click="setActiveTab('validations')" class="nav-link" href="#">Validations</a>
                                 </li>
                             </ul>
@@ -23,23 +23,23 @@
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="name-input">Name</label>
-                                                <input v-model="fields.name" id="name-input" type="text"
+                                                <input v-model="fields.title" id="name-input" type="text"
                                                        class="form-control"
-                                                       :class="errors && errors.name ? 'is-invalid' : ''"
+                                                       :class="errors && errors.title ? 'is-invalid' : ''"
                                                        placeholder="Enter name">
-                                                <div v-if="errors && errors.name" class="invalid-feedback">{{ errors.name[0] }}</div>
+                                                <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="id-input">Field ID</label>
-                                                <input v-model="fields.api_id" id="id-input" type="text"
+                                                <input v-model="fields.slug" id="id-input" type="text"
                                                        class="form-control"
-                                                       :class="errors && errors.api_id ? 'is-invalid' : ''"
+                                                       :class="errors && errors.slug ? 'is-invalid' : ''"
                                                        placeholder="Enter field ID"
-                                                       :readonly="fields._id"
+                                                       :readonly="fields.id"
                                                        >
-                                                <div v-if="errors && errors.api_id" class="invalid-feedback">{{ errors.api_id[0] }}</div>
+                                                <div v-if="errors && errors.slug" class="invalid-feedback">{{ errors.slug[0] }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -88,9 +88,9 @@
             },
             fields() {
                 return {
-                    _id: this.$store.getters.currentContentField._id,
-                    name: this.$store.getters.currentContentField.name,
-                    api_id: this.$store.getters.currentContentField.api_id,
+                    id: this.$store.getters.currentContentField.id,
+                    title: this.$store.getters.currentContentField.title,
+                    slug: this.$store.getters.currentContentField.slug,
                     type: this.$store.getters.currentContentField.type,
                     validations: this.$store.getters.currentContentField.validations
                 }
@@ -115,49 +115,20 @@
                 this.$store.commit('resetCurrentContentField');
                 this.$store.commit('resetCurrentValidationsRules');
             },
-            validateUniqueApiIdByFieldsInStorage() {
-                let isInvalid = this.contentFields.find(field => {
-                        return field._id != this.fields._id && field.api_id === this.fields.api_id;
-                    }
-                );
-
-                return !Boolean(isInvalid);
-            },
-            validateOnServer() {
-                return axios.post('/api/content-field/validate', this.fields);
-            },
             submit() {
-                let validate = this.validateUniqueApiIdByFieldsInStorage();
+                this.errors = [];
 
-                if(!validate) {
-                    this.errors = [];
-                    this.errors['api_id'] = ['The api id has already been taken.'];
-                    return false;
+                let field = Object.assign({}, this.fields);
+                field.validations = this.validations;
+
+                if(!this.fields.id) {
+                    field.id = Date.now();
                 }
 
-                this.validateOnServer().then(
-                    resolve => {
-                        this.errors = [];
+                this.$store.commit('addContentField', field);
 
-                        let field = Object.assign({}, this.fields);
-                        field.validations = this.validations;
-
-                        if(this.fields._id) {
-                            this.$store.commit('updateContentField', field);
-                        } else {
-                            field._id = Date.now();
-                            this.$store.commit('addContentField', field);
-                        }
-
-                        this.closeModal();
-                        this.resetFields();
-                    },
-                    reject => {
-                        if (reject.response.status === 422) {
-                            this.errors = reject.response.data.errors || {};
-                        }
-                    }
-                );
+                this.closeModal();
+                this.resetFields();
             }
         }
     }

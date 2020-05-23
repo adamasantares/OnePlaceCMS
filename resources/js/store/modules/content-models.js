@@ -37,7 +37,7 @@ export default {
 
             state.contentModelsFields = state.contentModelsFields.map((value) => {
 
-                if(payload._id == value._id) {
+                if(payload.id == value.id) {
                     return payload;
                 }
 
@@ -45,9 +45,9 @@ export default {
             });
 
         },
-        removeContentField(state, api_id) {
+        removeContentField(state, slug) {
             state.contentModelsFields = state.contentModelsFields.filter(function(field) {
-                return field.api_id != api_id;
+                return field.slug != slug;
             });
         },
         resetContentFields(state) {
@@ -72,10 +72,9 @@ export default {
     actions: {
         getContentModels(context, params) {
             return new Promise((resolve, reject) => {
-                let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-                let url = '/api/content-model?' + queryString;
-
-                axios.get(url)
+                axios.get("/api/meta-content", {
+                    params: params
+                })
                     .then((response) => {
                         context.commit('updateContentModels', response.data);
                         resolve();
