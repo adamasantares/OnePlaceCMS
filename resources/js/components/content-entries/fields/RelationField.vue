@@ -1,13 +1,13 @@
 <template>
     <div class="form-group">
-        <label>{{ field.name }}</label>
+        <label>{{ field.title }}</label>
         <v-select
             v-if="isValuePrepared"
             :value="value"
             :options="entries"
             @input="setSelected"
             label="title"
-            :reduce="option => option._id"
+            :reduce="option => option.id"
             multiple
             :class="errors ? 'is-invalid' : ''">
         </v-select>
@@ -52,7 +52,7 @@
             },
             prepareSelectedValue() {
                 this.value = this.entries.filter(entry => {
-                    if(this.model.indexOf(entry._id) != -1) {
+                    if(this.model.indexOf(entry.id) != -1) {
                         return true;
                     }
                 });

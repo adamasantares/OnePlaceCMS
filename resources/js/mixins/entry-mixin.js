@@ -8,8 +8,8 @@ export default {
             fields: {
                 title: '',
                 published: false,
-                model_id: this.$route.params.model,
-                api_id: '',
+                meta_content_id: this.$route.params.model,
+                slug: '',
                 fields: {},
                 files: {},
             },
@@ -26,44 +26,45 @@ export default {
     },
     methods: {
         filesUploaded(payload) {
-            this.fields.files[payload.api_id] = [];
+            this.fields.files[payload.slug] = [];
 
             payload['files'].forEach((file) => {
-                this.fields.files[payload.api_id].push(file);
+                this.fields.files[payload.slug].push(file);
             });
         },
         prepareDataForRequest() {
+            console.log(this.fields.fields.fields);
 
-            for (let [api_id, field] of Object.entries(this.fields.fields)) {
+            for (let [slug, field] of Object.entries(this.fields.fields)) {
                 if(Array.isArray(field)) {
                     field.forEach((value, index) => {
-                        this.formData.append('fields[' + api_id + '][' + index + ']', value);
+                        this.formData.append('fields[' + index + '][' + index + ']', value);
                     });
                 } else {
-                    this.formData.append('fields[' + api_id + ']', field);
+                    this.formData.append('fields[' + slug + ']', field);
                 }
             }
 
             if(this.fields.files) {
-                for (let [api_id, file] of Object.entries(this.fields.files)) {
+                for (let [slug, file] of Object.entries(this.fields.files)) {
                     if(Array.isArray(file)) {
                         file.forEach((value, index) => {
-                            this.formData.append('files[' + api_id + '][' + index + ']', value);
+                            this.formData.append('files[' + slug + '][' + index + ']', value);
                         });
                     } else {
-                        this.formData.append('files[' + api_id + ']', file);
+                        this.formData.append('files[' + slug + ']', file);
                     }
                 }
             }
 
             this.formData.append('title', this.fields.title);
             this.formData.append('published', this.fields.published);
-            this.formData.append('model_id', this.fields.model_id);
-            this.formData.append('api_id', this.fields.api_id);
+            this.formData.append('meta_content_id', this.fields.meta_content_id);
+            this.formData.append('slug', this.fields.slug);
         },
         getFields() {
             return new Promise((resolve, reject) => {
-                axios.get(`/api/content-model/${this.$route.params.model}`).then(response => {
+                axios.get(`/api/meta-content/${this.$route.params.model}`).then(response => {
                     this.modelFields = response.data.fields;
                     this.errors = [];
                     this.$store.commit('updateErrorMessage', []);
@@ -77,13 +78,10 @@ export default {
             })
         },
         fillFields() {
-            axios.get(`/api/entry/${this.$route.params.id}`).then(response => {
-
-                console.log(response.data)
-
+            axios.get(`/api/content/${this.$route.params.id}`).then(response => {
                 this.$store.commit('updateTitlePage', `Edit ${response.data.title}`);
 
-                this.fields._id = response.data._id;
+                this.fields.id = response.data.id;
                 this.fields.title = response.data.title;
                 this.fields.published = response.data.published;
                 this.fields.fields = response.data.fields || {};

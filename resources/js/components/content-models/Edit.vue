@@ -20,9 +20,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="id-field">Api Identifier</label>
-                                            <input v-model="fields.api_id" id="id-field" class="form-control"
-                                                   :class="errors && errors.api_id ? 'is-invalid' : ''" readonly>
-                                            <div v-if="errors && errors.api_id" class="invalid-feedback">{{ errors.api_id[0] }}</div>
+                                            <input v-model="fields.slug" id="id-field" class="form-control"
+                                                   :class="errors && errors.slug ? 'is-invalid' : ''" readonly>
+                                            <div v-if="errors && errors.slug" class="invalid-feedback">{{ errors.slug[0] }}</div>
                                         </div>
                                         <div class="form-group">
                                             <label for="desc-field">Description</label>
@@ -63,13 +63,13 @@
     import FunctionsMixin from '../../mixins/CreateAndUpdateContentModel';
 
     export default {
-        name: "Create",
+        name: "Edit",
         mixins: [FunctionsMixin],
         methods: {
             saveModel() {
                 this.fields.contentFields = this.contentFields;
 
-                axios.put(`/api/content-model/${this.fields._id}`, this.fields).then(response => {
+                axios.put(`/api/meta-content/${this.fields.id}`, this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was updated");
                     this.errors = [];
@@ -88,9 +88,9 @@
             }
         },
         created() {
-            axios.get(`/api/content-model/${this.$route.params.id}`)
+            axios.get(`/api/meta-content/${this.$route.params.id}`)
                 .then((response) => {
-                    this.fields = response.data.model;
+                    this.fields = response.data;
                     this.$store.commit('updateTitlePage', 'Edit ' + this.fields.title);
                     response.data.fields.forEach((field) => {
 

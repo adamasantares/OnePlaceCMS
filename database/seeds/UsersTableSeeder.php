@@ -13,11 +13,11 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::collection('users')->insert([
-            'name' => 'Admin',
-            'email' => 'admin@koyu.tech',
+        DB::table('users')->insert([
+            'name' => 'admin',
+            'email' => 'admin@admin.ru',
             'password' => bcrypt('admin'),
-            'created_at' => Carbon::now()->toDateString()
+            'created_at' => Carbon::now(),
         ]);
     }
 }

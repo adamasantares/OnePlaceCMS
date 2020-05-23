@@ -26,7 +26,7 @@
 
                 fields.forEach((field) => {
                     element = this.$store.getters.contentModelsFields.find((fieldState) => {
-                        if(fieldState.api_id == field.api_id) {
+                        if(fieldState.slug == field.slug) {
                             return fieldState;
                         }
                     });

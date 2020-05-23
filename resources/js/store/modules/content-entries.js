@@ -25,10 +25,9 @@ export default {
     actions: {
         getEntries(context, params) {
             return new Promise((resolve, reject) => {
-                let queryString = Object.keys(params).map(key => key + '=' + params[key]).join('&');
-                let url = '/api/entry?' + queryString;
-
-                axios.get(url)
+                axios.get('/api/content', {
+                    params: params
+                })
                     .then((response) => {
                         context.commit('updateContentEntries', response.data);
                         resolve();

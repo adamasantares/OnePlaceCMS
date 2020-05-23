@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContentModelRequest extends FormRequest
+class MetaContentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class ContentModelRequest extends FormRequest
     {
         return [
             'title' => 'max:255|required',
-            'api_id' => 'max:255|required|unique:models,api_id,'.request()->input('_id').',_id',
+            'slug' => 'max:255|required|unique:meta_contents,slug,'.request()->input('id').',id',
             'desc' => 'max:1024',
         ];
     }

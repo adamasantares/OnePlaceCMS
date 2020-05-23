@@ -32,8 +32,7 @@ return [
          */
         'middleware' => [
             \Barryvdh\Cors\HandleCors::class,
-            \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
-            \App\Http\Middleware\CheckSecretKey::class
+            \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class
         ],
     ],
 

@@ -19,10 +19,10 @@
                                             <div v-if="errors && errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="id-field">Api Identifier</label>
-                                            <input v-model="fields.api_id" id="id-field" class="form-control"
-                                                   :class="errors && errors.api_id ? 'is-invalid' : ''">
-                                            <div v-if="errors && errors.api_id" class="invalid-feedback">{{ errors.api_id[0] }}</div>
+                                            <label for="id-field">Slug</label>
+                                            <input v-model="fields.slug" id="id-field" class="form-control"
+                                                   :class="errors && errors.slug ? 'is-invalid' : ''">
+                                            <div v-if="errors && errors.slug" class="invalid-feedback">{{ errors.slug[0] }}</div>
                                         </div>
                                         <div class="form-group">
                                             <label for="desc-field">Description</label>
@@ -69,13 +69,13 @@
             saveModel() {
                 this.fields.contentFields = this.contentFields;
 
-                axios.post('/api/content-model', this.fields).then(response => {
+                axios.post('/api/meta-content', this.fields).then(response => {
                     this.$store.commit('updateErrorMessage', []);
                     this.$store.commit('updateSuccessMessage', this.fields.title + " was created");
                     this.$store.commit('resetContentFields');
                     this.errors = [];
                     this.fields = {};
-                    this.$router.push(`/model/edit/${response.data._id}`);
+                    this.$router.push(`/model/edit/${response.data.id}`);
                     this.$store.dispatch('getAllContentModels');
                 }).catch(error => {
                     if (error.response.status === 422) {

@@ -28,7 +28,7 @@
                     <td>{{ model.created_at }}</td>
                     <td>{{ model.updated_at }}</td>
                     <td>
-                        <router-link :to="{ path: `/entry/${model_id}/edit/${model._id}` }" class="btn btn btn-primary" >
+                        <router-link :to="{ path: `/entry/${model_id}/edit/${model.id}` }" class="btn btn btn-primary" >
                             <i class="fa fa-edit"></i>
                         </router-link>
                         <a @click.prevent="deleteRow(model)" href="#" title="Delete" class="btn btn btn-danger">
@@ -64,7 +64,7 @@
             return {
                 model_id: this.$route.params.model,
                 base_path: `/entry/${this.$route.params.model}`,
-                base_path_api: '/api/entry/',
+                base_path_api: '/api/content/',
                 searchParams: {
                     column: this.$route.query.column ? this.$route.query.column : 'created_at',
                     sort: this.$route.query.sort ? this.$route.query.sort : 'desc',

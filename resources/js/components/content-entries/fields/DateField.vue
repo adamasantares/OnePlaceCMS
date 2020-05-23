@@ -1,7 +1,7 @@
 <template>
     <div class="form-group">
-        <label :for="field.api_id">{{ field.name }}</label>
-        <datepicker :id="field.api_id"
+        <label :for="field.slug">{{ field.title }}</label>
+        <datepicker :id="field.slug"
                     :input-class="errors ? 'is-invalid form-control' : 'form-control'"
                     v-model="value"
         ></datepicker>
@@ -38,11 +38,9 @@
         },
         created() {
             //TODO refactor
-            if(this.model.$date) {
+            if(this.model) {
                 let date = new Date();
-
-                date.setTime(this.model.$date.$numberLong);
-
+                date.setTime(this.model);
                 this.value = date;
             }
         }

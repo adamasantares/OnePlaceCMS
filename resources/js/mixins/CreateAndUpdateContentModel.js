@@ -10,7 +10,7 @@ export default {
         return {
             fields: {
                 title: '',
-                api_id: '',
+                slug: '',
                 desc: '',
                 published: false
             },
